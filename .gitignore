@@ -1,0 +1,9 @@
+build/*
+reports/*
+target/*
+**/target/*
+.classpath
+/bin
+**/bin
+.settings/
+.project
