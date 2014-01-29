@@ -12,7 +12,7 @@ import com.google.common.collect.Lists;
 
 @SuppressWarnings("unchecked")
 @XmlRootElement
-public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> extends AbstractSearchParameters<FacetedSearchParameters<T>> {
+public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
 	private String term = "*";
 	private String sort = null;
 	private String sortDir = "asc";
