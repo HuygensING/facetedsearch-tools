@@ -14,14 +14,13 @@ import com.google.common.collect.Lists;
 @XmlRootElement
 public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
 	private String term = "*";
-	private String sort = null;
-	private String sortDir = "asc";
 	private boolean caseSensitive = false;
 	private String[] facetFields = new String[] {};
 	private List<FacetParameter> facetParameters = Lists.newArrayList();
 	private Map<String, FacetInfo> facetInfoMap;
-	private List<String> orderLevels = Lists.newArrayList();
+	private List<String> resultFields = Lists.newArrayList();
 	private boolean fuzzy = false;
+	private List<SortParameter> sortParameters = Lists.newArrayList();
 
 	public T setTerm(final String term) {
 		if (StringUtils.isNotBlank(term)) {
@@ -32,29 +31,6 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
 
 	public String getTerm() {
 		return term;
-	}
-
-	public T setSort(final String sort) {
-		this.sort = sort;
-		return (T) this;
-	}
-
-	public String getSort() {
-		return sort;
-	}
-
-	public T setSortDir(final String sortDir) {
-		this.sortDir = sortDir;
-		return (T) this;
-	}
-
-	public String getSortDir() {
-		return sortDir;
-	}
-
-	@XmlTransient
-	public boolean isAscending() {
-		return "asc".equals(sortDir);
 	}
 
 	public T setCaseSensitive(boolean matchCase) {
@@ -75,13 +51,13 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
 		return facetFields;
 	}
 
-	public T setOrderLevels(List<String> orderLevels) {
-		this.orderLevels = orderLevels;
+	public T setResultFields(List<String> orderLevels) {
+		this.resultFields = orderLevels;
 		return (T) this;
 	}
 
-	public List<String> getOrderLevels() {
-		return orderLevels;
+	public List<String> getResultFields() {
+		return resultFields;
 	}
 
 	public boolean isFuzzy() {
@@ -109,6 +85,15 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
 	public T setFacetInfoMap(Map<String, FacetInfo> facetInfoMap) {
 		this.facetInfoMap = facetInfoMap;
 		return (T) this;
+	}
+
+	public List<SortParameter> getSortParameters() {
+		return sortParameters;
+	}
+
+	public FacetedSearchParameters<T> setSortParameters(List<SortParameter> sortParameters) {
+		this.sortParameters = sortParameters;
+		return this;
 	}
 
 }
