@@ -51,12 +51,4 @@ public interface SolrServerWrapper {
    */
   Map<String, Object> search(FacetedSearchParameters<?> facetedSearchParameters) throws IndexException;
 
-  //  /**
-  //   * @param pid
-  //   * @param queryString
-  //   * @return
-  //   * @throws IndexException
-  //   */
-  //  String highlight(String pid, String queryString) throws IndexException;
-
 }
