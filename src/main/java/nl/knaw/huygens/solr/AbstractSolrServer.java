@@ -4,7 +4,9 @@ import java.util.Collection;
 import java.util.List;
 
 import nl.knaw.huygens.LoggableObject;
-import nl.knaw.huygens.solr.FacetCount.Option;
+import nl.knaw.huygens.facetedsearch.model.FacetCount;
+import nl.knaw.huygens.facetedsearch.model.FacetType;
+import nl.knaw.huygens.facetedsearch.model.FacetCount.Option;
 
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.response.FacetField;

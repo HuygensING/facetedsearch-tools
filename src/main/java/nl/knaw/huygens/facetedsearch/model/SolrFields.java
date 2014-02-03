@@ -1,4 +1,4 @@
-package nl.knaw.huygens.solr;
+package nl.knaw.huygens.facetedsearch.model;
 
 public class SolrFields {
 	public static final String SORT_PREFIX = "sort_";

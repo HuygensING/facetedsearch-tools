@@ -1,4 +1,4 @@
-package nl.knaw.huygens.solr;
+package nl.knaw.huygens.facetedsearch.model;
 
 public class RangeOption implements FacetCountOption {
 	private int lowerLimit = 99999999;

@@ -1,4 +1,4 @@
-package nl.knaw.huygens.solr;
+package nl.knaw.huygens.facetedsearch.model;
 
 import java.util.Collections;
 import java.util.Comparator;

@@ -1,4 +1,4 @@
-package nl.knaw.huygens.solr;
+package nl.knaw.huygens.facetedsearch.model;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;

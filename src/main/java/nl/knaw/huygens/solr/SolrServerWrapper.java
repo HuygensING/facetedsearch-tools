@@ -3,6 +3,8 @@ package nl.knaw.huygens.solr;
 import java.util.Collection;
 import java.util.Map;
 
+import nl.knaw.huygens.facetedsearch.model.FacetedSearchParameters;
+
 import org.apache.solr.common.SolrInputDocument;
 
 public interface SolrServerWrapper {

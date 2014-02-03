@@ -1,4 +1,4 @@
-package nl.knaw.huygens.solr;
+package nl.knaw.huygens.facetedsearch.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
@@ -6,7 +6,10 @@ import static org.junit.Assert.fail;
 import java.util.List;
 
 import nl.knaw.huygens.LoggableObject;
-import nl.knaw.huygens.solr.FacetCount.Option;
+import nl.knaw.huygens.facetedsearch.model.FacetCount;
+import nl.knaw.huygens.facetedsearch.model.FacetCountOption;
+import nl.knaw.huygens.facetedsearch.model.FacetType;
+import nl.knaw.huygens.facetedsearch.model.FacetCount.Option;
 
 import org.junit.Test;
 

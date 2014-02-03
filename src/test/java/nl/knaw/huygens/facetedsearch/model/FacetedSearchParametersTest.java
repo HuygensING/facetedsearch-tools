@@ -1,7 +1,8 @@
-package nl.knaw.huygens.solr;
+package nl.knaw.huygens.facetedsearch.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import nl.knaw.huygens.LoggableObject;
+import nl.knaw.huygens.facetedsearch.model.FacetedSearchParameters;
 
 import org.junit.After;
 import org.junit.Before;
