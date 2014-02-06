@@ -20,8 +20,14 @@ public abstract class AbstractSolrServer extends LoggableObject implements SolrS
 
   protected abstract void setServer();
 
+  protected String[] cores;
+
+  public AbstractSolrServer(String... cores) {
+    this.cores = cores;
+  }
+
   @Override
-  public void initialize() throws IndexException {
+  public void emptyServer() throws IndexException {
     try {
       server.deleteByQuery("*:*");
     } catch (Exception e) {
@@ -50,7 +56,7 @@ public abstract class AbstractSolrServer extends LoggableObject implements SolrS
   }
 
   @Override
-  public void add(SolrInputDocument doc) throws IndexException {
+  public void add(String coreName, SolrInputDocument doc) throws IndexException {
     try {
       server.add(doc);
     } catch (Exception e) {
@@ -59,7 +65,7 @@ public abstract class AbstractSolrServer extends LoggableObject implements SolrS
   }
 
   @Override
-  public void add(Collection<SolrInputDocument> docs) throws IndexException {
+  public void add(String coreName, Collection<SolrInputDocument> docs) throws IndexException {
     try {
       server.add(docs);
     } catch (Exception e) {
