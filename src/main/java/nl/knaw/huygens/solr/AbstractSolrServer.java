@@ -1,5 +1,6 @@
 package nl.knaw.huygens.solr;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
@@ -8,47 +9,45 @@ import nl.knaw.huygens.facetedsearch.model.FacetCount;
 import nl.knaw.huygens.facetedsearch.model.FacetCount.Option;
 import nl.knaw.huygens.facetedsearch.model.FacetType;
 
+import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
+import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
+import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrInputDocument;
 
 public abstract class AbstractSolrServer extends LoggableObject implements SolrServerWrapper {
   public static final String KEY_NUMFOUND = "numFound";
 
-  protected SolrServer server;
-
-  protected abstract void setServer();
-
-  protected String[] cores;
-
-  public AbstractSolrServer(String... cores) {
-    this.cores = cores;
-  }
-
   @Override
-  public void emptyServer() throws IndexException {
+  public void empty() throws IndexException {
     try {
-      server.deleteByQuery("*:*");
+      getSolrServer().deleteByQuery("*:*");
     } catch (Exception e) {
-      throw new IndexException(e.getMessage());
+      handleException(e);
     }
   }
 
   @Override
   public void shutdown() throws IndexException {
     try {
-      server.commit();
-      server.optimize();
+      SolrServer server = getSolrServer();
+      optimizeAndCommit(server);
     } catch (Exception e) {
-      throw new IndexException(e.getMessage());
+      handleException(e);
     }
+  }
+
+  protected void optimizeAndCommit(SolrServer server) throws SolrServerException, IOException {
+    server.commit();
+    server.optimize();
   }
 
   @Override
   public boolean ping() {
     try {
-      return server.ping().getStatus() == 0;
+      return getSolrServer().ping().getStatus() == 0;
     } catch (Exception e) {
       LOG.error("ping failed with '{}'", e.getMessage());
       return false;
@@ -56,21 +55,30 @@ public abstract class AbstractSolrServer extends LoggableObject implements SolrS
   }
 
   @Override
-  public void add(String coreName, SolrInputDocument doc) throws IndexException {
+  public void add(SolrInputDocument doc) throws IndexException {
     try {
-      server.add(doc);
+      getSolrServer().add(doc);
     } catch (Exception e) {
-      throw new IndexException(e.getMessage());
+      handleException(e);
     }
   }
 
   @Override
-  public void add(String coreName, Collection<SolrInputDocument> docs) throws IndexException {
+  public void add(Collection<SolrInputDocument> docs) throws IndexException {
     try {
-      server.add(docs);
+      getSolrServer().add(docs);
     } catch (Exception e) {
-      throw new IndexException(e.getMessage());
+      handleException(e);
     }
+  }
+
+  /**
+   * Because all exceptions handled this way.
+   * @param e
+   * @throws IndexException
+   */
+  protected void handleException(Exception e) throws IndexException {
+    throw new IndexException(e.getMessage());
   }
 
   /**
@@ -97,6 +105,69 @@ public abstract class AbstractSolrServer extends LoggableObject implements SolrS
       return facetCount;
     }
     return null;
+  }
+
+  /**
+   * Get the right {@code SolrServer} to perform an action on. 
+   * @return the {@code SolrServer}.
+   */
+  protected abstract SolrServer getSolrServer();
+
+  @Override
+  public void deleteById(String id) throws IndexException {
+    try {
+      getSolrServer().deleteById(id);
+    } catch (SolrServerException e) {
+      handleException(e);
+    } catch (IOException e) {
+      handleException(e);
+    }
+  }
+
+  @Override
+  public QueryResponse search(SolrQuery query) throws IndexException {
+    QueryResponse response = null;
+    try {
+      response = getSolrServer().query(query);
+    } catch (SolrServerException e) {
+      handleException(e);
+    }
+    return response;
+  }
+
+  @Override
+  public void commit() throws IndexException {
+    try {
+      getSolrServer().commit();
+    } catch (SolrServerException e) {
+      handleException(e);
+    } catch (IOException e) {
+      handleException(e);
+    }
+  }
+
+  @Override
+  public void deleteById(List<String> ids) throws IndexException {
+    try {
+      getSolrServer().deleteById(ids);
+    } catch (SolrServerException e) {
+      handleException(e);
+    } catch (IOException e) {
+      handleException(e);
+    }
+  
+  }
+
+  @Override
+  public void deleteByQuery(String query) throws IndexException {
+    try {
+      getSolrServer().deleteByQuery(query);
+    } catch (SolrServerException e) {
+      handleException(e);
+    } catch (IOException e) {
+      handleException(e);
+    }
+  
   }
 
 }
