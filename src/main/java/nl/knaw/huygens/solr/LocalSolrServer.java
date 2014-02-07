@@ -15,8 +15,8 @@ public class LocalSolrServer extends AbstractSolrServer {
   private CoreContainer container;
   private SolrServer server;
 
-  public LocalSolrServer(String solrDir, String coreName) {
-    super();
+  public LocalSolrServer(String solrDir, String coreName, int commitWithinInSeconds) {
+    super(commitWithinInSeconds);
     this.solrDir = StringUtils.defaultIfBlank(solrDir, SOLR_DIRECTORY);
     this.coreName = StringUtils.defaultIfBlank(coreName, "core1");
     createServer();

@@ -7,8 +7,8 @@ public class RemoteSolrServer extends AbstractSolrServer {
   private final String solrUrl;
   private SolrServer server;
 
-  public RemoteSolrServer(String solrUrl) {
-    super();
+  public RemoteSolrServer(String solrUrl, int commitWithinInSeconds) {
+    super(commitWithinInSeconds);
     this.solrUrl = solrUrl;
     createServer();
   }

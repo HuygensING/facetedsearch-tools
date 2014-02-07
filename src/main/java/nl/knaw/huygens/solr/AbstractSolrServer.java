@@ -20,10 +20,20 @@ import org.apache.solr.common.SolrInputDocument;
 public abstract class AbstractSolrServer extends LoggableObject implements SolrServerWrapper {
   public static final String KEY_NUMFOUND = "numFound";
 
+  public final int commitWithin;
+
+  /**
+   * @param commitWithinInSeconds all the changes to the server will be committed within the this time. 
+   */
+  public AbstractSolrServer(int commitWithinInSeconds) {
+    // solr uses commits within milliseconds.
+    this.commitWithin = commitWithinInSeconds * 1000;
+  }
+
   @Override
   public void empty() throws IndexException {
     try {
-      getSolrServer().deleteByQuery("*:*");
+      getSolrServer().deleteByQuery("*:*", commitWithin);
     } catch (Exception e) {
       handleException(e);
     }
@@ -57,7 +67,7 @@ public abstract class AbstractSolrServer extends LoggableObject implements SolrS
   @Override
   public void add(SolrInputDocument doc) throws IndexException {
     try {
-      getSolrServer().add(doc);
+      getSolrServer().add(doc, commitWithin);
     } catch (Exception e) {
       handleException(e);
     }
@@ -66,7 +76,7 @@ public abstract class AbstractSolrServer extends LoggableObject implements SolrS
   @Override
   public void add(Collection<SolrInputDocument> docs) throws IndexException {
     try {
-      getSolrServer().add(docs);
+      getSolrServer().add(docs, commitWithin);
     } catch (Exception e) {
       handleException(e);
     }
@@ -116,7 +126,7 @@ public abstract class AbstractSolrServer extends LoggableObject implements SolrS
   @Override
   public void deleteById(String id) throws IndexException {
     try {
-      getSolrServer().deleteById(id);
+      getSolrServer().deleteById(id, commitWithin);
     } catch (SolrServerException e) {
       handleException(e);
     } catch (IOException e) {
@@ -149,25 +159,25 @@ public abstract class AbstractSolrServer extends LoggableObject implements SolrS
   @Override
   public void deleteById(List<String> ids) throws IndexException {
     try {
-      getSolrServer().deleteById(ids);
+      getSolrServer().deleteById(ids, commitWithin);
     } catch (SolrServerException e) {
       handleException(e);
     } catch (IOException e) {
       handleException(e);
     }
-  
+
   }
 
   @Override
   public void deleteByQuery(String query) throws IndexException {
     try {
-      getSolrServer().deleteByQuery(query);
+      getSolrServer().deleteByQuery(query, commitWithin);
     } catch (SolrServerException e) {
       handleException(e);
     } catch (IOException e) {
       handleException(e);
     }
-  
+
   }
 
 }
