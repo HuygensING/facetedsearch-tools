@@ -13,6 +13,7 @@ import com.google.common.collect.Lists;
 @XmlRootElement
 public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
   private String term = "*";
+  private List<String> fullTextSearchFields;
   private boolean caseSensitive = false;
   private String[] facetFields = new String[] {};
   private List<FacetParameter> facetParameters = Lists.newArrayList();
@@ -30,6 +31,15 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
 
   public String getTerm() {
     return term;
+  }
+
+  public List<String> getFullTextSearchFields() {
+    return fullTextSearchFields;
+  }
+
+  public T setFullTextSearchFields(List<String> fullTextSearchFields) {
+    this.fullTextSearchFields = fullTextSearchFields;
+    return (T) this;
   }
 
   public T setCaseSensitive(boolean matchCase) {
@@ -50,8 +60,13 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
     return facetFields;
   }
 
-  public T setResultFields(List<String> orderLevels) {
-    this.resultFields = orderLevels;
+  /**
+   * Set the fields that should be shown in the result.
+   * @param resultFields a list with the fields.
+   * @return the current instance of the {@code FacetedSearchParameters}, for the builder pattern.
+   */
+  public T setResultFields(List<String> resultFields) {
+    this.resultFields = resultFields;
     return (T) this;
   }
 
