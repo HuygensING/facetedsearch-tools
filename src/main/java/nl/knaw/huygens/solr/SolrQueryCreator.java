@@ -103,7 +103,7 @@ public class SolrQueryCreator {
   /**
    * Sets the sort criteria for the query.
    * @param query the {@code SolrQuery} that should be sorted.
-   * @param searchParameters that container of the {@code SortParameter}s
+   * @param searchParameters that container of the {@code SortParameter}s.
    * @param validator a {@code FacetedSearchParametersValidator} to check if the {@code SortParamater}s exist.
    * @return the query, that went in plus the added {@code SortClause}s.
    * @throws NoSuchFieldInIndexException if one of the {@code SortParameter}s does not exist.
