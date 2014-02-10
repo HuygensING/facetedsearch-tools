@@ -15,7 +15,7 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
   private String term = "*";
   private List<String> fullTextSearchFields;
   private boolean caseSensitive = false;
-  private String[] facetFields = new String[] {};
+  private List<String> facetFields = Lists.newArrayList();
   private List<FacetParameter> facetParameters = Lists.newArrayList();
   private Map<String, FacetInfo> facetInfoMap;
   private List<String> resultFields = Lists.newArrayList();
@@ -51,12 +51,17 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
     return caseSensitive;
   }
 
-  public T setFacetFields(String[] _facetFields) {
-    this.facetFields = _facetFields;
+  /**
+   * Set the facets that should be shown in the result.
+   * @param facetFields a list with the fields.
+   * @return the current instance of the {@code FacetedSearchParameters}, for the builder pattern.
+   */
+  public T setFacetFields(List<String> facetFields) {
+    this.facetFields = facetFields;
     return (T) this;
   }
 
-  public String[] getFacetFields() {
+  public List<String> getFacetFields() {
     return facetFields;
   }
 
