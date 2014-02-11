@@ -24,6 +24,7 @@ import nl.knaw.huygens.facetedsearch.model.WrongFacetValueException;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.apache.solr.client.solrj.SolrQuery.SortClause;
+import org.apache.solr.common.params.FacetParams;
 import org.apache.solr.common.params.HighlightParams;
 import org.junit.Before;
 import org.junit.Test;
@@ -265,6 +266,7 @@ public class SolrQueryCreatorTest {
     SolrQuery query = instance.createSearchQuery(searchParameters, validator);
 
     assertArrayEquals(new String[] { "facetField" }, query.getFacetFields());
+    assertEquals(true, query.getBool(FacetParams.FACET)); // this boolean is set automagicly
   }
 
   @Test(expected = NoSuchFieldInIndexException.class)
