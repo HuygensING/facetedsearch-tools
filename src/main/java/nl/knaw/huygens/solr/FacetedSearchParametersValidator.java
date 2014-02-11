@@ -10,7 +10,10 @@ import nl.knaw.huygens.facetedsearch.model.SortParameter;
 public interface FacetedSearchParametersValidator {
   boolean facetExists(FacetParameter facet);
 
-  boolean isValidReturnField(String fieldName);
+  boolean facetFieldExists(String facetFieldName);
 
   boolean sortParameterExists(SortParameter sortParameter);
+
+  boolean resultFieldExists(String fieldName);
+
 }

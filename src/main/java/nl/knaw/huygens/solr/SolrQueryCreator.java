@@ -5,6 +5,7 @@ import java.util.List;
 import nl.knaw.huygens.facetedsearch.model.FacetParameter;
 import nl.knaw.huygens.facetedsearch.model.FacetedSearchParameters;
 import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
+import nl.knaw.huygens.facetedsearch.model.QueryOptimizer;
 import nl.knaw.huygens.facetedsearch.model.SortParameter;
 
 import org.apache.commons.lang.StringUtils;
@@ -17,11 +18,48 @@ public class SolrQueryCreator {
   public <T extends FacetedSearchParameters<T>> SolrQuery createSearchQuery(FacetedSearchParameters<T> searchParameters, FacetedSearchParametersValidator validator) throws NoSuchFieldInIndexException {
     SolrQuery query = new SolrQuery();
     query.setQuery(createQuery(searchParameters, validator));
-    query.setFields(searchParameters.getResultFields().toArray(new String[0]));
-    query.addFacetField(searchParameters.getFacetFields().toArray(new String[0]));
+    query.setFields(validateResultFields(searchParameters, validator));
+    query.addFacetField(validateFacetFields(searchParameters, validator));
     query = setSort(query, searchParameters, validator);
 
+    optimizeQuery(query, searchParameters);
+
     return query;
+  }
+
+  public <T extends FacetedSearchParameters<T>> SolrQuery optimizeQuery(SolrQuery query, FacetedSearchParameters<T> searchParameters) {
+    QueryOptimizer optimizer = searchParameters.getQueryOptimizer();
+
+    if (optimizer != null) {
+      query.setRows(optimizer.getRows());
+      query.setFacetLimit(optimizer.getFacetLimit());
+      query.setFacetMinCount(optimizer.getFacetMinCount());
+    }
+
+    return query;
+  }
+
+  private <T extends FacetedSearchParameters<T>> String[] validateResultFields(FacetedSearchParameters<T> searchParameters, FacetedSearchParametersValidator validator)
+      throws NoSuchFieldInIndexException {
+    for (String resultField : searchParameters.getResultFields()) {
+      if (!validator.resultFieldExists(resultField)) {
+        throw new NoSuchFieldInIndexException(resultField);
+      }
+    }
+
+    return searchParameters.getResultFields().toArray(new String[0]);
+  }
+
+  private <T extends FacetedSearchParameters<T>> String[] validateFacetFields(FacetedSearchParameters<T> searchParameters, FacetedSearchParametersValidator validator)
+      throws NoSuchFieldInIndexException {
+
+    for (String facetField : searchParameters.getFacetFields()) {
+      if (!validator.facetFieldExists(facetField)) {
+        throw new NoSuchFieldInIndexException(facetField);
+      }
+    }
+
+    return searchParameters.getFacetFields().toArray(new String[0]);
   }
 
   private <T extends FacetedSearchParameters<T>> String createQuery(FacetedSearchParameters<T> searchParameters, FacetedSearchParametersValidator validator) throws NoSuchFieldInIndexException {

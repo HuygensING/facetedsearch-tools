@@ -7,6 +7,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -15,6 +16,7 @@ import java.util.List;
 import nl.knaw.huygens.facetedsearch.model.DefaultFacetedSearchParameters;
 import nl.knaw.huygens.facetedsearch.model.FacetParameter;
 import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
+import nl.knaw.huygens.facetedsearch.model.QueryOptimizer;
 import nl.knaw.huygens.facetedsearch.model.SortDirection;
 import nl.knaw.huygens.facetedsearch.model.SortParameter;
 
@@ -22,6 +24,7 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.apache.solr.client.solrj.SolrQuery.SortClause;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.collect.Lists;
@@ -37,7 +40,9 @@ public class SolrQueryCreatorTest {
     instance = new SolrQueryCreator();
     validator = mock(FacetedSearchParametersValidator.class);
     when(validator.facetExists(any(FacetParameter.class))).thenReturn(true);
+    when(validator.facetFieldExists(anyString())).thenReturn(true);
     when(validator.sortParameterExists(any(SortParameter.class))).thenReturn(true);
+    when(validator.resultFieldExists(anyString())).thenReturn(true);
   }
 
   @Test
@@ -217,6 +222,8 @@ public class SolrQueryCreatorTest {
 
   }
 
+  @Ignore
+  @Test
   public void testCreateSearchQueryRangeFacetHasWrongValue() {
     fail("Yet to be implemented.");
   }
@@ -240,6 +247,14 @@ public class SolrQueryCreatorTest {
     assertEquals("resultField,resultField1", query.getFields().replaceAll(" ", ""));
   }
 
+  @Test(expected = NoSuchFieldInIndexException.class)
+  public void testCreateSearchQueryResultFieldDoesNotExist() throws NoSuchFieldInIndexException {
+    searchParameters.setResultFields(Lists.newArrayList("resultField"));
+    when(validator.resultFieldExists(anyString())).thenReturn(false);
+
+    instance.createSearchQuery(searchParameters, validator);
+  }
+
   @Test
   public void testCreateSearchQueryFacetFields() throws NoSuchFieldInIndexException {
     searchParameters.setFacetFields(Lists.newArrayList("facetField"));
@@ -249,8 +264,48 @@ public class SolrQueryCreatorTest {
     assertArrayEquals(new String[] { "facetField" }, query.getFacetFields());
   }
 
-  public void testCreateSearchQueryFacetFieldDoesNotExist() {
-    fail("Yet to be implemented.");
+  @Test(expected = NoSuchFieldInIndexException.class)
+  public void testCreateSearchQueryFacetFieldDoesNotExist() throws NoSuchFieldInIndexException {
+    searchParameters.setFacetFields(Lists.newArrayList("facetField"));
+    when(validator.facetFieldExists(anyString())).thenReturn(false);
+
+    instance.createSearchQuery(searchParameters, validator);
+  }
+
+  @Test
+  public void testCreateSearchQueryDefaultQueryOptimizer() throws NoSuchFieldInIndexException {
+    searchParameters.setQueryOptimizer(new QueryOptimizer());
+
+    SolrQuery query = instance.createSearchQuery(searchParameters, validator);
+
+    assertEquals(50000, (int) query.getRows());
+    assertEquals(10000, query.getFacetLimit());
+    assertEquals(1, query.getFacetMinCount());
+  }
+
+  @Test
+  public void testCreateSearchQueryCustomQueryOptimizer() throws NoSuchFieldInIndexException {
+    QueryOptimizer queryOptimizer = new QueryOptimizer();
+    queryOptimizer.setFacetLimit(60);
+    queryOptimizer.setFacetMinCount(10);
+    queryOptimizer.setRows(5000);
+    searchParameters.setQueryOptimizer(queryOptimizer);
+
+    SolrQuery query = instance.createSearchQuery(searchParameters, validator);
+
+    assertEquals(5000, (int) query.getRows());
+    assertEquals(60, query.getFacetLimit());
+    assertEquals(10, query.getFacetMinCount());
+  }
+
+  @Test
+  public void testCreateSearchQueryNoQueryOptimizer() throws NoSuchFieldInIndexException {
+    SolrQuery query = instance.createSearchQuery(searchParameters, validator);
+
+    //Solr defaults
+    assertEquals(null, query.getRows());
+    assertEquals(25, query.getFacetLimit());
+    assertEquals(1, query.getFacetMinCount());
   }
 
   private FacetParameter createFacetParameter(String name, List<String> values) {

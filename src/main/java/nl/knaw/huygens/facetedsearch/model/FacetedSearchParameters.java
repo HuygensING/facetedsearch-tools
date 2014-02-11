@@ -20,6 +20,7 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
   private List<String> resultFields = Lists.newArrayList();
   private boolean fuzzy = false;
   private List<SortParameter> sortParameters = Lists.newArrayList();
+  private QueryOptimizer queryOptimizer;
 
   public T setTerm(final String term) {
     if (StringUtils.isNotBlank(term)) {
@@ -103,6 +104,14 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
   public FacetedSearchParameters<T> setSortParameters(List<SortParameter> sortParameters) {
     this.sortParameters = sortParameters;
     return this;
+  }
+
+  public QueryOptimizer getQueryOptimizer() {
+    return queryOptimizer;
+  }
+
+  public void setQueryOptimizer(QueryOptimizer queryOptimizer) {
+    this.queryOptimizer = queryOptimizer;
   }
 
 }
