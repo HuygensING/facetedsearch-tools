@@ -20,7 +20,7 @@ import org.apache.solr.common.SolrInputDocument;
 public abstract class AbstractSolrServer extends LoggableObject implements SolrServerWrapper {
   public static final String KEY_NUMFOUND = "numFound";
 
-  public final int commitWithin;
+  private final int commitWithin;
 
   /**
    * @param commitWithinInSeconds all the changes to the server will be committed within the this time. 
@@ -97,7 +97,7 @@ public abstract class AbstractSolrServer extends LoggableObject implements SolrS
    * @param title the title of the facet
    * @param type the FacetType of the facet
    */
-  protected FacetCount convertFacet(FacetField field, String title, FacetType type) {
+  public FacetCount convertFacet(FacetField field, String title, FacetType type) {
     if (field != null) {
       FacetCount facetCount = new FacetCount()//
           .setName(field.getName())//
