@@ -12,8 +12,9 @@ public interface FacetedSearchParametersValidator {
 
   boolean facetFieldExists(String facetFieldName);
 
-  boolean sortParameterExists(SortParameter sortParameter);
+  boolean isValidRangeFacet(FacetParameter rangeFacet);
 
   boolean resultFieldExists(String fieldName);
 
+  boolean sortParameterExists(SortParameter sortParameter);
 }
