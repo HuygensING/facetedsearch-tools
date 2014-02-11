@@ -14,7 +14,6 @@ import com.google.common.collect.Lists;
 public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
   private String term = "*";
   private List<String> fullTextSearchFields;
-  private boolean caseSensitive = false;
   private List<String> facetFields = Lists.newArrayList();
   private List<FacetParameter> facetParameters = Lists.newArrayList();
   private Map<String, FacetInfo> facetInfoMap;
@@ -40,15 +39,6 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
   public T setFullTextSearchFields(List<String> fullTextSearchFields) {
     this.fullTextSearchFields = fullTextSearchFields;
     return (T) this;
-  }
-
-  public T setCaseSensitive(boolean matchCase) {
-    this.caseSensitive = matchCase;
-    return (T) this;
-  }
-
-  public boolean isCaseSensitive() {
-    return caseSensitive;
   }
 
   /**
