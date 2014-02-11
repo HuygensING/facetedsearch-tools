@@ -4,8 +4,12 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.core.CoreContainer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LocalSolrServer extends AbstractSolrServer {
+
+  private static final Logger LOG = LoggerFactory.getLogger(LocalSolrServer.class);
 
   public static final String SOLR_DIRECTORY = "solr";
   public static final String SOLR_CONFIG_FILE = "solrconfig.xml";
@@ -50,4 +54,8 @@ public class LocalSolrServer extends AbstractSolrServer {
     return server;
   }
 
+  @Override
+  protected Logger getLogger() {
+    return LOG;
+  }
 }

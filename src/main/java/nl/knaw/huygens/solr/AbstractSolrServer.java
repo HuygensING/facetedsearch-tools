@@ -4,20 +4,14 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
-import nl.knaw.huygens.LoggableObject;
-import nl.knaw.huygens.facetedsearch.model.FacetCount;
-import nl.knaw.huygens.facetedsearch.model.FacetCount.Option;
-import nl.knaw.huygens.facetedsearch.model.FacetType;
-
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.response.FacetField;
-import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrInputDocument;
+import org.slf4j.Logger;
 
-public abstract class AbstractSolrServer extends LoggableObject implements SolrServerWrapper {
+public abstract class AbstractSolrServer implements SolrServerWrapper {
   public static final String KEY_NUMFOUND = "numFound";
 
   private final int commitWithin;
@@ -49,17 +43,12 @@ public abstract class AbstractSolrServer extends LoggableObject implements SolrS
     }
   }
 
-  protected void optimizeAndCommit(SolrServer server) throws SolrServerException, IOException {
-    server.commit();
-    server.optimize();
-  }
-
   @Override
   public boolean ping() {
     try {
       return getSolrServer().ping().getStatus() == 0;
     } catch (Exception e) {
-      LOG.error("ping failed with '{}'", e.getMessage());
+      getLogger().error("ping failed with '{}'", e.getMessage());
       return false;
     }
   }
@@ -81,47 +70,6 @@ public abstract class AbstractSolrServer extends LoggableObject implements SolrS
       handleException(e);
     }
   }
-
-  /**
-   * Because all exceptions handled this way.
-   * @param e
-   * @throws IndexException
-   */
-  protected void handleException(Exception e) throws IndexException {
-    throw new IndexException(e.getMessage());
-  }
-
-  /**
-   * Returns a list of facetinfo with counts.
-   * @param field The FacetField to convert
-   * @param title the title of the facet
-   * @param type the FacetType of the facet
-   */
-  public FacetCount convertFacet(FacetField field, String title, FacetType type) {
-    if (field != null) {
-      FacetCount facetCount = new FacetCount()//
-          .setName(field.getName())//
-          .setTitle(title)//
-          .setType(type);
-      List<Count> counts = field.getValues();
-      if (counts != null) {
-        for (Count count : counts) {
-          Option option = new FacetCount.Option()//
-              .setName(count.getName())//
-              .setCount(count.getCount());
-          facetCount.addOption(option);
-        }
-      }
-      return facetCount;
-    }
-    return null;
-  }
-
-  /**
-   * Get the right {@code SolrServer} to perform an action on. 
-   * @return the {@code SolrServer}.
-   */
-  protected abstract SolrServer getSolrServer();
 
   @Override
   public void deleteById(String id) throws IndexException {
@@ -180,4 +128,25 @@ public abstract class AbstractSolrServer extends LoggableObject implements SolrS
 
   }
 
+  protected abstract Logger getLogger();
+
+  /**
+   * Get the right {@code SolrServer} to perform an action on. 
+   * @return the {@code SolrServer}.
+   */
+  protected abstract SolrServer getSolrServer();
+
+  /**
+   * Because all exceptions handled this way.
+   * @param e
+   * @throws IndexException
+   */
+  protected void handleException(Exception e) throws IndexException {
+    throw new IndexException(e.getMessage());
+  }
+
+  protected void optimizeAndCommit(SolrServer server) throws SolrServerException, IOException {
+    server.commit();
+    server.optimize();
+  }
 }
