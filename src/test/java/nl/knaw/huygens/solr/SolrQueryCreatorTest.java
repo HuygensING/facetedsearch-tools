@@ -14,6 +14,7 @@ import java.util.List;
 
 import nl.knaw.huygens.facetedsearch.model.DefaultFacetedSearchParameters;
 import nl.knaw.huygens.facetedsearch.model.FacetParameter;
+import nl.knaw.huygens.facetedsearch.model.HighlightingOptions;
 import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
 import nl.knaw.huygens.facetedsearch.model.QueryOptimizer;
 import nl.knaw.huygens.facetedsearch.model.SortDirection;
@@ -23,6 +24,7 @@ import nl.knaw.huygens.facetedsearch.model.WrongFacetValueException;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.apache.solr.client.solrj.SolrQuery.SortClause;
+import org.apache.solr.common.params.HighlightParams;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -307,6 +309,46 @@ public class SolrQueryCreatorTest {
     assertEquals(null, query.getRows());
     assertEquals(25, query.getFacetLimit());
     assertEquals(1, query.getFacetMinCount());
+  }
+
+  @Test
+  public void testCreateSearchQueryDefaultHightlightOptions() throws NoSuchFieldInIndexException, WrongFacetValueException {
+    searchParameters.setHighlightingOptions(new HighlightingOptions());
+    searchParameters.setTerm("test");
+    searchParameters.setFullTextSearchFields(Lists.newArrayList("fullTextSearchField"));
+
+    SolrQuery query = instance.createSearchQuery(searchParameters, validator);
+
+    assertEquals(true, query.getHighlight());
+    assertEquals(100, query.getHighlightFragsize());
+    assertArrayEquals(new String[] { "fullTextSearchField" }, query.getHighlightFields());
+    assertEquals(-1, (int) query.getInt(HighlightParams.MAX_CHARS));
+    assertEquals(false, query.getBool(HighlightParams.MERGE_CONTIGUOUS_FRAGMENTS));
+    assertEquals(null, query.get(HighlightParams.Q));// when it is filled it overrides the query.
+
+  }
+
+  @Test
+  public void testCreateSearchQueryCustomHightlightOptions() throws NoSuchFieldInIndexException, WrongFacetValueException {
+    searchParameters.setHighlightingOptions(new HighlightingOptions());
+    searchParameters.setTerm("test");
+    searchParameters.setFullTextSearchFields(Lists.newArrayList("fullTextSearchField"));
+
+    SolrQuery query = instance.createSearchQuery(searchParameters, validator);
+
+    assertEquals(true, query.getHighlight());
+    assertEquals(100, query.getHighlightFragsize());
+    assertArrayEquals(new String[] { "fullTextSearchField" }, query.getHighlightFields());
+    assertEquals(-1, (int) query.getInt(HighlightParams.MAX_CHARS));
+    assertEquals(false, query.getBool(HighlightParams.MERGE_CONTIGUOUS_FRAGMENTS));
+    assertEquals(null, query.get(HighlightParams.Q)); // when it is filled it overrides the query.
+  }
+
+  @Test
+  public void testCreateSearchQueryNoHightlightOptions() throws NoSuchFieldInIndexException, WrongFacetValueException {
+    SolrQuery query = instance.createSearchQuery(searchParameters, validator);
+
+    assertEquals(false, query.getHighlight());
   }
 
   private FacetParameter createFacetParameter(String name, List<String> values) {

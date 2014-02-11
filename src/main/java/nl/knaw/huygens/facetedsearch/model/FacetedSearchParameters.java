@@ -21,6 +21,7 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
   private boolean fuzzy = false;
   private List<SortParameter> sortParameters = Lists.newArrayList();
   private QueryOptimizer queryOptimizer;
+  private HighlightingOptions highlightingOptions;
 
   public T setTerm(final String term) {
     if (StringUtils.isNotBlank(term)) {
@@ -112,6 +113,14 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
 
   public void setQueryOptimizer(QueryOptimizer queryOptimizer) {
     this.queryOptimizer = queryOptimizer;
+  }
+
+  public HighlightingOptions getHighlightingOptions() {
+    return highlightingOptions;
+  }
+
+  public void setHighlightingOptions(HighlightingOptions highlightingOptions) {
+    this.highlightingOptions = highlightingOptions;
   }
 
 }

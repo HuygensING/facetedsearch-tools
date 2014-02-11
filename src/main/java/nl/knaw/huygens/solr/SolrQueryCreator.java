@@ -4,6 +4,7 @@ import java.util.List;
 
 import nl.knaw.huygens.facetedsearch.model.FacetParameter;
 import nl.knaw.huygens.facetedsearch.model.FacetedSearchParameters;
+import nl.knaw.huygens.facetedsearch.model.HighlightingOptions;
 import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
 import nl.knaw.huygens.facetedsearch.model.QueryOptimizer;
 import nl.knaw.huygens.facetedsearch.model.SortParameter;
@@ -13,6 +14,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.apache.solr.client.solrj.SolrQuery.SortClause;
+import org.apache.solr.common.params.HighlightParams;
 
 public class SolrQueryCreator {
 
@@ -23,19 +25,34 @@ public class SolrQueryCreator {
     query.setFields(validateResultFields(searchParameters, validator));
     query.addFacetField(validateFacetFields(searchParameters, validator));
     query = setSort(query, searchParameters, validator);
+    query = setHighlighting(query, searchParameters);
 
     optimizeQuery(query, searchParameters);
 
     return query;
   }
 
-  public <T extends FacetedSearchParameters<T>> SolrQuery optimizeQuery(SolrQuery query, FacetedSearchParameters<T> searchParameters) {
+  private <T extends FacetedSearchParameters<T>> SolrQuery optimizeQuery(SolrQuery query, FacetedSearchParameters<T> searchParameters) {
     QueryOptimizer optimizer = searchParameters.getQueryOptimizer();
 
     if (optimizer != null) {
       query.setRows(optimizer.getRows());
       query.setFacetLimit(optimizer.getFacetLimit());
       query.setFacetMinCount(optimizer.getFacetMinCount());
+    }
+
+    return query;
+  }
+
+  private <T extends FacetedSearchParameters<T>> SolrQuery setHighlighting(SolrQuery query, FacetedSearchParameters<T> searchParameters) {
+    HighlightingOptions highlightingOptions = searchParameters.getHighlightingOptions();
+
+    if (highlightingOptions != null && searchParameters.getFullTextSearchFields() != null) {
+      query.setHighlight(true);
+      query.setHighlightFragsize(highlightingOptions.getFragSize());
+      query.set(HighlightParams.MAX_CHARS, highlightingOptions.getMaxChars());
+      query.set(HighlightParams.MERGE_CONTIGUOUS_FRAGMENTS, highlightingOptions.isMergeContiguous());
+      query.set(HighlightParams.FIELDS, searchParameters.getFullTextSearchFields().toArray(new String[0]));
     }
 
     return query;
