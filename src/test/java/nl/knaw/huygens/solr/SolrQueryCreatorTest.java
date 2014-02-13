@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -27,6 +28,7 @@ import org.apache.solr.client.solrj.SolrQuery.SortClause;
 import org.apache.solr.common.params.FacetParams;
 import org.apache.solr.common.params.HighlightParams;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.collect.Lists;
@@ -275,6 +277,12 @@ public class SolrQueryCreatorTest {
     when(validator.facetFieldExists(anyString())).thenReturn(false);
 
     instance.createSearchQuery(searchParameters, validator);
+  }
+
+  @Ignore
+  @Test
+  public void testCreateSearchQueryRangeFacetFields() {
+    fail("Yet to be implemented.");
   }
 
   @Test
