@@ -7,6 +7,7 @@ import nl.knaw.huygens.facetedsearch.model.FacetedSearchParameters;
 import nl.knaw.huygens.facetedsearch.model.HighlightingOptions;
 import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
 import nl.knaw.huygens.facetedsearch.model.QueryOptimizer;
+import nl.knaw.huygens.facetedsearch.model.RangeParameter;
 import nl.knaw.huygens.facetedsearch.model.SortParameter;
 import nl.knaw.huygens.facetedsearch.model.WrongFacetValueException;
 
@@ -120,36 +121,13 @@ public class SolrQueryCreator {
   }
 
   private String formatFacetValue(FacetParameter facetParameter, FacetedSearchParametersValidator validator) throws WrongFacetValueException {
-    if (facetParameter.isRangeFacetParameter()) {
+    if (facetParameter instanceof RangeParameter) {
       if (!validator.isValidRangeFacet(facetParameter)) {
-        throw new WrongFacetValueException(facetParameter.getName(), facetParameter.getLowerLimit(), facetParameter.getUpperLimit());
+        throw new WrongFacetValueException(facetParameter.getName(), facetParameter.getQueryValue());
       }
-
-      return formatRangeFacetValue(facetParameter);
     }
-    return formatListFacetValue(facetParameter);
-  }
 
-  private String formatRangeFacetValue(FacetParameter facetParameter) {
-
-    return String.format("[%s TO %s]", facetParameter.getLowerLimit(), facetParameter.getUpperLimit());
-  }
-
-  private String formatListFacetValue(FacetParameter facetParameter) {
-    List<String> values = facetParameter.getValues();
-
-    if (values.size() > 1) {
-      StringBuilder builder = new StringBuilder();
-      builder.append("(");
-      String prefix = "";
-      for (String value : values) {
-        builder.append(prefix).append(SolrUtils.escapeFacetValue(value));
-        prefix = " ";
-      }
-      builder.append(")");
-      return builder.toString();
-    }
-    return SolrUtils.escapeFacetValue(values.get(0));
+    return facetParameter.getQueryValue();
   }
 
   private String formatTerm(String term, boolean fuzzy) {

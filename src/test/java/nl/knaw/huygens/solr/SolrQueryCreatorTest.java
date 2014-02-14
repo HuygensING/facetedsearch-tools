@@ -13,11 +13,13 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
+import nl.knaw.huygens.facetedsearch.model.DefaultFacetParameter;
 import nl.knaw.huygens.facetedsearch.model.DefaultFacetedSearchParameters;
 import nl.knaw.huygens.facetedsearch.model.FacetParameter;
 import nl.knaw.huygens.facetedsearch.model.HighlightingOptions;
 import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
 import nl.knaw.huygens.facetedsearch.model.QueryOptimizer;
+import nl.knaw.huygens.facetedsearch.model.RangeParameter;
 import nl.knaw.huygens.facetedsearch.model.SortDirection;
 import nl.knaw.huygens.facetedsearch.model.SortParameter;
 import nl.knaw.huygens.facetedsearch.model.WrongFacetValueException;
@@ -43,11 +45,11 @@ public class SolrQueryCreatorTest {
     searchParameters = new DefaultFacetedSearchParameters();
     instance = new SolrQueryCreator();
     validator = mock(FacetedSearchParametersValidator.class);
-    when(validator.facetExists(any(FacetParameter.class))).thenReturn(true);
+    when(validator.facetExists(any(DefaultFacetParameter.class))).thenReturn(true);
     when(validator.facetFieldExists(anyString())).thenReturn(true);
     when(validator.sortParameterExists(any(SortParameter.class))).thenReturn(true);
     when(validator.resultFieldExists(anyString())).thenReturn(true);
-    when(validator.isValidRangeFacet(any(FacetParameter.class))).thenReturn(true);
+    when(validator.isValidRangeFacet(any(DefaultFacetParameter.class))).thenReturn(true);
   }
 
   @Test
@@ -217,7 +219,7 @@ public class SolrQueryCreatorTest {
 
   @Test(expected = NoSuchFieldInIndexException.class)
   public void testCreateSearchQueryFacetDoesNotExist() throws NoSuchFieldInIndexException, WrongFacetValueException {
-    when(validator.facetExists(any(FacetParameter.class))).thenReturn(false);
+    when(validator.facetExists(any(DefaultFacetParameter.class))).thenReturn(false);
     searchParameters.setFacetValues(Lists.newArrayList(createFacetParameter("test", Lists.newArrayList("value"))));
 
     instance.createSearchQuery(searchParameters, validator);
@@ -228,7 +230,7 @@ public class SolrQueryCreatorTest {
   public void testCreateSearchQueryRangeFacetHasWrongValue() throws NoSuchFieldInIndexException, WrongFacetValueException {
     FacetParameter rangeFacet = createRangeFacetParameter("facetName", 20140101, 20130101);
     searchParameters.setFacetValues(Lists.newArrayList(rangeFacet));
-    when(validator.isValidRangeFacet(any(FacetParameter.class))).thenReturn(false);
+    when(validator.isValidRangeFacet(any(DefaultFacetParameter.class))).thenReturn(false);
 
     instance.createSearchQuery(searchParameters, validator);
 
@@ -362,17 +364,13 @@ public class SolrQueryCreatorTest {
   }
 
   private FacetParameter createFacetParameter(String name, List<String> values) {
-    FacetParameter facetParameter = new FacetParameter();
-    facetParameter.setName(name);
-    facetParameter.setValues(values);
+    DefaultFacetParameter facetParameter = new DefaultFacetParameter(name, values);
+
     return facetParameter;
   }
 
-  private FacetParameter createRangeFacetParameter(String facetName, int lowerLimit, int upperLimit) {
-    FacetParameter rangeFacet = new FacetParameter();
-    rangeFacet.setName(facetName);
-    rangeFacet.setLowerLimit(lowerLimit);
-    rangeFacet.setUpperLimit(upperLimit);
+  private FacetParameter createRangeFacetParameter(String name, int lowerLimit, int upperLimit) {
+    RangeParameter rangeFacet = new RangeParameter(name, lowerLimit, upperLimit);
 
     return rangeFacet;
   }

@@ -37,7 +37,7 @@ public class AbstractSolrServerBuilder {
   }
 
   private RemoteSolrServer createRemoteSolrServer() {
-    Preconditions.checkNotNull(coreName);
+    Preconditions.checkNotNull(solrUrl);
     return new RemoteSolrServer(solrUrl, commitWithinSeconds, queryCreator);
   }
 
