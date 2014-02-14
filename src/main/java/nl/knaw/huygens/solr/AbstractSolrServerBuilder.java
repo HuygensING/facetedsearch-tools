@@ -2,21 +2,23 @@ package nl.knaw.huygens.solr;
 
 import com.google.common.base.Preconditions;
 
-public class SolrServerWrapperBuilder {
+public class AbstractSolrServerBuilder {
 
   private final SolrServerType serverType;
   private final int commitWithinSeconds;
+  private final SolrQueryCreator queryCreator;
 
   private String coreName;
   private String solrDir;
   private String solrUrl;
 
-  public SolrServerWrapperBuilder(SolrServerType serverType, int commitWithinSeconds) {
+  public AbstractSolrServerBuilder(SolrServerType serverType, int commitWithinSeconds, SolrQueryCreator queryCreator) {
     this.serverType = serverType;
     this.commitWithinSeconds = commitWithinSeconds;
+    this.queryCreator = queryCreator;
   }
 
-  public SolrServerWrapper build() {
+  public AbstractSolrServer build() {
     switch (serverType) {
     case LOCAL:
       return createLocalSolrServer();
@@ -31,27 +33,27 @@ public class SolrServerWrapperBuilder {
     Preconditions.checkNotNull(coreName);
     Preconditions.checkNotNull(solrDir);
 
-    return new LocalSolrServer(solrDir, coreName, commitWithinSeconds);
+    return new LocalSolrServer(solrDir, coreName, commitWithinSeconds, queryCreator);
   }
 
   private RemoteSolrServer createRemoteSolrServer() {
     Preconditions.checkNotNull(coreName);
-    return new RemoteSolrServer(solrUrl, commitWithinSeconds);
+    return new RemoteSolrServer(solrUrl, commitWithinSeconds, queryCreator);
   }
 
-  public SolrServerWrapperBuilder setCoreName(String coreName) {
+  public AbstractSolrServerBuilder setCoreName(String coreName) {
     this.coreName = coreName;
 
     return this;
   }
 
-  public SolrServerWrapperBuilder setSolrDir(String solrDir) {
+  public AbstractSolrServerBuilder setSolrDir(String solrDir) {
     this.solrDir = solrDir;
 
     return this;
   }
 
-  public SolrServerWrapperBuilder setSolrUrl(String solrUrl) {
+  public AbstractSolrServerBuilder setSolrUrl(String solrUrl) {
     this.solrUrl = solrUrl;
 
     return this;

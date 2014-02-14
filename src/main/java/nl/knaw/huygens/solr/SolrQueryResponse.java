@@ -16,10 +16,10 @@ import org.apache.solr.common.SolrDocument;
 
 import com.google.common.collect.Lists;
 
-public class SolrQueryResponseHelper {
+public class SolrQueryResponse {
   private final QueryResponse queryResponse;
 
-  public SolrQueryResponseHelper(QueryResponse queryResponse) {
+  public SolrQueryResponse(QueryResponse queryResponse) {
     this.queryResponse = queryResponse;
   }
 

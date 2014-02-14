@@ -22,7 +22,7 @@ public class SolrQueryResponseHelperTest {
   public void testGetIds() {
     QueryResponse response = createDocumentsFilledQueryReponse(0L, 0.0F, 0L, "id1", "id2", "id3");
 
-    SolrQueryResponseHelper helper = new SolrQueryResponseHelper(response);
+    SolrQueryResponse helper = new SolrQueryResponse(response);
 
     assertEquals(Lists.newArrayList("id1", "id2", "id3"), helper.getIds());
   }
@@ -31,7 +31,7 @@ public class SolrQueryResponseHelperTest {
   public void testGetIdsNoneFound() {
     QueryResponse response = createDocumentsFilledQueryReponse(0L, 0.0F, 0L);
 
-    SolrQueryResponseHelper helper = new SolrQueryResponseHelper(response);
+    SolrQueryResponse helper = new SolrQueryResponse(response);
 
     assertEquals(Lists.newArrayList(), helper.getIds());
   }
@@ -76,7 +76,7 @@ public class SolrQueryResponseHelperTest {
   public void testGetDocuments() {
     QueryResponse response = createDocumentsFilledQueryReponse(0L, 0.0F, 0L, "id1", "id2", "id3");
 
-    SolrQueryResponseHelper helper = new SolrQueryResponseHelper(response);
+    SolrQueryResponse helper = new SolrQueryResponse(response);
 
     assertEquals(3, helper.getDocuments().size());
   }
@@ -85,7 +85,7 @@ public class SolrQueryResponseHelperTest {
   public void testGetDocumentsNoneFound() {
     QueryResponse response = createDocumentsFilledQueryReponse(0L, 0.0F, 0L);
 
-    SolrQueryResponseHelper helper = new SolrQueryResponseHelper(response);
+    SolrQueryResponse helper = new SolrQueryResponse(response);
 
     assertEquals(0, helper.getDocuments().size());
   }
@@ -95,7 +95,7 @@ public class SolrQueryResponseHelperTest {
     long numFound = 1000L;
     QueryResponse response = createDocumentsFilledQueryReponse(numFound, 0.0F, 0L, "id1", "id2", "id3");
 
-    SolrQueryResponseHelper helper = new SolrQueryResponseHelper(response);
+    SolrQueryResponse helper = new SolrQueryResponse(response);
 
     assertEquals(numFound, helper.getNumFound());
   }
@@ -105,7 +105,7 @@ public class SolrQueryResponseHelperTest {
     float maxScore = 5.5f;
     QueryResponse response = createDocumentsFilledQueryReponse(0L, maxScore, 0L, "id1", "id2", "id3");
 
-    SolrQueryResponseHelper helper = new SolrQueryResponseHelper(response);
+    SolrQueryResponse helper = new SolrQueryResponse(response);
 
     assertEquals(maxScore, helper.getMaxScore(), 0.0);
   }
@@ -115,7 +115,7 @@ public class SolrQueryResponseHelperTest {
     long start = 1000L;
     QueryResponse response = createDocumentsFilledQueryReponse(0L, 0.0F, start, "id1", "id2", "id3");
 
-    SolrQueryResponseHelper helper = new SolrQueryResponseHelper(response);
+    SolrQueryResponse helper = new SolrQueryResponse(response);
 
     assertEquals(start, helper.getStart());
   }

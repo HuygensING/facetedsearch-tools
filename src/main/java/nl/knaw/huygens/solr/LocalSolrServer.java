@@ -19,19 +19,19 @@ public class LocalSolrServer extends AbstractSolrServer {
   private CoreContainer container;
   private SolrServer server;
 
-  public LocalSolrServer(String solrDir, String coreName, int commitWithinInSeconds) {
-    super(commitWithinInSeconds);
+  public LocalSolrServer(String solrDir, String coreName, int commitWithinInSeconds, SolrQueryCreator queryCreator) {
+    super(commitWithinInSeconds, queryCreator);
     this.solrDir = StringUtils.defaultIfBlank(solrDir, SOLR_DIRECTORY);
     this.coreName = StringUtils.defaultIfBlank(coreName, "core1");
     createServer();
   }
 
   @Override
-  public void shutdown() throws IndexException {
+  public void shutdown() {
     try {
-      super.optimizeAndCommit(getSolrServer());
+      super.commitAndOptimize();
     } catch (Exception e) {
-      handleException(e);
+      getLogger().error("An exception occured during shutdown: {}", e.getMessage());
     } finally {
       if (container != null) {
         container.shutdown();
