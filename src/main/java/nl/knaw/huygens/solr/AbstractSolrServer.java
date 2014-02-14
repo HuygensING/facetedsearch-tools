@@ -15,7 +15,7 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrInputDocument;
 import org.slf4j.Logger;
 
-public abstract class AbstractSolrServer {
+public abstract class AbstractSolrServer implements SearchServer, IndexServer {
   public static final String KEY_NUMFOUND = "numFound";
 
   private final int commitWithin;
@@ -30,12 +30,10 @@ public abstract class AbstractSolrServer {
     this.queryCreator = queryCreator;
   }
 
-  /**
-   * Adds a document to the index, replacing a previously added document
-   * with the same unique id.
-   * @param doc the document to add.
-   * @throws IndexException if an error occurs.
+  /* (non-Javadoc)
+   * @see nl.knaw.huygens.solr.IndexServer#add(org.apache.solr.common.SolrInputDocument)
    */
+  @Override
   public void add(SolrInputDocument doc) throws IndexException {
     try {
       getSolrServer().add(doc, commitWithin);
@@ -44,12 +42,10 @@ public abstract class AbstractSolrServer {
     }
   }
 
-  /**
-   * Adds a document to the index, replacing a previously added document
-   * with the same unique id.
-   * @param docs the collection of documents to add.
-   * @throws IndexException if an error occurs.
+  /* (non-Javadoc)
+   * @see nl.knaw.huygens.solr.IndexServer#add(java.util.Collection)
    */
+  @Override
   public void add(Collection<SolrInputDocument> docs) throws IndexException {
     try {
       getSolrServer().add(docs, commitWithin);
@@ -58,10 +54,10 @@ public abstract class AbstractSolrServer {
     }
   }
 
-  /**
-   * Commit all the currently added items.
-   * @throws IndexException if an error occurs.
+  /* (non-Javadoc)
+   * @see nl.knaw.huygens.solr.IndexServer#commit()
    */
+  @Override
   public void commit() throws IndexException {
     try {
       getSolrServer().commit();
@@ -72,11 +68,10 @@ public abstract class AbstractSolrServer {
     }
   }
 
-  /**
-   * Delete an indexed item with the {@code id}.
-   * @param id the id of the item to delete.
-   * @throws IndexException if an error occurs.
+  /* (non-Javadoc)
+   * @see nl.knaw.huygens.solr.IndexServer#deleteById(java.lang.String)
    */
+  @Override
   public void deleteById(String id) throws IndexException {
     try {
       getSolrServer().deleteById(id, commitWithin);
@@ -87,11 +82,10 @@ public abstract class AbstractSolrServer {
     }
   }
 
-  /**
-   * Delete all indexed items with id's in the list {@code ids}.
-   * @param ids the id's to delete.
-   * @throws IndexException if an error occurs.
+  /* (non-Javadoc)
+   * @see nl.knaw.huygens.solr.IndexServer#deleteById(java.util.List)
    */
+  @Override
   public void deleteById(List<String> ids) throws IndexException {
     try {
       getSolrServer().deleteById(ids, commitWithin);
@@ -103,11 +97,10 @@ public abstract class AbstractSolrServer {
 
   }
 
-  /**
-   * Delete all items found by the {@code query}.
-   * @param query the query that is used to find the items to delete.
-   * @throws IndexException if an error occurs.
+  /* (non-Javadoc)
+   * @see nl.knaw.huygens.solr.IndexServer#deleteByQuery(java.lang.String)
    */
+  @Override
   public void deleteByQuery(String query) throws IndexException {
     try {
       getSolrServer().deleteByQuery(query, commitWithin);
@@ -119,10 +112,10 @@ public abstract class AbstractSolrServer {
 
   }
 
-  /**
-   * Clear the server.
-   * @throws IndexException if an error occurs.
+  /* (non-Javadoc)
+   * @see nl.knaw.huygens.solr.IndexServer#empty()
    */
+  @Override
   public void empty() throws IndexException {
     try {
       getSolrServer().deleteByQuery("*:*", commitWithin);
@@ -131,11 +124,10 @@ public abstract class AbstractSolrServer {
     }
   }
 
-  /**
-   * Checks the running status of the server.
-   * @return the boolean value <code>true</code> if everything is OK,
-   * <code>false</code> otherwise.
+  /* (non-Javadoc)
+   * @see nl.knaw.huygens.solr.IndexServer#ping()
    */
+  @Override
   public boolean ping() {
     try {
       return getSolrServer().ping().getStatus() == 0;
@@ -145,14 +137,10 @@ public abstract class AbstractSolrServer {
     }
   }
 
-  /**
-   * Search the index represented by {@code coreName}.
-   * @param searchParameters that should be search.
-   * @return the result of the query, that is executed on the core.
-   * @throws IndexException if an error occurs.
-   * @throws WrongFacetValueException when the {@code searchParameters} contain a facet with a wrong value.
-   * @throws NoSuchFieldInIndexException when the {@code searchParameters} contain a field or a facet that is not recognized.
+  /* (non-Javadoc)
+   * @see nl.knaw.huygens.solr.SearchServer#search(nl.knaw.huygens.facetedsearch.model.FacetedSearchParameters, nl.knaw.huygens.solr.FacetedSearchParametersValidator)
    */
+  @Override
   public <T extends FacetedSearchParameters<T>> SolrQueryResponse search(FacetedSearchParameters<T> searchParameters, FacetedSearchParametersValidator validator) throws IndexException,
       NoSuchFieldInIndexException, WrongFacetValueException {
 
@@ -168,9 +156,10 @@ public abstract class AbstractSolrServer {
     return new SolrQueryResponse(response);
   }
 
-  /**
-   * Shutdown the server.
+  /* (non-Javadoc)
+   * @see nl.knaw.huygens.solr.IndexServer#shutdown()
    */
+  @Override
   public void shutdown() {
     try {
       commitAndOptimize();

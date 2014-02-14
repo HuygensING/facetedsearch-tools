@@ -18,7 +18,7 @@ public class AbstractSolrServerBuilder {
     this.queryCreator = queryCreator;
   }
 
-  public AbstractSolrServer build() {
+  public SearchServer build() {
     switch (serverType) {
     case LOCAL:
       return createLocalSolrServer();
