@@ -3,11 +3,8 @@ package nl.knaw.huygens.solr;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
-public class SolrCoreWrapper {
+public interface SolrCoreWrapper {
 
-  public QueryResponse query(SolrQuery query) {
-    // TODO Auto-generated method stub
-    return null;
-  }
+  QueryResponse search(SolrQuery query) throws FacetedSearchException;
 
 }

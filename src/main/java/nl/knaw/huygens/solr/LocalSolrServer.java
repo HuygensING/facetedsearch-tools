@@ -19,8 +19,8 @@ public class LocalSolrServer extends AbstractSolrServer {
   private CoreContainer container;
   private SolrServer server;
 
-  public LocalSolrServer(String solrDir, String coreName, int commitWithinInSeconds, SolrQueryCreator queryCreator) {
-    super(commitWithinInSeconds, queryCreator);
+  public LocalSolrServer(String solrDir, String coreName, int commitWithinInSeconds) {
+    super(commitWithinInSeconds);
     this.solrDir = StringUtils.defaultIfBlank(solrDir, SOLR_DIRECTORY);
     this.coreName = StringUtils.defaultIfBlank(coreName, "core1");
     createServer();
@@ -58,4 +58,5 @@ public class LocalSolrServer extends AbstractSolrServer {
   protected Logger getLogger() {
     return LOG;
   }
+
 }

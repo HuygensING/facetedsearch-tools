@@ -12,7 +12,6 @@ import static org.mockito.Mockito.verify;
 import java.io.IOException;
 import java.util.List;
 
-import nl.knaw.huygens.facetedsearch.model.DefaultFacetedSearchParameters;
 import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
 import nl.knaw.huygens.facetedsearch.model.WrongFacetValueException;
 
@@ -33,15 +32,13 @@ public class AbstractSolrServerTest {
   private AbstractSolrServer instance;
   private SolrServer solrServer;
   private Logger logger;
-  private SolrQueryCreator queryCreator;
 
   @Before
   public void setUp() {
     solrServer = mock(SolrServer.class);
     logger = mock(Logger.class);
-    queryCreator = mock(SolrQueryCreator.class);
 
-    instance = new AbstractSolrServer(SECONDS_TO_COMMIT, queryCreator) {
+    instance = new AbstractSolrServer(SECONDS_TO_COMMIT) {
 
       @Override
       protected SolrServer getSolrServer() {
@@ -56,7 +53,7 @@ public class AbstractSolrServerTest {
   }
 
   @Test
-  public void testAdd() throws IndexException, SolrServerException, IOException {
+  public void testAdd() throws FacetedSearchException, SolrServerException, IOException {
     SolrInputDocument doc = new SolrInputDocument();
 
     instance.add(doc);
@@ -64,8 +61,8 @@ public class AbstractSolrServerTest {
     verify(solrServer).add(doc, TIME_TO_COMMIT);
   }
 
-  @Test(expected = IndexException.class)
-  public void testAddSolrServerException() throws IndexException, SolrServerException, IOException {
+  @Test(expected = FacetedSearchException.class)
+  public void testAddSolrServerException() throws FacetedSearchException, SolrServerException, IOException {
     SolrInputDocument doc = new SolrInputDocument();
     doThrow(SolrServerException.class).when(solrServer).add(doc, TIME_TO_COMMIT);
 
@@ -76,8 +73,8 @@ public class AbstractSolrServerTest {
     }
   }
 
-  @Test(expected = IndexException.class)
-  public void testAddIOException() throws IndexException, SolrServerException, IOException {
+  @Test(expected = FacetedSearchException.class)
+  public void testAddIOException() throws FacetedSearchException, SolrServerException, IOException {
     SolrInputDocument doc = new SolrInputDocument();
     doThrow(IOException.class).when(solrServer).add(doc, TIME_TO_COMMIT);
 
@@ -89,7 +86,7 @@ public class AbstractSolrServerTest {
   }
 
   @Test
-  public void testAddMultiple() throws IndexException, SolrServerException, IOException {
+  public void testAddMultiple() throws FacetedSearchException, SolrServerException, IOException {
 
     List<SolrInputDocument> docs = Lists.newArrayList(new SolrInputDocument(), new SolrInputDocument());
 
@@ -98,8 +95,8 @@ public class AbstractSolrServerTest {
     verify(solrServer).add(docs, TIME_TO_COMMIT);
   }
 
-  @Test(expected = IndexException.class)
-  public void testAddMultipleSolrServerException() throws IndexException, SolrServerException, IOException {
+  @Test(expected = FacetedSearchException.class)
+  public void testAddMultipleSolrServerException() throws FacetedSearchException, SolrServerException, IOException {
     List<SolrInputDocument> docs = Lists.newArrayList(new SolrInputDocument(), new SolrInputDocument());
     doThrow(SolrServerException.class).when(solrServer).add(docs, TIME_TO_COMMIT);
 
@@ -110,8 +107,8 @@ public class AbstractSolrServerTest {
     }
   }
 
-  @Test(expected = IndexException.class)
-  public void testAddMultipleIOException() throws IndexException, SolrServerException, IOException {
+  @Test(expected = FacetedSearchException.class)
+  public void testAddMultipleIOException() throws FacetedSearchException, SolrServerException, IOException {
     List<SolrInputDocument> docs = Lists.newArrayList(new SolrInputDocument(), new SolrInputDocument());
     doThrow(IOException.class).when(solrServer).add(docs, TIME_TO_COMMIT);
 
@@ -123,14 +120,14 @@ public class AbstractSolrServerTest {
   }
 
   @Test
-  public void testCommit() throws IndexException, SolrServerException, IOException {
+  public void testCommit() throws FacetedSearchException, SolrServerException, IOException {
     instance.commit();
 
     verify(solrServer).commit();
   }
 
-  @Test(expected = IndexException.class)
-  public void testCommitSolrServerException() throws IndexException, SolrServerException, IOException {
+  @Test(expected = FacetedSearchException.class)
+  public void testCommitSolrServerException() throws FacetedSearchException, SolrServerException, IOException {
     doThrow(SolrServerException.class).when(solrServer).commit();
 
     try {
@@ -140,8 +137,8 @@ public class AbstractSolrServerTest {
     }
   }
 
-  @Test(expected = IndexException.class)
-  public void testCommitIOException() throws IndexException, SolrServerException, IOException {
+  @Test(expected = FacetedSearchException.class)
+  public void testCommitIOException() throws FacetedSearchException, SolrServerException, IOException {
     doThrow(IOException.class).when(solrServer).commit();
 
     try {
@@ -152,15 +149,15 @@ public class AbstractSolrServerTest {
   }
 
   @Test
-  public void testDeleteById() throws IndexException, SolrServerException, IOException {
+  public void testDeleteById() throws FacetedSearchException, SolrServerException, IOException {
     String id = "id";
     instance.deleteById(id);
 
     verify(solrServer).deleteById(id, TIME_TO_COMMIT);
   }
 
-  @Test(expected = IndexException.class)
-  public void testDeleteByIdSolrServerException() throws IndexException, SolrServerException, IOException {
+  @Test(expected = FacetedSearchException.class)
+  public void testDeleteByIdSolrServerException() throws FacetedSearchException, SolrServerException, IOException {
     String id = "id";
     doThrow(SolrServerException.class).when(solrServer).deleteById(id, TIME_TO_COMMIT);
 
@@ -171,8 +168,8 @@ public class AbstractSolrServerTest {
     }
   }
 
-  @Test(expected = IndexException.class)
-  public void testDeleteByIdIOException() throws IndexException, SolrServerException, IOException {
+  @Test(expected = FacetedSearchException.class)
+  public void testDeleteByIdIOException() throws FacetedSearchException, SolrServerException, IOException {
     String id = "id";
     doThrow(IOException.class).when(solrServer).deleteById(id, TIME_TO_COMMIT);
 
@@ -184,15 +181,15 @@ public class AbstractSolrServerTest {
   }
 
   @Test
-  public void testDeleteByIdMultiple() throws IndexException, SolrServerException, IOException {
+  public void testDeleteByIdMultiple() throws FacetedSearchException, SolrServerException, IOException {
     List<String> ids = Lists.newArrayList("id1", "id2", "id3");
     instance.deleteById(ids);
 
     verify(solrServer).deleteById(ids, TIME_TO_COMMIT);
   }
 
-  @Test(expected = IndexException.class)
-  public void testDeleteByIdMultipleSolrServerException() throws IndexException, SolrServerException, IOException {
+  @Test(expected = FacetedSearchException.class)
+  public void testDeleteByIdMultipleSolrServerException() throws FacetedSearchException, SolrServerException, IOException {
     List<String> ids = Lists.newArrayList("id1", "id2", "id3");
     doThrow(SolrServerException.class).when(solrServer).deleteById(ids, TIME_TO_COMMIT);
 
@@ -203,8 +200,8 @@ public class AbstractSolrServerTest {
     }
   }
 
-  @Test(expected = IndexException.class)
-  public void testDeleteByIdMultitpleIOException() throws IndexException, SolrServerException, IOException {
+  @Test(expected = FacetedSearchException.class)
+  public void testDeleteByIdMultitpleIOException() throws FacetedSearchException, SolrServerException, IOException {
     List<String> ids = Lists.newArrayList("id1", "id2", "id3");
     doThrow(IOException.class).when(solrServer).deleteById(ids, TIME_TO_COMMIT);
 
@@ -216,7 +213,7 @@ public class AbstractSolrServerTest {
   }
 
   @Test
-  public void testDeleteByQuery() throws IndexException, SolrServerException, IOException {
+  public void testDeleteByQuery() throws FacetedSearchException, SolrServerException, IOException {
     String query = "test:test";
 
     instance.deleteByQuery(query);
@@ -225,8 +222,8 @@ public class AbstractSolrServerTest {
 
   }
 
-  @Test(expected = IndexException.class)
-  public void testDeleteByQuerySolrServerException() throws IndexException, SolrServerException, IOException {
+  @Test(expected = FacetedSearchException.class)
+  public void testDeleteByQuerySolrServerException() throws FacetedSearchException, SolrServerException, IOException {
     String query = "test:test";
     doThrow(SolrServerException.class).when(solrServer).deleteByQuery(query, TIME_TO_COMMIT);
 
@@ -237,8 +234,8 @@ public class AbstractSolrServerTest {
     }
   }
 
-  @Test(expected = IndexException.class)
-  public void testDeleteByQueryIOException() throws IndexException, SolrServerException, IOException {
+  @Test(expected = FacetedSearchException.class)
+  public void testDeleteByQueryIOException() throws FacetedSearchException, SolrServerException, IOException {
     String query = "test:test";
     doThrow(IOException.class).when(solrServer).deleteByQuery(query, TIME_TO_COMMIT);
 
@@ -250,14 +247,14 @@ public class AbstractSolrServerTest {
   }
 
   @Test
-  public void testEmpty() throws IndexException, SolrServerException, IOException {
+  public void testEmpty() throws FacetedSearchException, SolrServerException, IOException {
     instance.empty();
 
     verify(solrServer).deleteByQuery("*:*", TIME_TO_COMMIT);
   }
 
-  @Test(expected = IndexException.class)
-  public void testEmptySolrServerException() throws IndexException, SolrServerException, IOException {
+  @Test(expected = FacetedSearchException.class)
+  public void testEmptySolrServerException() throws FacetedSearchException, SolrServerException, IOException {
     doThrow(SolrServerException.class).when(solrServer).deleteByQuery("*:*", TIME_TO_COMMIT);
 
     try {
@@ -267,8 +264,8 @@ public class AbstractSolrServerTest {
     }
   }
 
-  @Test(expected = IndexException.class)
-  public void testEmptyIOException() throws IndexException, SolrServerException, IOException {
+  @Test(expected = FacetedSearchException.class)
+  public void testEmptyIOException() throws FacetedSearchException, SolrServerException, IOException {
     doThrow(IOException.class).when(solrServer).deleteByQuery("*:*", TIME_TO_COMMIT);
 
     try {
@@ -285,7 +282,7 @@ public class AbstractSolrServerTest {
 
     try {
       instance.handleException(ex);
-    } catch (IndexException e) {
+    } catch (FacetedSearchException e) {
       assertEquals(message, e.getMessage());
     }
 
@@ -383,62 +380,30 @@ public class AbstractSolrServerTest {
   }
 
   @Test
-  public void testSearch() throws IndexException, NoSuchFieldInIndexException, WrongFacetValueException, SolrServerException {
-    DefaultFacetedSearchParameters searchParameters = mock(DefaultFacetedSearchParameters.class);
-    FacetedSearchParametersValidator validator = mock(FacetedSearchParametersValidator.class);
+  public void testSearch() throws FacetedSearchException, NoSuchFieldInIndexException, WrongFacetValueException, SolrServerException {
+    SolrQuery queryMock = mock(SolrQuery.class);
 
-    instance.search(searchParameters, validator);
+    instance.search(queryMock);
 
-    InOrder inOrder = inOrder(queryCreator, solrServer);
-    inOrder.verify(queryCreator).createSearchQuery(searchParameters, validator);
-    inOrder.verify(solrServer).query(any(SolrQuery.class));
+    verify(solrServer).query(queryMock);
   }
 
-  @Test(expected = IndexException.class)
-  public void testSearchSolrServerException() throws NoSuchFieldInIndexException, WrongFacetValueException, SolrServerException, IndexException {
+  @Test(expected = FacetedSearchException.class)
+  public void testSearchSolrServerException() throws NoSuchFieldInIndexException, WrongFacetValueException, SolrServerException, FacetedSearchException {
     doThrow(SolrServerException.class).when(solrServer).query(any(SolrQuery.class));
-    DefaultFacetedSearchParameters searchParameters = mock(DefaultFacetedSearchParameters.class);
-    FacetedSearchParametersValidator validator = mock(FacetedSearchParametersValidator.class);
+
+    SolrQuery queryMock = mock(SolrQuery.class);
 
     try {
-      instance.search(searchParameters, validator);
+      instance.search(queryMock);
     } finally {
-      InOrder inOrder = inOrder(queryCreator, solrServer);
-      inOrder.verify(queryCreator).createSearchQuery(searchParameters, validator);
-      inOrder.verify(solrServer).query(any(SolrQuery.class));
-    }
-  }
 
-  @Test(expected = NoSuchFieldInIndexException.class)
-  public void testSearchNoSuchFieldInIndexException() throws NoSuchFieldInIndexException, WrongFacetValueException, IndexException, SolrServerException {
-    doThrow(NoSuchFieldInIndexException.class).when(queryCreator).createSearchQuery(any(DefaultFacetedSearchParameters.class), any(FacetedSearchParametersValidator.class));
-    DefaultFacetedSearchParameters searchParameters = mock(DefaultFacetedSearchParameters.class);
-    FacetedSearchParametersValidator validator = mock(FacetedSearchParametersValidator.class);
-
-    try {
-      instance.search(searchParameters, validator);
-    } finally {
-      verify(queryCreator).createSearchQuery(searchParameters, validator);
-      verify(solrServer, never()).query(any(SolrQuery.class));
-    }
-  }
-
-  @Test(expected = WrongFacetValueException.class)
-  public void testSearchWrongFacetValueException() throws NoSuchFieldInIndexException, WrongFacetValueException, IndexException, SolrServerException {
-    doThrow(WrongFacetValueException.class).when(queryCreator).createSearchQuery(any(DefaultFacetedSearchParameters.class), any(FacetedSearchParametersValidator.class));
-    DefaultFacetedSearchParameters searchParameters = mock(DefaultFacetedSearchParameters.class);
-    FacetedSearchParametersValidator validator = mock(FacetedSearchParametersValidator.class);
-
-    try {
-      instance.search(searchParameters, validator);
-    } finally {
-      verify(queryCreator).createSearchQuery(searchParameters, validator);
-      verify(solrServer, never()).query(any(SolrQuery.class));
+      verify(solrServer).query(any(SolrQuery.class));
     }
   }
 
   @Test
-  public void testShutdown() throws SolrServerException, IOException {
+  public void testShutdown() throws SolrServerException, IOException, FacetedSearchException {
 
     instance.shutdown();
 
@@ -448,8 +413,8 @@ public class AbstractSolrServerTest {
 
   }
 
-  @Test
-  public void testShutdownSolrException() throws SolrServerException, IOException {
+  @Test(expected = FacetedSearchException.class)
+  public void testShutdownSolrException() throws SolrServerException, IOException, FacetedSearchException {
     doThrow(SolrServerException.class).when(solrServer).commit();
     instance.shutdown();
 
@@ -458,8 +423,8 @@ public class AbstractSolrServerTest {
     inOrder.verify(logger).error(anyString(), anyString());
   }
 
-  @Test()
-  public void testShutdownIOException() throws SolrServerException, IOException {
+  @Test(expected = FacetedSearchException.class)
+  public void testShutdownIOException() throws SolrServerException, IOException, FacetedSearchException {
     doThrow(IOException.class).when(solrServer).commit();
     instance.shutdown();
 

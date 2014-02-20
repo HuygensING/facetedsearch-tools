@@ -1,9 +1,9 @@
 package nl.knaw.huygens.solr;
 
-public class IndexException extends Exception {
+public class FacetedSearchException extends Exception {
   private static final long serialVersionUID = 1L;
 
-  public IndexException(String message) {
+  public FacetedSearchException(String message) {
     super(message);
   }
 }

@@ -4,10 +4,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
-import nl.knaw.huygens.facetedsearch.model.FacetedSearchParameters;
-import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
-import nl.knaw.huygens.facetedsearch.model.WrongFacetValueException;
-
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -15,26 +11,26 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrInputDocument;
 import org.slf4j.Logger;
 
-public abstract class AbstractSolrServer implements SearchServer, IndexServer {
+public abstract class AbstractSolrServer implements SolrCoreWrapper {
   public static final String KEY_NUMFOUND = "numFound";
 
   private final int commitWithin;
-  private final SolrQueryCreator queryCreator;
 
   /**
    * @param commitWithinInSeconds all the changes to the server will be committed within the this time. 
    */
-  public AbstractSolrServer(int commitWithinInSeconds, SolrQueryCreator queryCreator) {
+  public AbstractSolrServer(int commitWithinInSeconds) {
     // solr uses commits within milliseconds.
     this.commitWithin = commitWithinInSeconds * 1000;
-    this.queryCreator = queryCreator;
   }
 
-  /* (non-Javadoc)
-   * @see nl.knaw.huygens.solr.IndexServer#add(org.apache.solr.common.SolrInputDocument)
+  /**
+   * Adds a document to the index, replacing a previously added document
+   * with the same unique id.
+   * @param doc the document to add.
+   * @throws FacetedSearchException if an error occurs.
    */
-  @Override
-  public void add(SolrInputDocument doc) throws IndexException {
+  public void add(SolrInputDocument doc) throws FacetedSearchException {
     try {
       getSolrServer().add(doc, commitWithin);
     } catch (Exception e) {
@@ -42,11 +38,13 @@ public abstract class AbstractSolrServer implements SearchServer, IndexServer {
     }
   }
 
-  /* (non-Javadoc)
-   * @see nl.knaw.huygens.solr.IndexServer#add(java.util.Collection)
+  /**
+   * Adds a document to the index, replacing a previously added document
+   * with the same unique id.
+   * @param docs the collection of documents to add.
+   * @throws FacetedSearchException if an error occurs.
    */
-  @Override
-  public void add(Collection<SolrInputDocument> docs) throws IndexException {
+  public void add(Collection<SolrInputDocument> docs) throws FacetedSearchException {
     try {
       getSolrServer().add(docs, commitWithin);
     } catch (Exception e) {
@@ -54,11 +52,11 @@ public abstract class AbstractSolrServer implements SearchServer, IndexServer {
     }
   }
 
-  /* (non-Javadoc)
-   * @see nl.knaw.huygens.solr.IndexServer#commit()
+  /**
+   * Commit all the currently added items.
+   * @throws FacetedSearchException if an error occurs.
    */
-  @Override
-  public void commit() throws IndexException {
+  public void commit() throws FacetedSearchException {
     try {
       getSolrServer().commit();
     } catch (SolrServerException e) {
@@ -68,11 +66,12 @@ public abstract class AbstractSolrServer implements SearchServer, IndexServer {
     }
   }
 
-  /* (non-Javadoc)
-   * @see nl.knaw.huygens.solr.IndexServer#deleteById(java.lang.String)
+  /**
+   * Delete an indexed item with the {@code id}.
+   * @param id the id of the item to delete.
+   * @throws FacetedSearchException if an error occurs.
    */
-  @Override
-  public void deleteById(String id) throws IndexException {
+  public void deleteById(String id) throws FacetedSearchException {
     try {
       getSolrServer().deleteById(id, commitWithin);
     } catch (SolrServerException e) {
@@ -82,11 +81,12 @@ public abstract class AbstractSolrServer implements SearchServer, IndexServer {
     }
   }
 
-  /* (non-Javadoc)
-   * @see nl.knaw.huygens.solr.IndexServer#deleteById(java.util.List)
+  /**
+   * Delete all indexed items with id's in the list {@code ids}.
+   * @param ids the id's to delete.
+   * @throws FacetedSearchException if an error occurs.
    */
-  @Override
-  public void deleteById(List<String> ids) throws IndexException {
+  public void deleteById(List<String> ids) throws FacetedSearchException {
     try {
       getSolrServer().deleteById(ids, commitWithin);
     } catch (SolrServerException e) {
@@ -97,11 +97,12 @@ public abstract class AbstractSolrServer implements SearchServer, IndexServer {
 
   }
 
-  /* (non-Javadoc)
-   * @see nl.knaw.huygens.solr.IndexServer#deleteByQuery(java.lang.String)
+  /**
+   * Delete all items found by the {@code query}.
+   * @param query the query that is used to find the items to delete.
+   * @throws FacetedSearchException if an error occurs.
    */
-  @Override
-  public void deleteByQuery(String query) throws IndexException {
+  public void deleteByQuery(String query) throws FacetedSearchException {
     try {
       getSolrServer().deleteByQuery(query, commitWithin);
     } catch (SolrServerException e) {
@@ -112,11 +113,11 @@ public abstract class AbstractSolrServer implements SearchServer, IndexServer {
 
   }
 
-  /* (non-Javadoc)
-   * @see nl.knaw.huygens.solr.IndexServer#empty()
+  /**
+   * Clear the server.
+   * @throws FacetedSearchException if an error occurs.
    */
-  @Override
-  public void empty() throws IndexException {
+  public void empty() throws FacetedSearchException {
     try {
       getSolrServer().deleteByQuery("*:*", commitWithin);
     } catch (Exception e) {
@@ -124,10 +125,11 @@ public abstract class AbstractSolrServer implements SearchServer, IndexServer {
     }
   }
 
-  /* (non-Javadoc)
-   * @see nl.knaw.huygens.solr.IndexServer#ping()
+  /**
+   * Checks the running status of the server.
+   * @return the boolean value <code>true</code> if everything is OK,
+   * <code>false</code> otherwise.
    */
-  @Override
   public boolean ping() {
     try {
       return getSolrServer().ping().getStatus() == 0;
@@ -137,34 +139,26 @@ public abstract class AbstractSolrServer implements SearchServer, IndexServer {
     }
   }
 
-  /* (non-Javadoc)
-   * @see nl.knaw.huygens.solr.SearchServer#search(nl.knaw.huygens.facetedsearch.model.FacetedSearchParameters, nl.knaw.huygens.solr.FacetedSearchParametersValidator)
-   */
   @Override
-  public <T extends FacetedSearchParameters<T>> SolrQueryResponse search(FacetedSearchParameters<T> searchParameters, FacetedSearchParametersValidator validator) throws IndexException,
-      NoSuchFieldInIndexException, WrongFacetValueException {
-
-    QueryResponse response = null;
-
-    SolrQuery query = queryCreator.createSearchQuery(searchParameters, validator);
-
+  public QueryResponse search(SolrQuery query) throws FacetedSearchException {
     try {
-      response = getSolrServer().query(query);
+      return getSolrServer().query(query);
     } catch (SolrServerException e) {
-      handleException(e);
+      getLogger().error("An exception occured during shutdown: {}", e.getMessage());
+      throw new FacetedSearchException(e.getMessage());
     }
-    return new SolrQueryResponse(response);
   }
 
-  /* (non-Javadoc)
-   * @see nl.knaw.huygens.solr.IndexServer#shutdown()
+  /**
+   * Shutdown the server.
+   * @throws FacetedSearchException 
    */
-  @Override
-  public void shutdown() {
+  public void shutdown() throws FacetedSearchException {
     try {
       commitAndOptimize();
     } catch (Exception e) {
       getLogger().error("An exception occured during shutdown: {}", e.getMessage());
+      handleException(e);
     }
   }
 
@@ -179,10 +173,10 @@ public abstract class AbstractSolrServer implements SearchServer, IndexServer {
   /**
    * Because all exceptions handled this way.
    * @param e
-   * @throws IndexException
+   * @throws FacetedSearchException
    */
-  protected void handleException(Exception e) throws IndexException {
-    throw new IndexException(e.getMessage());
+  protected void handleException(Exception e) throws FacetedSearchException {
+    throw new FacetedSearchException(e.getMessage());
   }
 
   protected void commitAndOptimize() throws SolrServerException, IOException {

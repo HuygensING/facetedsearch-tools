@@ -24,9 +24,17 @@ public class FacetedSearchLibrary {
     this.searchResultBuilder = new SearchResultBuilder();
   }
 
-  public <T extends FacetedSearchParameters<T>> SearchResult search(FacetedSearchParameters<T> searchParameters) throws NoSuchFieldInIndexException, WrongFacetValueException {
+  /**
+   * Search the index.
+   * @param searchParameters that should be search.
+   * @return the result of the query, that is executed on the core.
+   * @throws WrongFacetValueException when the {@code searchParameters} contain a facet with a wrong value.
+   * @throws NoSuchFieldInIndexException when the {@code searchParameters} contain a field or a facet that is not recognized.
+   * @throws FacetedSearchException when the search fails to execute.
+   */
+  public <T extends FacetedSearchParameters<T>> SearchResult search(FacetedSearchParameters<T> searchParameters) throws NoSuchFieldInIndexException, WrongFacetValueException, FacetedSearchException {
     SolrQuery query = queryCreator.createSearchQuery(searchParameters, null);
-    QueryResponse queryResponse = solrCore.query(query);
+    QueryResponse queryResponse = solrCore.search(query);
     SearchResult searchResult = searchResultBuilder.build(queryResponse);
 
     return searchResult;

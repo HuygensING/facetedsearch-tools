@@ -6,19 +6,17 @@ public class AbstractSolrServerBuilder {
 
   private final SolrServerType serverType;
   private final int commitWithinSeconds;
-  private final SolrQueryCreator queryCreator;
 
   private String coreName;
   private String solrDir;
   private String solrUrl;
 
-  public AbstractSolrServerBuilder(SolrServerType serverType, int commitWithinSeconds, SolrQueryCreator queryCreator) {
+  public AbstractSolrServerBuilder(SolrServerType serverType, int commitWithinSeconds) {
     this.serverType = serverType;
     this.commitWithinSeconds = commitWithinSeconds;
-    this.queryCreator = queryCreator;
   }
 
-  public SearchServer build() {
+  public SolrCoreWrapper build() {
     switch (serverType) {
     case LOCAL:
       return createLocalSolrServer();
@@ -33,12 +31,12 @@ public class AbstractSolrServerBuilder {
     Preconditions.checkNotNull(coreName);
     Preconditions.checkNotNull(solrDir);
 
-    return new LocalSolrServer(solrDir, coreName, commitWithinSeconds, queryCreator);
+    return new LocalSolrServer(solrDir, coreName, commitWithinSeconds);
   }
 
   private RemoteSolrServer createRemoteSolrServer() {
     Preconditions.checkNotNull(solrUrl);
-    return new RemoteSolrServer(solrUrl, commitWithinSeconds, queryCreator);
+    return new RemoteSolrServer(solrUrl, commitWithinSeconds);
   }
 
   public AbstractSolrServerBuilder setCoreName(String coreName) {
