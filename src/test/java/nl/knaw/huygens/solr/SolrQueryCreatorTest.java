@@ -5,7 +5,6 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -15,10 +14,12 @@ import java.util.List;
 
 import nl.knaw.huygens.facetedsearch.model.DefaultFacetParameter;
 import nl.knaw.huygens.facetedsearch.model.DefaultFacetedSearchParameters;
+import nl.knaw.huygens.facetedsearch.model.FacetField;
 import nl.knaw.huygens.facetedsearch.model.FacetParameter;
 import nl.knaw.huygens.facetedsearch.model.HighlightingOptions;
 import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
 import nl.knaw.huygens.facetedsearch.model.QueryOptimizer;
+import nl.knaw.huygens.facetedsearch.model.RangeFacetField;
 import nl.knaw.huygens.facetedsearch.model.RangeParameter;
 import nl.knaw.huygens.facetedsearch.model.SortDirection;
 import nl.knaw.huygens.facetedsearch.model.SortParameter;
@@ -30,7 +31,6 @@ import org.apache.solr.client.solrj.SolrQuery.SortClause;
 import org.apache.solr.common.params.FacetParams;
 import org.apache.solr.common.params.HighlightParams;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.collect.Lists;
@@ -265,26 +265,31 @@ public class SolrQueryCreatorTest {
 
   @Test
   public void testCreateSearchQueryFacetFields() throws NoSuchFieldInIndexException, WrongFacetValueException {
-    searchParameters.setFacetFields(Lists.newArrayList("facetField"));
+    searchParameters.setFacetFields(Lists.newArrayList(new FacetField("facetField")));
 
     SolrQuery query = instance.createSearchQuery(searchParameters, validator);
 
     assertArrayEquals(new String[] { "facetField" }, query.getFacetFields());
-    assertEquals(true, query.getBool(FacetParams.FACET)); // this boolean is set automagicly
+    assertEquals(true, query.getBool(FacetParams.FACET)); // this boolean is set automagically
   }
 
   @Test(expected = NoSuchFieldInIndexException.class)
   public void testCreateSearchQueryFacetFieldDoesNotExist() throws NoSuchFieldInIndexException, WrongFacetValueException {
-    searchParameters.setFacetFields(Lists.newArrayList("facetField"));
+    searchParameters.setFacetFields(Lists.newArrayList(new FacetField("facetField")));
     when(validator.facetFieldExists(anyString())).thenReturn(false);
 
     instance.createSearchQuery(searchParameters, validator);
   }
 
-  @Ignore
   @Test
-  public void testCreateSearchQueryRangeFacetFields() {
-    fail("Yet to be implemented.");
+  public void testCreateSearchQueryRangeFacetFields() throws NoSuchFieldInIndexException, WrongFacetValueException {
+    List<FacetField> facetFields = Lists.<FacetField> newArrayList();
+    facetFields.add(new RangeFacetField("rangeField", "lowerField", "upperField"));
+    searchParameters.setFacetFields(facetFields);
+
+    SolrQuery query = instance.createSearchQuery(searchParameters, validator);
+
+    assertArrayEquals(new String[] { "lowerField", "upperField" }, query.getFacetFields());
   }
 
   @Test

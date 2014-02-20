@@ -5,7 +5,7 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 
 public class SolrCoreWrapper {
 
-  public QueryResponse query(SolrQuery queryMock) {
+  public QueryResponse query(SolrQuery query) {
     // TODO Auto-generated method stub
     return null;
   }

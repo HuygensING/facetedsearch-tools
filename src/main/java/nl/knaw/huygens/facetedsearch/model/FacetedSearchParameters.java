@@ -14,7 +14,7 @@ import com.google.common.collect.Lists;
 public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
   private String term = "*";
   private List<String> fullTextSearchFields;
-  private List<String> facetFields = Lists.newArrayList();
+  private List<FacetField> facetFields = Lists.newArrayList();
   private List<FacetParameter> facetParameters = Lists.newArrayList();
   private Map<String, FacetInfo> facetInfoMap;
   private List<String> resultFields = Lists.newArrayList();
@@ -48,13 +48,19 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
    * @param facetFields a list with the fields.
    * @return the current instance of the {@code FacetedSearchParameters}, for the builder pattern.
    */
-  public T setFacetFields(List<String> facetFields) {
+  public T setFacetFields(List<FacetField> facetFields) {
     this.facetFields = facetFields;
     return (T) this;
   }
 
   public List<String> getFacetFields() {
-    return facetFields;
+    List<String> fields = Lists.newArrayList();
+
+    for (FacetField field : facetFields) {
+      fields.addAll(field.getFields());
+    }
+
+    return fields;
   }
 
   /**
