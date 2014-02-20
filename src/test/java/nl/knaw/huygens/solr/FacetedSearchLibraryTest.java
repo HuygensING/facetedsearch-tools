@@ -29,7 +29,7 @@ public class FacetedSearchLibraryTest {
 
     DefaultFacetedSearchParameters parameters = new DefaultFacetedSearchParameters();
 
-    FacetSearchLibrary library = new FacetSearchLibrary(solrCoreMock, queryCreatorMock);
+    FacetedSearchLibrary library = new FacetedSearchLibrary(solrCoreMock, queryCreatorMock);
 
     library.setSearchResultBuilder(searchResultBuilderMock);
 

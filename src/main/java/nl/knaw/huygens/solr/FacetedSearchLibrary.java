@@ -7,18 +7,18 @@ import nl.knaw.huygens.facetedsearch.model.WrongFacetValueException;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
-public class FacetSearchLibrary {
+public class FacetedSearchLibrary {
 
   private final SolrQueryCreator queryCreator;
   private final SolrCoreWrapper solrCore;
   private SearchResultBuilder searchResultBuilder;
 
-  public FacetSearchLibrary(SolrCoreWrapper solrCore) {
+  public FacetedSearchLibrary(SolrCoreWrapper solrCore) {
 
     this(solrCore, new SolrQueryCreator());
   }
 
-  public FacetSearchLibrary(SolrCoreWrapper solrCore, SolrQueryCreator queryCreator) {
+  public FacetedSearchLibrary(SolrCoreWrapper solrCore, SolrQueryCreator queryCreator) {
     this.solrCore = solrCore;
     this.queryCreator = queryCreator;
     this.searchResultBuilder = new SearchResultBuilder();
