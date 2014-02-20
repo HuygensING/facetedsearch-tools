@@ -11,27 +11,39 @@ import nl.knaw.huygens.facetedsearch.model.WrongFacetValueException;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
 
 public class FacetedSearchLibraryTest {
 
+  private FacetedSearchLibrary instance;
+
+  private SolrQueryCreator queryCreatorMock;
+  private SolrQuery queryMock;
+  private SolrCoreWrapper solrCoreMock;
+  private SearchResultBuilder searchResultBuilderMock;
+  private QueryResponse queryResponseMock;
+  private SearchResult searchResultMock;
+
+  @Before
+  public void setUp() {
+    queryCreatorMock = mock(SolrQueryCreator.class);
+    queryMock = mock(SolrQuery.class);
+    solrCoreMock = mock(SolrCoreWrapper.class);
+    searchResultBuilderMock = mock(SearchResultBuilder.class);
+    queryResponseMock = mock(QueryResponse.class);
+    searchResultMock = mock(SearchResult.class);
+
+    instance = new FacetedSearchLibrary(solrCoreMock, queryCreatorMock);
+
+    instance.setSearchResultBuilder(searchResultBuilderMock);
+  }
+
   @Test
-  public void testDoFacetedSearch() throws NoSuchFieldInIndexException, WrongFacetValueException {
-    // mocks
-    SolrQueryCreator queryCreatorMock = mock(SolrQueryCreator.class);
-    SolrQuery queryMock = mock(SolrQuery.class);
-    SolrCoreWrapper solrCoreMock = mock(SolrCoreWrapper.class);
-    SearchResultBuilder searchResultBuilderMock = mock(SearchResultBuilder.class);
-    QueryResponse queryResponseMock = mock(QueryResponse.class);
-    SearchResult searchResultMock = mock(SearchResult.class);
-
+  public void testSearch() throws NoSuchFieldInIndexException, WrongFacetValueException {
     DefaultFacetedSearchParameters parameters = new DefaultFacetedSearchParameters();
-
-    FacetedSearchLibrary library = new FacetedSearchLibrary(solrCoreMock, queryCreatorMock);
-
-    library.setSearchResultBuilder(searchResultBuilderMock);
 
     // when
     when(queryCreatorMock.createSearchQuery(any(DefaultFacetedSearchParameters.class), any(FacetedSearchParametersValidator.class))).thenReturn(queryMock);
@@ -39,7 +51,7 @@ public class FacetedSearchLibraryTest {
     when(searchResultBuilderMock.build(queryResponseMock)).thenReturn(searchResultMock);
 
     // action
-    SearchResult result = library.search(parameters);
+    SearchResult result = instance.search(parameters);
 
     // verify
     InOrder inOrder = Mockito.inOrder(queryCreatorMock, solrCoreMock, searchResultBuilderMock);
@@ -48,4 +60,5 @@ public class FacetedSearchLibraryTest {
     inOrder.verify(searchResultBuilderMock).build(queryResponseMock);
     assertThat(result, is(searchResultMock));
   }
+
 }
