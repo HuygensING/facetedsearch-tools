@@ -1,6 +1,7 @@
 package nl.knaw.huygens.solr;
 
 import nl.knaw.huygens.facetedsearch.model.FacetedSearchParameters;
+import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
 import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
 import nl.knaw.huygens.facetedsearch.model.WrongFacetValueException;
 
@@ -15,13 +16,13 @@ public class FacetedSearchLibrary {
 
   public FacetedSearchLibrary(SolrCoreWrapper solrCore) {
 
-    this(solrCore, new SolrQueryCreator());
+    this(solrCore, new SolrQueryCreator(), null);
   }
 
-  public FacetedSearchLibrary(SolrCoreWrapper solrCore, SolrQueryCreator queryCreator) {
+  public FacetedSearchLibrary(SolrCoreWrapper solrCore, SolrQueryCreator queryCreator, SearchResultBuilder searchResultBuilder) {
     this.solrCore = solrCore;
     this.queryCreator = queryCreator;
-    this.searchResultBuilder = new SearchResultBuilder();
+    this.searchResultBuilder = searchResultBuilder;
   }
 
   /**
@@ -32,10 +33,11 @@ public class FacetedSearchLibrary {
    * @throws NoSuchFieldInIndexException when the {@code searchParameters} contain a field or a facet that is not recognized.
    * @throws FacetedSearchException when the search fails to execute.
    */
-  public <T extends FacetedSearchParameters<T>> SearchResult search(FacetedSearchParameters<T> searchParameters) throws NoSuchFieldInIndexException, WrongFacetValueException, FacetedSearchException {
+  public <T extends FacetedSearchParameters<T>> FacetedSearchResult search(FacetedSearchParameters<T> searchParameters) throws NoSuchFieldInIndexException, WrongFacetValueException,
+      FacetedSearchException {
     SolrQuery query = queryCreator.createSearchQuery(searchParameters, null);
     QueryResponse queryResponse = solrCore.search(query);
-    SearchResult searchResult = searchResultBuilder.build(queryResponse);
+    FacetedSearchResult searchResult = searchResultBuilder.build(queryResponse);
 
     return searchResult;
   }

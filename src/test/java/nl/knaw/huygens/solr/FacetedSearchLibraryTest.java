@@ -10,6 +10,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import nl.knaw.huygens.facetedsearch.model.DefaultFacetedSearchParameters;
+import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
 import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
 import nl.knaw.huygens.facetedsearch.model.WrongFacetValueException;
 
@@ -29,7 +30,7 @@ public class FacetedSearchLibraryTest {
   private SolrCoreWrapper solrCoreMock;
   private SearchResultBuilder searchResultBuilderMock;
   private QueryResponse queryResponseMock;
-  private SearchResult searchResultMock;
+  private FacetedSearchResult searchResultMock;
 
   private DefaultFacetedSearchParameters searchParameters;
 
@@ -40,10 +41,9 @@ public class FacetedSearchLibraryTest {
     solrCoreMock = mock(SolrCoreWrapper.class);
     searchResultBuilderMock = mock(SearchResultBuilder.class);
     queryResponseMock = mock(QueryResponse.class);
-    searchResultMock = mock(SearchResult.class);
+    searchResultMock = mock(FacetedSearchResult.class);
 
-    instance = new FacetedSearchLibrary(solrCoreMock, queryCreatorMock);
-    instance.setSearchResultBuilder(searchResultBuilderMock);
+    instance = new FacetedSearchLibrary(solrCoreMock, queryCreatorMock, searchResultBuilderMock);
 
     searchParameters = new DefaultFacetedSearchParameters();
   }
@@ -56,7 +56,7 @@ public class FacetedSearchLibraryTest {
     when(searchResultBuilderMock.build(queryResponseMock)).thenReturn(searchResultMock);
 
     // action
-    SearchResult result = instance.search(searchParameters);
+    FacetedSearchResult result = instance.search(searchParameters);
 
     // verify
     InOrder inOrder = Mockito.inOrder(queryCreatorMock, solrCoreMock, searchResultBuilderMock);
