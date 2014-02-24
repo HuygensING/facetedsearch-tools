@@ -1,13 +1,15 @@
 package nl.knaw.huygens.solr;
 
-import java.util.List;
-import java.util.Map;
+import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
 
-public class HighlightingConverter {
+import org.apache.solr.client.solrj.response.QueryResponse;
 
-  public Map<String, List<String>> convert(Map<String, Map<String, List<String>>> any) {
+public class HighlightingConverter implements QueryResponseConverter {
+
+  @Override
+  public <T extends FacetedSearchResult> void convert(T result, QueryResponse queryResponse) {
     // TODO Auto-generated method stub
-    return null;
+
   }
 
 }

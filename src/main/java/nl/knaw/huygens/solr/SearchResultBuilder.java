@@ -5,28 +5,19 @@ import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
 public class SearchResultBuilder {
-  private final FacetConverter facetConverter;
-  private final HighlightingConverter highlightingConverter;
-  private final ResultConverter resultConverter;
 
-  public SearchResultBuilder(FacetConverter facetConverter, HighlightingConverter highlightingConverter, ResultConverter resultConverter) {
-    this.facetConverter = facetConverter;
-    this.highlightingConverter = highlightingConverter;
-    this.resultConverter = resultConverter;
+  private final QueryResponseConverter[] converters;
+
+  public SearchResultBuilder(QueryResponseConverter... converters) {
+    this.converters = converters;
   }
 
   public FacetedSearchResult build(QueryResponse queryResponse) {
-    FacetedSearchResult result = createFacetedSearchResult();
+    final FacetedSearchResult result = createFacetedSearchResult();
 
-    result.setFacets(facetConverter.convert(queryResponse.getFacetFields()));
-    result.setHighlighting(highlightingConverter.convert(queryResponse.getHighlighting()));
-
-    resultConverter.setResult(queryResponse.getResults());
-    result.setIds(resultConverter.getIdList());
-    result.setMaxScore(resultConverter.getMaxScore());
-    result.setNumFound(resultConverter.getNumFound());
-    result.setOffset(resultConverter.getOffset());
-    result.setRawResults(resultConverter.getRawResults());
+    for (QueryResponseConverter converter : converters) {
+      converter.convert(result, queryResponse);
+    }
 
     return result;
   }
