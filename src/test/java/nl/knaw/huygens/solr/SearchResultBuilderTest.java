@@ -5,6 +5,9 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
+import nl.knaw.huygens.solr.converters.FacetConverter;
+import nl.knaw.huygens.solr.converters.HighlightingConverter;
+import nl.knaw.huygens.solr.converters.ResultConverter;
 
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.junit.Test;

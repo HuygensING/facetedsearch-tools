@@ -1,6 +1,7 @@
 package nl.knaw.huygens.solr;
 
 import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
+import nl.knaw.huygens.solr.converters.QueryResponseConverter;
 
 import org.apache.solr.client.solrj.response.QueryResponse;
 

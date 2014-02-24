@@ -1,10 +1,10 @@
-package nl.knaw.huygens.solr;
+package nl.knaw.huygens.solr.converters;
 
 import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
 
 import org.apache.solr.client.solrj.response.QueryResponse;
 
-public class HighlightingConverter implements QueryResponseConverter {
+public class FacetConverter implements QueryResponseConverter {
 
   @Override
   public <T extends FacetedSearchResult> void convert(T result, QueryResponse queryResponse) {
