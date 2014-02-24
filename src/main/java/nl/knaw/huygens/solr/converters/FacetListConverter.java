@@ -1,26 +1,27 @@
 package nl.knaw.huygens.solr.converters;
 
+import nl.knaw.huygens.facetedsearch.model.FacetedSearchParameters;
 import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
 
-import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
-public class FacetListConverter implements QueryResponseConverter {
+public class FacetListConverter<T extends FacetedSearchParameters<T>> implements QueryResponseConverter {
   private final FacetConverter facetConverter;
+  private final T facetedSearchParameters;
 
-  public FacetListConverter(FacetConverter facetConveter) {
+  public FacetListConverter(FacetConverter facetConveter, T facetedSearchParameters) {
     this.facetConverter = facetConveter;
+    this.facetedSearchParameters = facetedSearchParameters;
   }
 
-  public FacetListConverter() {
-    this(new FacetConverter());
+  public FacetListConverter(T facetedSearchParameters) {
+    this(new FacetConverter(), facetedSearchParameters);
   }
 
   @Override
-  public <T extends FacetedSearchResult> void convert(T result, QueryResponse queryResponse) {
-    for (FacetField facetField : queryResponse.getFacetFields()) {
-      result.addFacet(facetConverter.convert(facetField));
+  public void convert(final FacetedSearchResult result, final QueryResponse queryResponse) {
+    for (String facetFieldName : facetedSearchParameters.getFacetFields()) {
+      facetConverter.convert(result, queryResponse, facetFieldName, facetedSearchParameters);
     }
   }
-
 }

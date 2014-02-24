@@ -11,6 +11,6 @@ public interface QueryResponseConverter {
    * @param result the result to add to
    * @param queryResponse the {@code QueryResponse} to get the data from.
    */
-  <T extends FacetedSearchResult> void convert(T result, QueryResponse queryResponse);
+  void convert(final FacetedSearchResult result, final QueryResponse queryResponse);
 
 }

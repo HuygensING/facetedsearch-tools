@@ -1,8 +1,8 @@
 package nl.knaw.huygens.solr.converters;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -10,29 +10,30 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.knaw.huygens.facetedsearch.model.DefaultFacetedSearchParameters;
 import nl.knaw.huygens.facetedsearch.model.FacetCount;
 import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
 
-import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InOrder;
-import org.mockito.Mockito;
 
 import com.google.common.collect.Lists;
 
 public class FacetListConverterTest {
   private FacetConverter facetConveterMock;
-  private FacetListConverter instance;
+  private FacetListConverter<DefaultFacetedSearchParameters> instance;
   private FacetCount facetCountMock;
   private FacetedSearchResult resultMock;
   private QueryResponse queryResponseMock;
 
+  private DefaultFacetedSearchParameters facetedSearchParameters;
+
   @Before
   public void setUp() {
     facetConveterMock = mock(FacetConverter.class);
-    instance = new FacetListConverter(facetConveterMock);
+    facetedSearchParameters = mock(DefaultFacetedSearchParameters.class);
+    instance = new FacetListConverter<DefaultFacetedSearchParameters>(facetConveterMock, facetedSearchParameters);
     facetCountMock = mock(FacetCount.class);
 
     resultMock = mock(FacetedSearchResult.class);
@@ -43,52 +44,22 @@ public class FacetListConverterTest {
   public void testConvertOneFacet() {
     int numberOfFacets = 1;
     // when
-    when(queryResponseMock.getFacetFields()).thenReturn(createFacetFieldList(numberOfFacets));
-    when(facetConveterMock.convert(any(FacetField.class))).thenReturn(facetCountMock);
+    when(facetedSearchParameters.getFacetFields()).thenReturn(createFacetFieldList(numberOfFacets));
 
     instance.convert(resultMock, queryResponseMock);
 
     // verify
-    InOrder inOrder = Mockito.inOrder(facetConveterMock, resultMock);
-    inOrder.verify(facetConveterMock, times(numberOfFacets)).convert(any(FacetField.class));
-    inOrder.verify(resultMock, times(numberOfFacets)).addFacet(facetCountMock);
+    verify(facetConveterMock, times(numberOfFacets)).convert(any(FacetedSearchResult.class), any(QueryResponse.class), anyString(), any(DefaultFacetedSearchParameters.class));
   }
 
-  @Test
-  public void testConvertMultipleFacets() {
-    int numberOfFacets = 5;
-    // when
-    when(queryResponseMock.getFacetFields()).thenReturn(createFacetFieldList(numberOfFacets));
-    when(facetConveterMock.convert(any(FacetField.class))).thenReturn(facetCountMock);
-
-    instance.convert(resultMock, queryResponseMock);
-
-    // verify
-    verify(facetConveterMock, times(numberOfFacets)).convert(any(FacetField.class));
-    verify(resultMock, times(numberOfFacets)).addFacet(facetCountMock);
-  }
-
-  @Test
-  public void testConvertZeroFacets() {
-    int numberOfFacets = 0;
-    // when
-    when(queryResponseMock.getFacetFields()).thenReturn(createFacetFieldList(numberOfFacets));
-    when(facetConveterMock.convert(any(FacetField.class))).thenReturn(facetCountMock);
-
-    instance.convert(resultMock, queryResponseMock);
-
-    // verify
-    verify(facetConveterMock, never()).convert(any(FacetField.class));
-    verify(resultMock, never()).addFacet(facetCountMock);
-  }
-
-  private List<FacetField> createFacetFieldList(int numberOfFacets) {
-    ArrayList<FacetField> facetFieldList = Lists.newArrayList();
+  private List<String> createFacetFieldList(int numberOfFacets) {
+    ArrayList<String> facetFieldList = Lists.newArrayList();
 
     for (int i = 0; i < numberOfFacets; i++) {
-      facetFieldList.add(mock(FacetField.class));
+      facetFieldList.add("" + i);
     }
 
     return facetFieldList;
   }
+
 }
