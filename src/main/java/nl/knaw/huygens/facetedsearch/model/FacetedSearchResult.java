@@ -72,4 +72,9 @@ public class FacetedSearchResult {
     this.rawResults = rawResults;
   }
 
+  public void addFacet(FacetCount facet) {
+    // TODO Auto-generated method stub
+
+  }
+
 }

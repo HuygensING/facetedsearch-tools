@@ -1,15 +1,14 @@
 package nl.knaw.huygens.solr.converters;
 
-import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
+import nl.knaw.huygens.facetedsearch.model.FacetCount;
 
-import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.client.solrj.response.FacetField;
 
-public class FacetConverter implements QueryResponseConverter {
+public class FacetConverter {
 
-  @Override
-  public <T extends FacetedSearchResult> void convert(T result, QueryResponse queryResponse) {
+  public FacetCount convert(FacetField facetField) {
     // TODO Auto-generated method stub
-
+    return null;
   }
 
 }

@@ -5,7 +5,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
-import nl.knaw.huygens.solr.converters.FacetConverter;
+import nl.knaw.huygens.solr.converters.FacetListConverter;
 import nl.knaw.huygens.solr.converters.HighlightingConverter;
 import nl.knaw.huygens.solr.converters.ResultConverter;
 
@@ -18,7 +18,7 @@ public class SearchResultBuilderTest {
   public void testSearchResultBuilder() {
     //mock
     QueryResponse queryResponseMock = mock(QueryResponse.class);
-    FacetConverter facetConverterMock = mock(FacetConverter.class);
+    FacetListConverter facetConverterMock = mock(FacetListConverter.class);
     HighlightingConverter highlightingConverterMock = mock(HighlightingConverter.class);
     ResultConverter resultConverterMock = mock(ResultConverter.class);
 
