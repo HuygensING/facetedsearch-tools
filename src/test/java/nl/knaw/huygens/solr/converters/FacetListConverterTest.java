@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nl.knaw.huygens.facetedsearch.model.DefaultFacetedSearchParameters;
-import nl.knaw.huygens.facetedsearch.model.FacetCount;
 import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
 
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -23,7 +22,6 @@ import com.google.common.collect.Lists;
 public class FacetListConverterTest {
   private FacetConverter facetConveterMock;
   private FacetListConverter<DefaultFacetedSearchParameters> instance;
-  private FacetCount facetCountMock;
   private FacetedSearchResult resultMock;
   private QueryResponse queryResponseMock;
 
@@ -34,7 +32,6 @@ public class FacetListConverterTest {
     facetConveterMock = mock(FacetConverter.class);
     facetedSearchParameters = mock(DefaultFacetedSearchParameters.class);
     instance = new FacetListConverter<DefaultFacetedSearchParameters>(facetConveterMock, facetedSearchParameters);
-    facetCountMock = mock(FacetCount.class);
 
     resultMock = mock(FacetedSearchResult.class);
     queryResponseMock = mock(QueryResponse.class);
