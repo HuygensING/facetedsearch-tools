@@ -9,13 +9,13 @@ public class FacetListConverter<T extends FacetedSearchParameters<T>> implements
   private final FacetConverter facetConverter;
   private final T facetedSearchParameters;
 
-  public FacetListConverter(FacetConverter facetConveter, T facetedSearchParameters) {
+  public FacetListConverter(T facetedSearchParameters, FacetConverter facetConveter) {
     this.facetConverter = facetConveter;
     this.facetedSearchParameters = facetedSearchParameters;
   }
 
   public FacetListConverter(T facetedSearchParameters) {
-    this(new FacetConverter(), facetedSearchParameters);
+    this(facetedSearchParameters, new FacetConverter());
   }
 
   @Override
