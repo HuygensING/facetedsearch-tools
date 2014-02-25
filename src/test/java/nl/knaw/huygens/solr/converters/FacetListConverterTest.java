@@ -31,7 +31,7 @@ public class FacetListConverterTest {
   public void setUp() {
     facetConveterMock = mock(FacetConverter.class);
     facetedSearchParametersMock = mock(DefaultFacetedSearchParameters.class);
-    instance = new FacetListConverter<DefaultFacetedSearchParameters>(facetedSearchParametersMock);
+    instance = new FacetListConverter<DefaultFacetedSearchParameters>(facetedSearchParametersMock, facetConveterMock);
 
     resultMock = mock(FacetedSearchResult.class);
     queryResponseMock = mock(QueryResponse.class);
@@ -39,7 +39,7 @@ public class FacetListConverterTest {
 
   @Test
   public void testConvertOneFacet() {
-    int numberOfFacets = 1;
+    int numberOfFacets = 2;
     // when
     when(facetedSearchParametersMock.getFacetFields()).thenReturn(createFacetFieldList(numberOfFacets));
 
