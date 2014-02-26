@@ -11,7 +11,7 @@ public class FacetedSearchResult {
   private long numFound;
   private long offset;
 
-  private List<FacetCount> facets;
+  private List<Facet<?>> facets;
   private Map<String, List<String>> highlighting;
   private List<String> ids;
   private List<Map<String, Object>> rawResults;
@@ -40,11 +40,11 @@ public class FacetedSearchResult {
     this.offset = offset;
   }
 
-  public List<FacetCount> getFacets() {
+  public List<Facet<?>> getFacets() {
     return facets;
   }
 
-  public void setFacets(List<FacetCount> facets) {
+  public void setFacets(List<Facet<?>> facets) {
     this.facets = facets;
   }
 
@@ -72,7 +72,7 @@ public class FacetedSearchResult {
     this.rawResults = rawResults;
   }
 
-  public void addFacet(FacetCount facet) {
+  public void addFacet(Facet facet) {
     // TODO Auto-generated method stub
 
   }

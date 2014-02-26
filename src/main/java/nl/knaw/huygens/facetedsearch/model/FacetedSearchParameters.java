@@ -129,4 +129,22 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
     this.highlightingOptions = highlightingOptions;
   }
 
+  /**
+   * Get a single {@code FacetInfo} of corresponding with the {@code facetFieldName}.
+   * @param facetFieldName the name of the facet to get the {@code FacetInfo} for.
+   * @return the {@code FacetInfo} if exists else null. 
+   */
+  public FacetInfo getFacetInfo(String facetFieldName) {
+    return facetInfoMap.get(facetFieldName);
+  }
+
+  public List<FacetInfo> getFacetInfoForRequest() {
+    List<FacetInfo> facetInfos = Lists.newArrayList();
+    for (String facetFieldName : getFacetFields()) {
+      facetInfos.add(getFacetInfo(facetFieldName));
+    }
+
+    return facetInfos;
+  }
+
 }

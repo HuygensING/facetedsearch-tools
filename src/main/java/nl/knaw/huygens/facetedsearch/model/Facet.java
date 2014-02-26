@@ -1,5 +1,8 @@
 package nl.knaw.huygens.facetedsearch.model;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
+
 public abstract class Facet<T extends Facet<T>> {
   private String name;
   private String title;
@@ -45,5 +48,10 @@ public abstract class Facet<T extends Facet<T>> {
   public abstract T combineWith(T otherFacet);
 
   public abstract FacetType getType();
+
+  @Override
+  public String toString() {
+    return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE, false);
+  }
 
 }

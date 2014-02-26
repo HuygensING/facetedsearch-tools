@@ -2,9 +2,6 @@ package nl.knaw.huygens.facetedsearch.model;
 
 import java.util.List;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
-
 import com.google.common.collect.Lists;
 
 public class DefaultFacet extends Facet<DefaultFacet> {
@@ -74,10 +71,5 @@ public class DefaultFacet extends Facet<DefaultFacet> {
       }
     }
     return false;
-  }
-
-  @Override
-  public String toString() {
-    return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE, false);
   }
 }

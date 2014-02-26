@@ -1,5 +1,8 @@
 package nl.knaw.huygens.facetedsearch.model;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
+
 import com.google.common.base.Objects;
 
 public class FacetOption {
@@ -47,5 +50,10 @@ public class FacetOption {
     long combinedCount = count + otherOption.count;
 
     return new FacetOption(name, combinedCount);
+  }
+
+  @Override
+  public String toString() {
+    return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE, false);
   }
 }
