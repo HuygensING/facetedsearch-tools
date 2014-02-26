@@ -3,12 +3,11 @@ package nl.knaw.huygens.solr.converters;
 import java.util.List;
 
 import nl.knaw.huygens.facetedsearch.model.FacetInfo;
-import nl.knaw.huygens.facetedsearch.model.FacetedSearchParameters;
 import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
 
 import org.apache.solr.client.solrj.response.QueryResponse;
 
-public class FacetListConverter<T extends FacetedSearchParameters<T>> implements QueryResponseConverter {
+public class FacetListConverter implements QueryResponseConverter {
   private final List<FacetInfo> facetInfoList;
 
   public FacetListConverter(List<FacetInfo> facetInfoList) {
