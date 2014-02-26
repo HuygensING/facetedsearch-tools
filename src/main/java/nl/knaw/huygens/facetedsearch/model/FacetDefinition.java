@@ -8,9 +8,9 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import com.google.common.base.Objects;
 
 public class FacetDefinition {
-  String name = "";
-  String title = "";
-  FacetType type = FacetType.LIST;
+  private String name = "";
+  private String title = "";
+  private FacetType type = FacetType.LIST;
 
   public String getName() {
     return name;
@@ -47,11 +47,11 @@ public class FacetDefinition {
   public void addFacetToResult(FacetedSearchResult result, QueryResponse queryResponse) {
 
     switch (type) {
-    case RANGE:
-      addRangeFacet(result, queryResponse);
-      break;
-    default:
-      addDefaultFacet(result, queryResponse);
+      case RANGE:
+        addRangeFacet(result, queryResponse);
+        break;
+      default:
+        addDefaultFacet(result, queryResponse);
     }
 
   }
