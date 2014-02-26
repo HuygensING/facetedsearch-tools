@@ -40,7 +40,7 @@ public class DefaultFacetTest {
   public void testCombineWithSameSingleOption() {
     // setup
     final DefaultFacet combinedFacetMock = mock(DefaultFacet.class);
-    DefaultOption optionFacet1Mock = mock(DefaultOption.class);
+    FacetOption optionFacet1Mock = mock(FacetOption.class);
     DefaultFacet facet1 = new DefaultFacet("name", "title") {
       @Override
       protected DefaultFacet createCombinedListFacet() {
@@ -49,13 +49,13 @@ public class DefaultFacetTest {
     };
     facet1.addOption(optionFacet1Mock);
 
-    DefaultOption optionFacet2Mock = mock(DefaultOption.class);
+    FacetOption optionFacet2Mock = mock(FacetOption.class);
     DefaultFacet facet2 = createFacet(optionFacet2Mock);
 
-    DefaultOption combinedOptionMock = mock(DefaultOption.class);
+    FacetOption combinedOptionMock = mock(FacetOption.class);
 
     // when
-    when(optionFacet1Mock.isCombinable(any(DefaultOption.class))).thenReturn(false);
+    when(optionFacet1Mock.isCombinable(any(FacetOption.class))).thenReturn(false);
     when(optionFacet1Mock.isCombinable(optionFacet2Mock)).thenReturn(true);
     when(optionFacet1Mock.combineWith(optionFacet2Mock)).thenReturn(combinedOptionMock);
 
@@ -75,8 +75,8 @@ public class DefaultFacetTest {
   public void testCombineWithMultipleOptions() {
     // setup
     final DefaultFacet combinedFacetMock = mock(DefaultFacet.class);
-    DefaultOption option1Facet1Mock = mock(DefaultOption.class);
-    DefaultOption option2Facet1Mock = mock(DefaultOption.class);
+    FacetOption option1Facet1Mock = mock(FacetOption.class);
+    FacetOption option2Facet1Mock = mock(FacetOption.class);
     DefaultFacet facet1 = new DefaultFacet("name", "title") {
       @Override
       protected DefaultFacet createCombinedListFacet() {
@@ -86,19 +86,19 @@ public class DefaultFacetTest {
     facet1.addOption(option1Facet1Mock);
     facet1.addOption(option2Facet1Mock);
 
-    DefaultOption option1Facet2Mock = mock(DefaultOption.class);
-    DefaultOption option2Facet2Mock = mock(DefaultOption.class);
+    FacetOption option1Facet2Mock = mock(FacetOption.class);
+    FacetOption option2Facet2Mock = mock(FacetOption.class);
     DefaultFacet facet2 = createFacet(option1Facet2Mock, option2Facet2Mock);
 
-    DefaultOption combinedOption1 = mock(DefaultOption.class);
-    DefaultOption combinedOption2 = mock(DefaultOption.class);
+    FacetOption combinedOption1 = mock(FacetOption.class);
+    FacetOption combinedOption2 = mock(FacetOption.class);
 
     // when
-    when(option1Facet1Mock.isCombinable(any(DefaultOption.class))).thenReturn(false);
+    when(option1Facet1Mock.isCombinable(any(FacetOption.class))).thenReturn(false);
     when(option1Facet1Mock.isCombinable(option1Facet2Mock)).thenReturn(true);
     when(option1Facet1Mock.combineWith(option1Facet2Mock)).thenReturn(combinedOption1);
 
-    when(option2Facet1Mock.isCombinable(any(DefaultOption.class))).thenReturn(false);
+    when(option2Facet1Mock.isCombinable(any(FacetOption.class))).thenReturn(false);
     when(option2Facet1Mock.isCombinable(option2Facet2Mock)).thenReturn(true);
     when(option2Facet1Mock.combineWith(option2Facet2Mock)).thenReturn(combinedOption2);
 
@@ -120,9 +120,9 @@ public class DefaultFacetTest {
     assertThat(resultFacet, is(combinedFacetMock));
   }
 
-  private DefaultFacet createFacet(DefaultOption... options) {
+  private DefaultFacet createFacet(FacetOption... options) {
     DefaultFacet facet = new DefaultFacet("name", "title");
-    for (DefaultOption option : options) {
+    for (FacetOption option : options) {
       facet.addOption(option);
     }
     return facet;
@@ -132,8 +132,8 @@ public class DefaultFacetTest {
   public void testCombineWithFacetHasOtherOptions() {
     // setup
     final DefaultFacet combinedFacetMock = mock(DefaultFacet.class);
-    DefaultOption option1Facet1Mock = mock(DefaultOption.class);
-    DefaultOption option2Facet1Mock = mock(DefaultOption.class);
+    FacetOption option1Facet1Mock = mock(FacetOption.class);
+    FacetOption option2Facet1Mock = mock(FacetOption.class);
     DefaultFacet facet1 = new DefaultFacet("name", "title") {
       @Override
       protected DefaultFacet createCombinedListFacet() {
@@ -143,19 +143,19 @@ public class DefaultFacetTest {
     facet1.addOption(option1Facet1Mock);
     facet1.addOption(option2Facet1Mock);
 
-    DefaultOption optionFacet2Mock = mock(DefaultOption.class);
+    FacetOption optionFacet2Mock = mock(FacetOption.class);
     DefaultFacet facet2 = createFacet(optionFacet2Mock);
 
-    DefaultOption combinedOptionMock = mock(DefaultOption.class);
+    FacetOption combinedOptionMock = mock(FacetOption.class);
 
     // when
-    when(option1Facet1Mock.isCombinable(any(DefaultOption.class))).thenReturn(false);
+    when(option1Facet1Mock.isCombinable(any(FacetOption.class))).thenReturn(false);
     when(option1Facet1Mock.isCombinable(optionFacet2Mock)).thenReturn(true);
     when(option1Facet1Mock.combineWith(optionFacet2Mock)).thenReturn(combinedOptionMock);
 
-    when(option2Facet1Mock.isCombinable(any(DefaultOption.class))).thenReturn(false);
+    when(option2Facet1Mock.isCombinable(any(FacetOption.class))).thenReturn(false);
 
-    when(combinedFacetMock.containsOption(any(DefaultOption.class))).thenReturn(true);
+    when(combinedFacetMock.containsOption(any(FacetOption.class))).thenReturn(true);
     when(combinedFacetMock.containsOption(option2Facet1Mock)).thenReturn(false);
 
     // action
@@ -175,7 +175,7 @@ public class DefaultFacetTest {
   public void testCombineWithOtherFacetHasOtherOptions() {
     // setup
     final DefaultFacet combinedFacetMock = mock(DefaultFacet.class);
-    DefaultOption optionFacet1Mock = mock(DefaultOption.class);
+    FacetOption optionFacet1Mock = mock(FacetOption.class);
     DefaultFacet facet1 = new DefaultFacet("name", "title") {
       @Override
       protected DefaultFacet createCombinedListFacet() {
@@ -184,18 +184,18 @@ public class DefaultFacetTest {
     };
     facet1.addOption(optionFacet1Mock);
 
-    DefaultOption option1Facet2Mock = mock(DefaultOption.class);
-    DefaultOption option2Facet2Mock = mock(DefaultOption.class);
+    FacetOption option1Facet2Mock = mock(FacetOption.class);
+    FacetOption option2Facet2Mock = mock(FacetOption.class);
     DefaultFacet facet2 = createFacet(option1Facet2Mock, option2Facet2Mock);
 
-    DefaultOption combinedOptionMock = mock(DefaultOption.class);
+    FacetOption combinedOptionMock = mock(FacetOption.class);
 
     // when
-    when(optionFacet1Mock.isCombinable(any(DefaultOption.class))).thenReturn(false);
+    when(optionFacet1Mock.isCombinable(any(FacetOption.class))).thenReturn(false);
     when(optionFacet1Mock.isCombinable(option1Facet2Mock)).thenReturn(true);
     when(optionFacet1Mock.combineWith(option1Facet2Mock)).thenReturn(combinedOptionMock);
 
-    when(option2Facet2Mock.isCombinable(any(DefaultOption.class))).thenReturn(false);
+    when(option2Facet2Mock.isCombinable(any(FacetOption.class))).thenReturn(false);
 
     // action
     DefaultFacet resultFacet = facet1.combineWith(facet2);
