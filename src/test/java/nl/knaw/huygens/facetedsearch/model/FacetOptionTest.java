@@ -6,35 +6,35 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-public class DefautlOptionTest {
+public class FacetOptionTest {
   @Test
   public void testIsCombinable() {
-    DefaultOption option1 = new DefaultOption("test", 1);
-    DefaultOption option2 = new DefaultOption("test", 1);
+    FacetOption option1 = new FacetOption("test", 1);
+    FacetOption option2 = new FacetOption("test", 1);
 
     assertTrue(option1.isCombinable(option2));
   }
 
   @Test
   public void testIsCombinableWithDifferentNames() {
-    DefaultOption option1 = new DefaultOption("name", 1);
-    DefaultOption option2 = new DefaultOption("test", 1);
+    FacetOption option1 = new FacetOption("name", 1);
+    FacetOption option2 = new FacetOption("test", 1);
 
     assertFalse(option1.isCombinable(option2));
   }
 
   @Test
   public void testIsCombinableWithDifferentCounts() {
-    DefaultOption option1 = new DefaultOption("test", 23);
-    DefaultOption option2 = new DefaultOption("test", 1);
+    FacetOption option1 = new FacetOption("test", 23);
+    FacetOption option2 = new FacetOption("test", 1);
 
     assertTrue(option1.isCombinable(option2));
   }
 
   @Test
   public void testCombine() {
-    DefaultOption option1 = new DefaultOption("test", 23);
-    DefaultOption option2 = new DefaultOption("test", 1);
+    FacetOption option1 = new FacetOption("test", 23);
+    FacetOption option2 = new FacetOption("test", 1);
 
     assertEquals(24, option1.combineWith(option2).getCount());
   }
