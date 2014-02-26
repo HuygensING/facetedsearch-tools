@@ -10,10 +10,24 @@ public class RangeFacet extends Facet {
     this.upperLimit = upperLimit;
   }
 
+  public RangeFacet(String name, String title) {
+    super(name, title);
+  }
+
   @Override
   public RangeFacet combineWith(Facet otherFacet) {
-    // TODO Auto-generated method stub
-    return null;
+    if (!isCombinable(otherFacet)) {
+      throwUncombinableFacetsException();
+    }
+
+    RangeFacet other = (RangeFacet) otherFacet;
+
+    RangeFacet combinedFacet = new RangeFacet(getName(), getTitle());
+
+    combinedFacet.setLowerLimit(Math.min(getLowerLimit(), other.getLowerLimit()));
+    combinedFacet.setUpperLimit(Math.max(getUpperLimit(), other.getUpperLimit()));
+
+    return combinedFacet;
   }
 
   @Override

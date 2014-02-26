@@ -54,4 +54,8 @@ public abstract class Facet {
     return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE, false);
   }
 
+  protected void throwUncombinableFacetsException() {
+    throw new RuntimeException("facets can't be combined, name/title/type doesn't match.");
+  }
+
 }

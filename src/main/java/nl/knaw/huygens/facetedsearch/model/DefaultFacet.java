@@ -15,7 +15,7 @@ public class DefaultFacet extends Facet {
   @Override
   public DefaultFacet combineWith(Facet facet) {
     if (!isCombinable(facet)) {
-      throw new RuntimeException("facets can't be combined, name/title/type doesn't match.");
+      throwUncombinableFacetsException();
     }
 
     DefaultFacet otherFacet = (DefaultFacet) facet;
