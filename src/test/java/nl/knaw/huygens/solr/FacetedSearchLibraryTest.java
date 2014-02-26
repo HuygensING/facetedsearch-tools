@@ -10,6 +10,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import nl.knaw.huygens.facetedsearch.model.DefaultFacetedSearchParameters;
+import nl.knaw.huygens.facetedsearch.model.FacetedSearchParameters;
 import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
 import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
 import nl.knaw.huygens.facetedsearch.model.WrongFacetValueException;
@@ -32,7 +33,7 @@ public class FacetedSearchLibraryTest {
   private QueryResponse queryResponseMock;
   private FacetedSearchResult searchResultMock;
 
-  private DefaultFacetedSearchParameters searchParameters;
+  private FacetedSearchParameters<DefaultFacetedSearchParameters> searchParameters;
 
   @Before
   public void setUp() {
