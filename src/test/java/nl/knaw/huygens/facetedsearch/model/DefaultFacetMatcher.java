@@ -35,7 +35,7 @@ public class DefaultFacetMatcher extends TypeSafeMatcher<DefaultFacet> {
   }
 
   @Factory
-  public static Matcher<DefaultFacet> defaultFacetHamcrestMatcher(String name, String title, List<FacetOption> options) {
+  public static Matcher<DefaultFacet> hasCharacteristics(String name, String title, List<FacetOption> options) {
     return new DefaultFacetMatcher(name, title, options);
   }
 }
