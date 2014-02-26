@@ -1,37 +1,25 @@
 package nl.knaw.huygens.solr.converters;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import nl.knaw.huygens.facetedsearch.model.DefaultFacetedSearchParameters;
+import nl.knaw.huygens.facetedsearch.model.FacetInfo;
 import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
 
 import org.apache.solr.client.solrj.response.QueryResponse;
-import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.collect.Lists;
 
 public class FacetListConverterTest {
-  private FacetConverter facetConveterMock;
-  private FacetListConverter<DefaultFacetedSearchParameters> instance;
+
+  private FacetListConverter instance;
   private FacetedSearchResult resultMock;
   private QueryResponse queryResponseMock;
 
-  private DefaultFacetedSearchParameters facetedSearchParametersMock;
+  public void setUp(FacetInfo... facetInfos) {
 
-  @Before
-  public void setUp() {
-    facetConveterMock = mock(FacetConverter.class);
-    facetedSearchParametersMock = mock(DefaultFacetedSearchParameters.class);
-    instance = new FacetListConverter<DefaultFacetedSearchParameters>(facetedSearchParametersMock, facetConveterMock);
+    instance = new FacetListConverter<DefaultFacetedSearchParameters>(Lists.newArrayList(facetInfos));
 
     resultMock = mock(FacetedSearchResult.class);
     queryResponseMock = mock(QueryResponse.class);
@@ -39,24 +27,37 @@ public class FacetListConverterTest {
 
   @Test
   public void testConvertOneFacet() {
-    int numberOfFacets = 2;
-    // when
-    when(facetedSearchParametersMock.getFacetFields()).thenReturn(createFacetFieldList(numberOfFacets));
+    // mock
+    FacetInfo facetInfo = mock(FacetInfo.class);
 
+    // setup
+    setUp(facetInfo);
+
+    // action
     instance.convert(resultMock, queryResponseMock);
 
-    // verify
-    verify(facetConveterMock, times(numberOfFacets)).convert(any(FacetedSearchResult.class), any(QueryResponse.class), anyString(), any(DefaultFacetedSearchParameters.class));
+    //verify
+    verify(facetInfo).addFacetToResult(resultMock, queryResponseMock);
   }
 
-  private List<String> createFacetFieldList(int numberOfFacets) {
-    ArrayList<String> facetFieldList = Lists.newArrayList();
+  @Test
+  public void testConvertMultipleFacets() {
 
-    for (int i = 0; i < numberOfFacets; i++) {
-      facetFieldList.add("" + i);
-    }
+    // mock
+    FacetInfo facetInfo1 = mock(FacetInfo.class);
+    FacetInfo facetInfo2 = mock(FacetInfo.class);
+    FacetInfo facetInfo3 = mock(FacetInfo.class);
 
-    return facetFieldList;
+    // setup
+    setUp(facetInfo1, facetInfo2, facetInfo3);
+
+    // action
+    instance.convert(resultMock, queryResponseMock);
+
+    //verify
+    verify(facetInfo1).addFacetToResult(resultMock, queryResponseMock);
+    verify(facetInfo2).addFacetToResult(resultMock, queryResponseMock);
+    verify(facetInfo3).addFacetToResult(resultMock, queryResponseMock);
   }
 
 }
