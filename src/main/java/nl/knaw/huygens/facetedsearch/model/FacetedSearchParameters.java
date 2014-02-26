@@ -16,7 +16,7 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
   private List<String> fullTextSearchFields;
   private List<FacetField> facetFields = Lists.newArrayList();
   private List<FacetParameter> facetParameters = Lists.newArrayList();
-  private Map<String, FacetInfo> facetInfoMap;
+  private Map<String, FacetDefinition> facetInfoMap;
   private List<String> resultFields = Lists.newArrayList();
   private boolean fuzzy = false;
   private List<SortParameter> sortParameters = Lists.newArrayList();
@@ -95,11 +95,11 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
     return (T) this;
   }
 
-  public Map<String, FacetInfo> getFacetInfoMap() {
+  public Map<String, FacetDefinition> getFacetInfoMap() {
     return facetInfoMap;
   }
 
-  public T setFacetInfoMap(Map<String, FacetInfo> facetInfoMap) {
+  public T setFacetInfoMap(Map<String, FacetDefinition> facetInfoMap) {
     this.facetInfoMap = facetInfoMap;
     return (T) this;
   }
@@ -134,12 +134,12 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
    * @param facetFieldName the name of the facet to get the {@code FacetInfo} for.
    * @return the {@code FacetInfo} if exists else null. 
    */
-  public FacetInfo getFacetInfo(String facetFieldName) {
+  public FacetDefinition getFacetInfo(String facetFieldName) {
     return facetInfoMap.get(facetFieldName);
   }
 
-  public List<FacetInfo> getFacetInfoForRequest() {
-    List<FacetInfo> facetInfos = Lists.newArrayList();
+  public List<FacetDefinition> getFacetInfoForRequest() {
+    List<FacetDefinition> facetInfos = Lists.newArrayList();
     for (String facetFieldName : getFacetFields()) {
       facetInfos.add(getFacetInfo(facetFieldName));
     }

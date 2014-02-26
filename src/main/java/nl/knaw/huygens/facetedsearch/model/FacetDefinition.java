@@ -7,7 +7,7 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 
 import com.google.common.base.Objects;
 
-public class FacetInfo {
+public class FacetDefinition {
   String name = "";
   String title = "";
   FacetType type = FacetType.LIST;
@@ -16,7 +16,7 @@ public class FacetInfo {
     return name;
   }
 
-  public FacetInfo setName(String name) {
+  public FacetDefinition setName(String name) {
     this.name = name;
     return this;
   }
@@ -25,7 +25,7 @@ public class FacetInfo {
     return title;
   }
 
-  public FacetInfo setTitle(String title) {
+  public FacetDefinition setTitle(String title) {
     this.title = title;
     return this;
   }
@@ -34,7 +34,7 @@ public class FacetInfo {
     return type;
   }
 
-  public FacetInfo setType(FacetType type) {
+  public FacetDefinition setType(FacetType type) {
     this.type = type;
     return this;
   }

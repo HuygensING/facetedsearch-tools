@@ -21,7 +21,7 @@ import org.mockito.MockitoAnnotations;
 
 import com.google.common.collect.Lists;
 
-public class FacetInfoTest {
+public class FacetDefinitionTest {
   private String facetName = "name";
   private String facetTitle = "title";
 
@@ -37,7 +37,7 @@ public class FacetInfoTest {
   // Currently the default implementation.
   public void testAddFacetToResultWithListFacet() {
     // setup instance
-    FacetInfo instance = new FacetInfo().setName(facetName).setTitle(facetTitle).setType(FacetType.LIST);
+    FacetDefinition instance = new FacetDefinition().setName(facetName).setTitle(facetTitle).setType(FacetType.LIST);
 
     // mocks
     QueryResponse queryResponseMock = mock(QueryResponse.class);
@@ -72,7 +72,7 @@ public class FacetInfoTest {
     // setup instance
     long lowerLimit = 20l;
     long upperLimit = 100l;
-    FacetInfo instance = new FacetInfo().setName(facetName).setTitle(facetTitle).setType(FacetType.RANGE);
+    FacetDefinition instance = new FacetDefinition().setName(facetName).setTitle(facetTitle).setType(FacetType.RANGE);
 
     // mocks
     QueryResponse queryResponseMock = mock(QueryResponse.class);
