@@ -3,7 +3,7 @@ package nl.knaw.huygens.facetedsearch.model;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
-public abstract class Facet<T extends Facet<T>> {
+public abstract class Facet {
   private String name;
   private String title;
 
@@ -33,7 +33,7 @@ public abstract class Facet<T extends Facet<T>> {
    * @param other the facet to check with if they can be combined.
    * @return true if they can be combined false if not.
    */
-  protected boolean isCombinable(T other) {
+  protected boolean isCombinable(Facet other) {
     return other.getName().equals(getName()) //
         && other.getTitle().equals(getTitle()) //
         && other.getType().equals(getType());
@@ -45,7 +45,7 @@ public abstract class Facet<T extends Facet<T>> {
    * @return a new {@code Facet} with the combined data.
    * @throws RuntimeException when the facets cannot be combined.
    */
-  public abstract T combineWith(T otherFacet);
+  public abstract Facet combineWith(Facet otherFacet);
 
   public abstract FacetType getType();
 

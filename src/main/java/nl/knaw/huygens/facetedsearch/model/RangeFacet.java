@@ -1,6 +1,6 @@
 package nl.knaw.huygens.facetedsearch.model;
 
-public class RangeFacet extends Facet<RangeFacet> {
+public class RangeFacet extends Facet {
   private long lowerLimit;
   private long upperLimit;
 
@@ -11,7 +11,7 @@ public class RangeFacet extends Facet<RangeFacet> {
   }
 
   @Override
-  public RangeFacet combineWith(RangeFacet otherFacet) {
+  public RangeFacet combineWith(Facet otherFacet) {
     // TODO Auto-generated method stub
     return null;
   }

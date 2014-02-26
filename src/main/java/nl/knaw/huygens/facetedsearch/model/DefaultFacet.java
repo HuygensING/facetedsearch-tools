@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-public class DefaultFacet extends Facet<DefaultFacet> {
+public class DefaultFacet extends Facet {
   private List<FacetOption> options;
 
   public DefaultFacet(String name, String title) {
@@ -13,10 +13,12 @@ public class DefaultFacet extends Facet<DefaultFacet> {
   }
 
   @Override
-  public DefaultFacet combineWith(DefaultFacet otherFacet) {
-    if (!isCombinable(otherFacet)) {
+  public DefaultFacet combineWith(Facet facet) {
+    if (!isCombinable(facet)) {
       throw new RuntimeException("facets can't be combined, name/title/type doesn't match.");
     }
+
+    DefaultFacet otherFacet = (DefaultFacet) facet;
 
     DefaultFacet combinedFacet = createCombinedListFacet();
 
