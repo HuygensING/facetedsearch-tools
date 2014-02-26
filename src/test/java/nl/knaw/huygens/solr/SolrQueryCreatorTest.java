@@ -16,6 +16,7 @@ import nl.knaw.huygens.facetedsearch.model.DefaultFacetParameter;
 import nl.knaw.huygens.facetedsearch.model.DefaultFacetedSearchParameters;
 import nl.knaw.huygens.facetedsearch.model.FacetField;
 import nl.knaw.huygens.facetedsearch.model.FacetParameter;
+import nl.knaw.huygens.facetedsearch.model.FacetedSearchParameters;
 import nl.knaw.huygens.facetedsearch.model.HighlightingOptions;
 import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
 import nl.knaw.huygens.facetedsearch.model.QueryOptimizer;
@@ -36,7 +37,7 @@ import org.junit.Test;
 import com.google.common.collect.Lists;
 
 public class SolrQueryCreatorTest {
-  private DefaultFacetedSearchParameters searchParameters;
+  private FacetedSearchParameters<DefaultFacetedSearchParameters> searchParameters;
   private FacetedSearchParametersValidator validator;
   private SolrQueryCreator instance;
 
