@@ -5,8 +5,6 @@ import org.apache.commons.lang.builder.ToStringStyle;
 import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
-import com.google.common.base.Objects;
-
 public class FacetDefinition {
   private String name = "";
   private String title = "";
@@ -45,32 +43,6 @@ public class FacetDefinition {
   }
 
   public void addFacetToResult(FacetedSearchResult result, QueryResponse queryResponse) {
-
-    switch (type) {
-      case RANGE:
-        addRangeFacet(result, queryResponse);
-        break;
-      default:
-        addDefaultFacet(result, queryResponse);
-    }
-
-  }
-
-  @SuppressWarnings("rawtypes")
-  private void addRangeFacet(FacetedSearchResult result, QueryResponse queryResponse) {
-    for (org.apache.solr.client.solrj.response.RangeFacet solrRange : queryResponse.getFacetRanges()) {
-      if (Objects.equal(getName(), solrRange.getName())) {
-        long lowerLimit = (Long) solrRange.getStart();
-        long upperLimit = (Long) solrRange.getEnd();
-
-        result.addFacet(new RangeFacet(name, title, lowerLimit, upperLimit));
-
-      }
-    }
-
-  }
-
-  private void addDefaultFacet(FacetedSearchResult result, QueryResponse queryResponse) {
     DefaultFacet facet = new DefaultFacet(getName(), getTitle());
     org.apache.solr.client.solrj.response.FacetField solrField = queryResponse.getFacetField(getName());
 
