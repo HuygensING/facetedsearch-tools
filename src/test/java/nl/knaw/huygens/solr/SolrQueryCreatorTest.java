@@ -5,10 +5,6 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.util.List;
 
@@ -37,19 +33,12 @@ import com.google.common.collect.Lists;
 
 public class SolrQueryCreatorTest {
   private DefaultFacetedSearchParameters searchParameters;
-  private FacetedSearchParametersValidator validator;
   private SolrQueryCreator instance;
 
   @Before
   public void setUp() {
     searchParameters = new DefaultFacetedSearchParameters();
     instance = new SolrQueryCreator();
-    validator = mock(FacetedSearchParametersValidator.class);
-    when(validator.facetExists(any(DefaultFacetParameter.class))).thenReturn(true);
-    when(validator.facetFieldExists(anyString())).thenReturn(true);
-    when(validator.sortParameterExists(any(SortParameter.class))).thenReturn(true);
-    when(validator.resultFieldExists(anyString())).thenReturn(true);
-    when(validator.isValidRangeFacet(any(DefaultFacetParameter.class))).thenReturn(true);
   }
 
   @Test
@@ -57,7 +46,7 @@ public class SolrQueryCreatorTest {
     searchParameters.setTerm("test");
     searchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField"));
 
-    SolrQuery query = instance.createSearchQuery(searchParameters, validator);
+    SolrQuery query = instance.createSearchQuery(searchParameters);
 
     assertEquals("testSearchField:test", query.getQuery());
   }
@@ -67,7 +56,7 @@ public class SolrQueryCreatorTest {
     searchParameters.setTerm("test");
     searchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField", "testSearchField1"));
 
-    SolrQuery query = instance.createSearchQuery(searchParameters, validator);
+    SolrQuery query = instance.createSearchQuery(searchParameters);
 
     assertEquals("testSearchField:test testSearchField1:test", query.getQuery());
   }
@@ -77,7 +66,7 @@ public class SolrQueryCreatorTest {
     searchParameters.setTerm("");
     searchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField"));
 
-    SolrQuery query = instance.createSearchQuery(searchParameters, validator);
+    SolrQuery query = instance.createSearchQuery(searchParameters);
 
     assertEquals("*:*", query.getQuery());
 
@@ -88,7 +77,7 @@ public class SolrQueryCreatorTest {
     searchParameters.setTerm("test1 test2");
     searchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField"));
 
-    SolrQuery query = instance.createSearchQuery(searchParameters, validator);
+    SolrQuery query = instance.createSearchQuery(searchParameters);
 
     assertEquals("testSearchField:(test1 test2)", query.getQuery());
   }
@@ -99,7 +88,7 @@ public class SolrQueryCreatorTest {
     searchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField"));
     searchParameters.setFuzzy(true);
 
-    SolrQuery query = instance.createSearchQuery(searchParameters, validator);
+    SolrQuery query = instance.createSearchQuery(searchParameters);
 
     assertThat(query.getQuery(), startsWith("testSearchField:-test123"));
   }
@@ -110,7 +99,7 @@ public class SolrQueryCreatorTest {
     searchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField"));
     searchParameters.setFuzzy(true);
 
-    SolrQuery query = instance.createSearchQuery(searchParameters, validator);
+    SolrQuery query = instance.createSearchQuery(searchParameters);
 
     assertThat(query.getQuery(), startsWith("testSearchField:test123~"));
   }
@@ -121,7 +110,7 @@ public class SolrQueryCreatorTest {
     searchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField"));
     searchParameters.setFuzzy(true);
 
-    SolrQuery query = instance.createSearchQuery(searchParameters, validator);
+    SolrQuery query = instance.createSearchQuery(searchParameters);
 
     assertThat(query.getQuery(), containsString("test~"));
     assertThat(query.getQuery(), containsString("test2~"));
@@ -131,7 +120,7 @@ public class SolrQueryCreatorTest {
   public void testCreateSearchQueryTermNoFullTextSearchFields() throws NoSuchFieldInIndexException, WrongFacetValueException {
     searchParameters.setTerm("test");
 
-    SolrQuery query = instance.createSearchQuery(searchParameters, validator);
+    SolrQuery query = instance.createSearchQuery(searchParameters);
 
     assertEquals("*:*", query.getQuery());
   }
@@ -142,7 +131,7 @@ public class SolrQueryCreatorTest {
     searchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField"));
     searchParameters.setFacetValues(Lists.newArrayList(createFacetParameter("facetField", Lists.newArrayList("facetValue"))));
 
-    SolrQuery query = instance.createSearchQuery(searchParameters, validator);
+    SolrQuery query = instance.createSearchQuery(searchParameters);
 
     assertEquals("+testSearchField:test1 +facetField:facetValue", query.getQuery());
   }
@@ -152,7 +141,7 @@ public class SolrQueryCreatorTest {
     String sortFieldName = "name";
     searchParameters.setSortParameters(Lists.newArrayList(createSortParameter(sortFieldName, SortDirection.ASCENDING)));
 
-    SolrQuery query = instance.createSearchQuery(searchParameters, validator);
+    SolrQuery query = instance.createSearchQuery(searchParameters);
 
     SortClause sortClause = query.getSorts().get(0);
 
@@ -166,7 +155,7 @@ public class SolrQueryCreatorTest {
     String sortFieldName2 = "name2";
     searchParameters.setSortParameters(Lists.newArrayList(createSortParameter(sortFieldName1, SortDirection.ASCENDING), createSortParameter(sortFieldName2, SortDirection.DESCENDING)));
 
-    SolrQuery query = instance.createSearchQuery(searchParameters, validator);
+    SolrQuery query = instance.createSearchQuery(searchParameters);
 
     SortClause sortClause1 = query.getSorts().get(0);
     SortClause sortClause2 = query.getSorts().get(1);
@@ -178,20 +167,11 @@ public class SolrQueryCreatorTest {
     assertEquals(sortFieldName2, sortClause2.getItem());
   }
 
-  @Test(expected = NoSuchFieldInIndexException.class)
-  public void testCreateSearchQuerySortFieldDoesNotExist() throws NoSuchFieldInIndexException, WrongFacetValueException {
-    String sortFieldName = "name";
-    searchParameters.setSortParameters(Lists.newArrayList(createSortParameter(sortFieldName, SortDirection.ASCENDING)));
-    when(validator.sortParameterExists(any(SortParameter.class))).thenReturn(false);
-
-    instance.createSearchQuery(searchParameters, validator);
-  }
-
   @Test
   public void testCreateSearchQueryFacet() throws NoSuchFieldInIndexException, WrongFacetValueException {
     searchParameters.setFacetValues(Lists.newArrayList(createFacetParameter("facetField", Lists.newArrayList("facetValue"))));
 
-    SolrQuery query = instance.createSearchQuery(searchParameters, validator);
+    SolrQuery query = instance.createSearchQuery(searchParameters);
 
     assertEquals("+facetField:facetValue", query.getQuery().trim());
   }
@@ -201,7 +181,7 @@ public class SolrQueryCreatorTest {
     FacetParameter rangeFacet = createRangeFacetParameter("facetField", 20130101, 20140101);
     searchParameters.setFacetValues(Lists.newArrayList(rangeFacet));
 
-    SolrQuery query = instance.createSearchQuery(searchParameters, validator);
+    SolrQuery query = instance.createSearchQuery(searchParameters);
 
     assertEquals("+facetField:[20130101 TO 20140101]", query.getQuery().trim());
   }
@@ -212,35 +192,16 @@ public class SolrQueryCreatorTest {
     FacetParameter facet2 = createFacetParameter("facetField2", Lists.newArrayList("facetValue2"));
     searchParameters.setFacetValues(Lists.newArrayList(facet1, facet2));
 
-    SolrQuery query = instance.createSearchQuery(searchParameters, validator);
+    SolrQuery query = instance.createSearchQuery(searchParameters);
 
     assertEquals("+facetField:facetValue +facetField2:facetValue2", query.getQuery().trim());
-  }
-
-  @Test(expected = NoSuchFieldInIndexException.class)
-  public void testCreateSearchQueryFacetDoesNotExist() throws NoSuchFieldInIndexException, WrongFacetValueException {
-    when(validator.facetExists(any(DefaultFacetParameter.class))).thenReturn(false);
-    searchParameters.setFacetValues(Lists.newArrayList(createFacetParameter("test", Lists.newArrayList("value"))));
-
-    instance.createSearchQuery(searchParameters, validator);
-
-  }
-
-  @Test(expected = WrongFacetValueException.class)
-  public void testCreateSearchQueryRangeFacetHasWrongValue() throws NoSuchFieldInIndexException, WrongFacetValueException {
-    FacetParameter rangeFacet = createRangeFacetParameter("facetName", 20140101, 20130101);
-    searchParameters.setFacetValues(Lists.newArrayList(rangeFacet));
-    when(validator.isValidRangeFacet(any(DefaultFacetParameter.class))).thenReturn(false);
-
-    instance.createSearchQuery(searchParameters, validator);
-
   }
 
   @Test
   public void testCreateSearchQueryResultField() throws NoSuchFieldInIndexException, WrongFacetValueException {
     searchParameters.setResultFields(Lists.newArrayList("resultField"));
 
-    SolrQuery query = instance.createSearchQuery(searchParameters, validator);
+    SolrQuery query = instance.createSearchQuery(searchParameters);
 
     assertEquals("resultField", query.getFields());
   }
@@ -249,36 +210,20 @@ public class SolrQueryCreatorTest {
   public void testCreateSearchQueryMultipleResultFields() throws NoSuchFieldInIndexException, WrongFacetValueException {
     searchParameters.setResultFields(Lists.newArrayList("resultField", "resultField1"));
 
-    SolrQuery query = instance.createSearchQuery(searchParameters, validator);
+    SolrQuery query = instance.createSearchQuery(searchParameters);
 
     // to make the test independent of format changed ignore all the white spaces.
     assertEquals("resultField,resultField1", query.getFields().replaceAll(" ", ""));
-  }
-
-  @Test(expected = NoSuchFieldInIndexException.class)
-  public void testCreateSearchQueryResultFieldDoesNotExist() throws NoSuchFieldInIndexException, WrongFacetValueException {
-    searchParameters.setResultFields(Lists.newArrayList("resultField"));
-    when(validator.resultFieldExists(anyString())).thenReturn(false);
-
-    instance.createSearchQuery(searchParameters, validator);
   }
 
   @Test
   public void testCreateSearchQueryFacetFields() throws NoSuchFieldInIndexException, WrongFacetValueException {
     searchParameters.setFacetFields(Lists.newArrayList(new FacetField("facetField")));
 
-    SolrQuery query = instance.createSearchQuery(searchParameters, validator);
+    SolrQuery query = instance.createSearchQuery(searchParameters);
 
     assertArrayEquals(new String[] { "facetField" }, query.getFacetFields());
     assertEquals(true, query.getBool(FacetParams.FACET)); // this boolean is set automagically
-  }
-
-  @Test(expected = NoSuchFieldInIndexException.class)
-  public void testCreateSearchQueryFacetFieldDoesNotExist() throws NoSuchFieldInIndexException, WrongFacetValueException {
-    searchParameters.setFacetFields(Lists.newArrayList(new FacetField("facetField")));
-    when(validator.facetFieldExists(anyString())).thenReturn(false);
-
-    instance.createSearchQuery(searchParameters, validator);
   }
 
   @Test
@@ -287,7 +232,7 @@ public class SolrQueryCreatorTest {
     facetFields.add(new RangeFacetField("rangeField", "lowerField", "upperField"));
     searchParameters.setFacetFields(facetFields);
 
-    SolrQuery query = instance.createSearchQuery(searchParameters, validator);
+    SolrQuery query = instance.createSearchQuery(searchParameters);
 
     assertArrayEquals(new String[] { "lowerField", "upperField" }, query.getFacetFields());
   }
@@ -296,7 +241,7 @@ public class SolrQueryCreatorTest {
   public void testCreateSearchQueryDefaultQueryOptimizer() throws NoSuchFieldInIndexException, WrongFacetValueException {
     searchParameters.setQueryOptimizer(new QueryOptimizer());
 
-    SolrQuery query = instance.createSearchQuery(searchParameters, validator);
+    SolrQuery query = instance.createSearchQuery(searchParameters);
 
     assertEquals(50000, (int) query.getRows());
     assertEquals(10000, query.getFacetLimit());
@@ -311,7 +256,7 @@ public class SolrQueryCreatorTest {
     queryOptimizer.setRows(5000);
     searchParameters.setQueryOptimizer(queryOptimizer);
 
-    SolrQuery query = instance.createSearchQuery(searchParameters, validator);
+    SolrQuery query = instance.createSearchQuery(searchParameters);
 
     assertEquals(5000, (int) query.getRows());
     assertEquals(60, query.getFacetLimit());
@@ -320,7 +265,7 @@ public class SolrQueryCreatorTest {
 
   @Test
   public void testCreateSearchQueryNoQueryOptimizer() throws NoSuchFieldInIndexException, WrongFacetValueException {
-    SolrQuery query = instance.createSearchQuery(searchParameters, validator);
+    SolrQuery query = instance.createSearchQuery(searchParameters);
 
     //Solr defaults
     assertEquals(null, query.getRows());
@@ -334,7 +279,7 @@ public class SolrQueryCreatorTest {
     searchParameters.setTerm("test");
     searchParameters.setFullTextSearchFields(Lists.newArrayList("fullTextSearchField"));
 
-    SolrQuery query = instance.createSearchQuery(searchParameters, validator);
+    SolrQuery query = instance.createSearchQuery(searchParameters);
 
     assertEquals(true, query.getHighlight());
     assertEquals(100, query.getHighlightFragsize());
@@ -351,7 +296,7 @@ public class SolrQueryCreatorTest {
     searchParameters.setTerm("test");
     searchParameters.setFullTextSearchFields(Lists.newArrayList("fullTextSearchField"));
 
-    SolrQuery query = instance.createSearchQuery(searchParameters, validator);
+    SolrQuery query = instance.createSearchQuery(searchParameters);
 
     assertEquals(true, query.getHighlight());
     assertEquals(100, query.getHighlightFragsize());
@@ -363,7 +308,7 @@ public class SolrQueryCreatorTest {
 
   @Test
   public void testCreateSearchQueryNoHightlightOptions() throws NoSuchFieldInIndexException, WrongFacetValueException {
-    SolrQuery query = instance.createSearchQuery(searchParameters, validator);
+    SolrQuery query = instance.createSearchQuery(searchParameters);
 
     assertEquals(false, query.getHighlight());
   }

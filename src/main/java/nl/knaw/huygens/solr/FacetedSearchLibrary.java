@@ -35,7 +35,8 @@ public class FacetedSearchLibrary {
    */
   public <T extends FacetedSearchParameters<T>> FacetedSearchResult search(FacetedSearchParameters<T> searchParameters) throws NoSuchFieldInIndexException, WrongFacetValueException,
       FacetedSearchException {
-    SolrQuery query = queryCreator.createSearchQuery(searchParameters, null);
+    searchParameters.validate();
+    SolrQuery query = queryCreator.createSearchQuery(searchParameters);
     QueryResponse queryResponse = solrCore.search(query);
     FacetedSearchResult searchResult = searchResultBuilder.build(queryResponse);
 

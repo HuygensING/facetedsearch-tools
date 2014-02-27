@@ -7,9 +7,7 @@ import nl.knaw.huygens.facetedsearch.model.FacetedSearchParameters;
 import nl.knaw.huygens.facetedsearch.model.HighlightingOptions;
 import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
 import nl.knaw.huygens.facetedsearch.model.QueryOptimizer;
-import nl.knaw.huygens.facetedsearch.model.RangeParameter;
 import nl.knaw.huygens.facetedsearch.model.SortParameter;
-import nl.knaw.huygens.facetedsearch.model.WrongFacetValueException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -19,13 +17,12 @@ import org.apache.solr.common.params.HighlightParams;
 
 public class SolrQueryCreator {
 
-  public <T extends FacetedSearchParameters<T>> SolrQuery createSearchQuery(FacetedSearchParameters<T> searchParameters, FacetedSearchParametersValidator validator)
-      throws NoSuchFieldInIndexException, WrongFacetValueException {
+  public <T extends FacetedSearchParameters<T>> SolrQuery createSearchQuery(FacetedSearchParameters<T> searchParameters) {
     SolrQuery query = new SolrQuery();
-    query.setQuery(createQuery(searchParameters, validator));
-    query.setFields(validateResultFields(searchParameters, validator));
-    query.addFacetField(validateFacetFields(searchParameters, validator));
-    query = setSort(query, searchParameters, validator);
+    query.setQuery(createQuery(searchParameters));
+    query.setFields(getResultFields(searchParameters));
+    query.addFacetField(getFacetFields(searchParameters));
+    query = setSort(query, searchParameters);
     query = setHighlighting(query, searchParameters);
 
     optimizeQuery(query, searchParameters);
@@ -59,31 +56,17 @@ public class SolrQueryCreator {
     return query;
   }
 
-  private <T extends FacetedSearchParameters<T>> String[] validateResultFields(FacetedSearchParameters<T> searchParameters, FacetedSearchParametersValidator validator)
-      throws NoSuchFieldInIndexException {
-    for (String resultField : searchParameters.getResultFields()) {
-      if (!validator.resultFieldExists(resultField)) {
-        throw new NoSuchFieldInIndexException(resultField);
-      }
-    }
+  private <T extends FacetedSearchParameters<T>> String[] getResultFields(FacetedSearchParameters<T> searchParameters) {
 
     return searchParameters.getResultFields().toArray(new String[0]);
   }
 
-  private <T extends FacetedSearchParameters<T>> String[] validateFacetFields(FacetedSearchParameters<T> searchParameters, FacetedSearchParametersValidator validator)
-      throws NoSuchFieldInIndexException {
-
-    for (String facetField : searchParameters.getFacetFields()) {
-      if (!validator.facetFieldExists(facetField)) {
-        throw new NoSuchFieldInIndexException(facetField);
-      }
-    }
+  private <T extends FacetedSearchParameters<T>> String[] getFacetFields(FacetedSearchParameters<T> searchParameters) {
 
     return searchParameters.getFacetFields().toArray(new String[0]);
   }
 
-  private <T extends FacetedSearchParameters<T>> String createQuery(FacetedSearchParameters<T> searchParameters, FacetedSearchParametersValidator validator) throws NoSuchFieldInIndexException,
-      WrongFacetValueException {
+  private <T extends FacetedSearchParameters<T>> String createQuery(FacetedSearchParameters<T> searchParameters) {
     StringBuilder builder = new StringBuilder();
     List<String> fullTextSearchFields = searchParameters.getFullTextSearchFields();
     List<FacetParameter> facetValues = searchParameters.getFacetValues();
@@ -104,12 +87,9 @@ public class SolrQueryCreator {
     if (useFacets) {
       for (FacetParameter facetParameter : facetValues) {
         String name = facetParameter.getName();
-        if (validator.facetExists(facetParameter)) {
-          builder.append(" +").append(name).append(":");
-          builder.append(formatFacetValue(facetParameter, validator));
-        } else {
-          throw new NoSuchFieldInIndexException(name);
-        }
+
+        builder.append(" +").append(name).append(":");
+        builder.append(facetParameter.getQueryValue());
       }
     }
 
@@ -118,16 +98,6 @@ public class SolrQueryCreator {
 
   private boolean isWildCardQuery(String term) {
     return StringUtils.isBlank(term) || term.equals("*") || term.equals("*:*");
-  }
-
-  private String formatFacetValue(FacetParameter facetParameter, FacetedSearchParametersValidator validator) throws WrongFacetValueException {
-    if (facetParameter instanceof RangeParameter) {
-      if (!validator.isValidRangeFacet(facetParameter)) {
-        throw new WrongFacetValueException(facetParameter.getName(), facetParameter.getQueryValue());
-      }
-    }
-
-    return facetParameter.getQueryValue();
   }
 
   private String formatTerm(String term, boolean fuzzy) {
@@ -145,19 +115,13 @@ public class SolrQueryCreator {
    * Sets the sort criteria for the query.
    * @param query the {@code SolrQuery} that should be sorted.
    * @param searchParameters that container of the {@code SortParameter}s.
-   * @param validator a {@code FacetedSearchParametersValidator} to check if the {@code SortParamater}s exist.
    * @return the query, that went in plus the added {@code SortClause}s.
    * @throws NoSuchFieldInIndexException if one of the {@code SortParameter}s does not exist.
    */
-  private <T extends FacetedSearchParameters<T>> SolrQuery setSort(SolrQuery query, FacetedSearchParameters<T> searchParameters, FacetedSearchParametersValidator validator)
-      throws NoSuchFieldInIndexException {
+  private <T extends FacetedSearchParameters<T>> SolrQuery setSort(SolrQuery query, FacetedSearchParameters<T> searchParameters) {
     List<SortParameter> sortParameters = searchParameters.getSortParameters();
     for (SortParameter sortParameter : sortParameters) {
-      if (validator.sortParameterExists(sortParameter)) {
-        query.addSort(createSortClause(sortParameter));
-      } else {
-        throw new NoSuchFieldInIndexException(sortParameter.getFieldname());
-      }
+      query.addSort(createSortClause(sortParameter));
     }
     return query;
   }

@@ -147,4 +147,14 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
     return facetInfos;
   }
 
+  /**
+   * Validates the model if all the fields defined by the user exist and have the right value. 
+   * @throws NoSuchFieldInIndexException when a field is found that does not exist.
+   * @throws WrongFacetValueException when a facet has the wrong value.
+   */
+  public void validate() throws NoSuchFieldInIndexException, WrongFacetValueException {
+    // TODO Auto-generated method stub
+
+  }
+
 }
