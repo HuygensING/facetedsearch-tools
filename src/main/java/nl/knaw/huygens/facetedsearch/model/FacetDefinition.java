@@ -53,4 +53,11 @@ public class FacetDefinition {
     result.addFacet(facet);
   }
 
+  public boolean isValidFacetField(FacetField facetField) {
+    throw new UnsupportedOperationException("Yet to be implemented");
+  }
+
+  public boolean isValidFacetParameter(FacetParameter facetParameter) {
+    throw new UnsupportedOperationException("Yet to be implemented");
+  }
 }

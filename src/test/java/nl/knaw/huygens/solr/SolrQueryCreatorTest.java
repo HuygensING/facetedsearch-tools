@@ -129,7 +129,7 @@ public class SolrQueryCreatorTest {
   public void testCreateSearchQueryTermAndFacet() throws NoSuchFieldInIndexException, WrongFacetValueException {
     searchParameters.setTerm("test1");
     searchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField"));
-    searchParameters.setFacetValues(Lists.newArrayList(createFacetParameter("facetField", Lists.newArrayList("facetValue"))));
+    searchParameters.setFacetParameters(Lists.newArrayList(createFacetParameter("facetField", Lists.newArrayList("facetValue"))));
 
     SolrQuery query = instance.createSearchQuery(searchParameters);
 
@@ -169,7 +169,7 @@ public class SolrQueryCreatorTest {
 
   @Test
   public void testCreateSearchQueryFacet() throws NoSuchFieldInIndexException, WrongFacetValueException {
-    searchParameters.setFacetValues(Lists.newArrayList(createFacetParameter("facetField", Lists.newArrayList("facetValue"))));
+    searchParameters.setFacetParameters(Lists.newArrayList(createFacetParameter("facetField", Lists.newArrayList("facetValue"))));
 
     SolrQuery query = instance.createSearchQuery(searchParameters);
 
@@ -179,7 +179,7 @@ public class SolrQueryCreatorTest {
   @Test
   public void testCreateSearchQueryRangeFacet() throws NoSuchFieldInIndexException, WrongFacetValueException {
     FacetParameter rangeFacet = createRangeFacetParameter("facetField", 20130101, 20140101);
-    searchParameters.setFacetValues(Lists.newArrayList(rangeFacet));
+    searchParameters.setFacetParameters(Lists.newArrayList(rangeFacet));
 
     SolrQuery query = instance.createSearchQuery(searchParameters);
 
@@ -190,7 +190,7 @@ public class SolrQueryCreatorTest {
   public void testCreateSearchQueryMultipleFacets() throws NoSuchFieldInIndexException, WrongFacetValueException {
     FacetParameter facet1 = createFacetParameter("facetField", Lists.newArrayList("facetValue"));
     FacetParameter facet2 = createFacetParameter("facetField2", Lists.newArrayList("facetValue2"));
-    searchParameters.setFacetValues(Lists.newArrayList(facet1, facet2));
+    searchParameters.setFacetParameters(Lists.newArrayList(facet1, facet2));
 
     SolrQuery query = instance.createSearchQuery(searchParameters);
 

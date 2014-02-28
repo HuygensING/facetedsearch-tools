@@ -12,16 +12,16 @@ import com.google.common.collect.Lists;
 @SuppressWarnings("unchecked")
 @XmlRootElement
 public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
-  private String term = "*";
-  private List<String> fullTextSearchFields;
-  private List<FacetField> facetFields = Lists.newArrayList();
-  private List<FacetParameter> facetParameters = Lists.newArrayList();
-  private Map<String, FacetDefinition> facetInfoMap;
-  private List<String> resultFields = Lists.newArrayList();
-  private boolean fuzzy = false;
-  private List<SortParameter> sortParameters = Lists.newArrayList();
-  private QueryOptimizer queryOptimizer;
-  private HighlightingOptions highlightingOptions;
+  private String term = "*"; // set in front-end
+  private List<String> fullTextSearchFields; // set in back-end
+  private List<FacetField> facetFields = Lists.newArrayList(); // set in back-end
+  private List<FacetParameter> facetParameters = Lists.newArrayList(); // set in front-end
+  private Map<String, FacetDefinition> facetDefinitionMap; // set in back-end
+  private List<String> resultFields = Lists.newArrayList(); // set in back-end
+  private boolean fuzzy = false; // set in front-end
+  private List<SortParameter> sortParameters = Lists.newArrayList(); // set in front-end
+  private QueryOptimizer queryOptimizer; // set in back-end
+  private HighlightingOptions highlightingOptions; // set in back-end
 
   public T setTerm(final String term) {
     if (StringUtils.isNotBlank(term)) {
@@ -90,17 +90,17 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
     return facetParameters;
   }
 
-  public T setFacetValues(List<FacetParameter> fp) {
+  public T setFacetParameters(List<FacetParameter> fp) {
     this.facetParameters = fp;
     return (T) this;
   }
 
-  public Map<String, FacetDefinition> getFacetInfoMap() {
-    return facetInfoMap;
+  public Map<String, FacetDefinition> getFacetDefinitionMap() {
+    return facetDefinitionMap;
   }
 
-  public T setFacetInfoMap(Map<String, FacetDefinition> facetInfoMap) {
-    this.facetInfoMap = facetInfoMap;
+  public T setFacetDefinitionMap(Map<String, FacetDefinition> facetDefinitionMap) {
+    this.facetDefinitionMap = facetDefinitionMap;
     return (T) this;
   }
 
@@ -135,7 +135,7 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
    * @return the {@code FacetInfo} if exists else null. 
    */
   public FacetDefinition getFacetInfo(String facetFieldName) {
-    return facetInfoMap.get(facetFieldName);
+    return facetDefinitionMap.get(facetFieldName);
   }
 
   public List<FacetDefinition> getFacetInfoForRequest() {
@@ -153,8 +153,49 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
    * @throws WrongFacetValueException when a facet has the wrong value.
    */
   public void validate() throws NoSuchFieldInIndexException, WrongFacetValueException {
-    // TODO Auto-generated method stub
+    for (FacetField facetField : facetFields) {
+      if (!isValidFacetField(facetField)) {
+        throw new NoSuchFieldInIndexException(facetField.getName());
+      }
+    }
+
+    for (FacetParameter facetParameter : facetParameters) {
+      if (!isValidFacetParameter(facetParameter)) {
+        throw new NoSuchFieldInIndexException(facetParameter.getName());
+      }
+    }
+
+    for (String resultField : resultFields) {
+      if (!isValidResultField(resultField)) {
+        throw new NoSuchFieldInIndexException(resultField);
+      }
+    }
+
+    for (SortParameter sortParameter : sortParameters) {
+      if (!isValidSortParamater(sortParameter)) {
+        throw new NoSuchFieldInIndexException(sortParameter.getFieldname());
+      }
+    }
 
   }
 
+  private boolean isValidSortParamater(SortParameter sortParameter) {
+    return facetDefinitionMap.get(sortParameter.getFieldname()) != null;
+  }
+
+  private boolean isValidResultField(String resultField) {
+    return facetDefinitionMap.get(resultField) != null;
+  }
+
+  private boolean isValidFacetParameter(FacetParameter facetParameter) {
+    FacetDefinition definition = facetDefinitionMap.get(facetParameter.getName());
+
+    return definition != null && definition.isValidFacetParameter(facetParameter);
+  }
+
+  private boolean isValidFacetField(FacetField facetField) {
+    FacetDefinition definition = facetDefinitionMap.get(facetField.getName());
+
+    return definition != null && definition.isValidFacetField(facetField);
+  }
 }

@@ -17,4 +17,8 @@ public class FacetField {
   public List<String> getFields() {
     return Lists.newArrayList(facetName);
   }
+
+  public String getName() {
+    return facetName;
+  }
 }
