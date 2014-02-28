@@ -11,7 +11,7 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 // Different module / package
 public interface SolrSearcher {
 
-  QueryResponse search(SolrQuery query) throws SolrServerException; //TODO throw solr exception
+  QueryResponse search(SolrQuery query) throws SolrServerException;
 
   List<FacetDefinition> getFacetDefinitions();
 
