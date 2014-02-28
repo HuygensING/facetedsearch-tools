@@ -1,7 +1,13 @@
 package nl.knaw.huygens.solr;
 
+import java.io.IOException;
+import java.util.List;
+
+import nl.knaw.huygens.facetedsearch.model.FacetDefinition;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrServer;
+import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.core.CoreContainer;
 import org.slf4j.Logger;
@@ -19,19 +25,17 @@ public class LocalSolrServer extends AbstractSolrServer {
   private CoreContainer container;
   private SolrServer server;
 
-  public LocalSolrServer(String solrDir, String coreName, int commitWithinInSeconds) {
-    super(commitWithinInSeconds);
+  public LocalSolrServer(String solrDir, String coreName, int commitWithinInSeconds, List<FacetDefinition> facetDefinitions) {
+    super(commitWithinInSeconds, facetDefinitions);
     this.solrDir = StringUtils.defaultIfBlank(solrDir, SOLR_DIRECTORY);
     this.coreName = StringUtils.defaultIfBlank(coreName, "core1");
     createServer();
   }
 
   @Override
-  public void shutdown() {
+  public void shutdown() throws SolrServerException, IOException {
     try {
       super.commitAndOptimize();
-    } catch (Exception e) {
-      getLogger().error("An exception occured during shutdown: {}", e.getMessage());
     } finally {
       if (container != null) {
         container.shutdown();

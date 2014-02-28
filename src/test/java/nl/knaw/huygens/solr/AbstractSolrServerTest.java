@@ -1,6 +1,5 @@
 package nl.knaw.huygens.solr;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doThrow;
@@ -38,7 +37,7 @@ public class AbstractSolrServerTest {
     solrServer = mock(SolrServer.class);
     logger = mock(Logger.class);
 
-    instance = new AbstractSolrServer(SECONDS_TO_COMMIT) {
+    instance = new AbstractSolrServer(SECONDS_TO_COMMIT, null) {
 
       @Override
       protected SolrServer getSolrServer() {
@@ -53,7 +52,7 @@ public class AbstractSolrServerTest {
   }
 
   @Test
-  public void testAdd() throws FacetedSearchException, SolrServerException, IOException {
+  public void testAdd() throws SolrServerException, IOException {
     SolrInputDocument doc = new SolrInputDocument();
 
     instance.add(doc);
@@ -61,8 +60,8 @@ public class AbstractSolrServerTest {
     verify(solrServer).add(doc, TIME_TO_COMMIT);
   }
 
-  @Test(expected = FacetedSearchException.class)
-  public void testAddSolrServerException() throws FacetedSearchException, SolrServerException, IOException {
+  @Test(expected = SolrServerException.class)
+  public void testAddSolrServerException() throws SolrServerException, IOException {
     SolrInputDocument doc = new SolrInputDocument();
     doThrow(SolrServerException.class).when(solrServer).add(doc, TIME_TO_COMMIT);
 
@@ -73,8 +72,8 @@ public class AbstractSolrServerTest {
     }
   }
 
-  @Test(expected = FacetedSearchException.class)
-  public void testAddIOException() throws FacetedSearchException, SolrServerException, IOException {
+  @Test(expected = IOException.class)
+  public void testAddIOException() throws SolrServerException, IOException {
     SolrInputDocument doc = new SolrInputDocument();
     doThrow(IOException.class).when(solrServer).add(doc, TIME_TO_COMMIT);
 
@@ -86,7 +85,7 @@ public class AbstractSolrServerTest {
   }
 
   @Test
-  public void testAddMultiple() throws FacetedSearchException, SolrServerException, IOException {
+  public void testAddMultiple() throws SolrServerException, IOException {
 
     List<SolrInputDocument> docs = Lists.newArrayList(new SolrInputDocument(), new SolrInputDocument());
 
@@ -95,8 +94,8 @@ public class AbstractSolrServerTest {
     verify(solrServer).add(docs, TIME_TO_COMMIT);
   }
 
-  @Test(expected = FacetedSearchException.class)
-  public void testAddMultipleSolrServerException() throws FacetedSearchException, SolrServerException, IOException {
+  @Test(expected = SolrServerException.class)
+  public void testAddMultipleSolrServerException() throws SolrServerException, IOException {
     List<SolrInputDocument> docs = Lists.newArrayList(new SolrInputDocument(), new SolrInputDocument());
     doThrow(SolrServerException.class).when(solrServer).add(docs, TIME_TO_COMMIT);
 
@@ -107,8 +106,8 @@ public class AbstractSolrServerTest {
     }
   }
 
-  @Test(expected = FacetedSearchException.class)
-  public void testAddMultipleIOException() throws FacetedSearchException, SolrServerException, IOException {
+  @Test(expected = IOException.class)
+  public void testAddMultipleIOException() throws SolrServerException, IOException {
     List<SolrInputDocument> docs = Lists.newArrayList(new SolrInputDocument(), new SolrInputDocument());
     doThrow(IOException.class).when(solrServer).add(docs, TIME_TO_COMMIT);
 
@@ -120,14 +119,14 @@ public class AbstractSolrServerTest {
   }
 
   @Test
-  public void testCommit() throws FacetedSearchException, SolrServerException, IOException {
+  public void testCommit() throws SolrServerException, IOException {
     instance.commit();
 
     verify(solrServer).commit();
   }
 
-  @Test(expected = FacetedSearchException.class)
-  public void testCommitSolrServerException() throws FacetedSearchException, SolrServerException, IOException {
+  @Test(expected = SolrServerException.class)
+  public void testCommitSolrServerException() throws SolrServerException, IOException {
     doThrow(SolrServerException.class).when(solrServer).commit();
 
     try {
@@ -137,8 +136,8 @@ public class AbstractSolrServerTest {
     }
   }
 
-  @Test(expected = FacetedSearchException.class)
-  public void testCommitIOException() throws FacetedSearchException, SolrServerException, IOException {
+  @Test(expected = IOException.class)
+  public void testCommitIOException() throws SolrServerException, IOException {
     doThrow(IOException.class).when(solrServer).commit();
 
     try {
@@ -149,15 +148,15 @@ public class AbstractSolrServerTest {
   }
 
   @Test
-  public void testDeleteById() throws FacetedSearchException, SolrServerException, IOException {
+  public void testDeleteById() throws SolrServerException, IOException {
     String id = "id";
     instance.deleteById(id);
 
     verify(solrServer).deleteById(id, TIME_TO_COMMIT);
   }
 
-  @Test(expected = FacetedSearchException.class)
-  public void testDeleteByIdSolrServerException() throws FacetedSearchException, SolrServerException, IOException {
+  @Test(expected = SolrServerException.class)
+  public void testDeleteByIdSolrServerException() throws SolrServerException, IOException {
     String id = "id";
     doThrow(SolrServerException.class).when(solrServer).deleteById(id, TIME_TO_COMMIT);
 
@@ -168,8 +167,8 @@ public class AbstractSolrServerTest {
     }
   }
 
-  @Test(expected = FacetedSearchException.class)
-  public void testDeleteByIdIOException() throws FacetedSearchException, SolrServerException, IOException {
+  @Test(expected = IOException.class)
+  public void testDeleteByIdIOException() throws SolrServerException, IOException {
     String id = "id";
     doThrow(IOException.class).when(solrServer).deleteById(id, TIME_TO_COMMIT);
 
@@ -181,15 +180,15 @@ public class AbstractSolrServerTest {
   }
 
   @Test
-  public void testDeleteByIdMultiple() throws FacetedSearchException, SolrServerException, IOException {
+  public void testDeleteByIdMultiple() throws SolrServerException, IOException {
     List<String> ids = Lists.newArrayList("id1", "id2", "id3");
     instance.deleteById(ids);
 
     verify(solrServer).deleteById(ids, TIME_TO_COMMIT);
   }
 
-  @Test(expected = FacetedSearchException.class)
-  public void testDeleteByIdMultipleSolrServerException() throws FacetedSearchException, SolrServerException, IOException {
+  @Test(expected = SolrServerException.class)
+  public void testDeleteByIdMultipleSolrServerException() throws SolrServerException, IOException {
     List<String> ids = Lists.newArrayList("id1", "id2", "id3");
     doThrow(SolrServerException.class).when(solrServer).deleteById(ids, TIME_TO_COMMIT);
 
@@ -200,8 +199,8 @@ public class AbstractSolrServerTest {
     }
   }
 
-  @Test(expected = FacetedSearchException.class)
-  public void testDeleteByIdMultitpleIOException() throws FacetedSearchException, SolrServerException, IOException {
+  @Test(expected = IOException.class)
+  public void testDeleteByIdMultitpleIOException() throws SolrServerException, IOException {
     List<String> ids = Lists.newArrayList("id1", "id2", "id3");
     doThrow(IOException.class).when(solrServer).deleteById(ids, TIME_TO_COMMIT);
 
@@ -213,7 +212,7 @@ public class AbstractSolrServerTest {
   }
 
   @Test
-  public void testDeleteByQuery() throws FacetedSearchException, SolrServerException, IOException {
+  public void testDeleteByQuery() throws SolrServerException, IOException {
     String query = "test:test";
 
     instance.deleteByQuery(query);
@@ -222,8 +221,8 @@ public class AbstractSolrServerTest {
 
   }
 
-  @Test(expected = FacetedSearchException.class)
-  public void testDeleteByQuerySolrServerException() throws FacetedSearchException, SolrServerException, IOException {
+  @Test(expected = SolrServerException.class)
+  public void testDeleteByQuerySolrServerException() throws SolrServerException, IOException {
     String query = "test:test";
     doThrow(SolrServerException.class).when(solrServer).deleteByQuery(query, TIME_TO_COMMIT);
 
@@ -234,8 +233,8 @@ public class AbstractSolrServerTest {
     }
   }
 
-  @Test(expected = FacetedSearchException.class)
-  public void testDeleteByQueryIOException() throws FacetedSearchException, SolrServerException, IOException {
+  @Test(expected = IOException.class)
+  public void testDeleteByQueryIOException() throws SolrServerException, IOException {
     String query = "test:test";
     doThrow(IOException.class).when(solrServer).deleteByQuery(query, TIME_TO_COMMIT);
 
@@ -247,14 +246,14 @@ public class AbstractSolrServerTest {
   }
 
   @Test
-  public void testEmpty() throws FacetedSearchException, SolrServerException, IOException {
+  public void testEmpty() throws SolrServerException, IOException {
     instance.empty();
 
     verify(solrServer).deleteByQuery("*:*", TIME_TO_COMMIT);
   }
 
-  @Test(expected = FacetedSearchException.class)
-  public void testEmptySolrServerException() throws FacetedSearchException, SolrServerException, IOException {
+  @Test(expected = SolrServerException.class)
+  public void testEmptySolrServerException() throws SolrServerException, IOException {
     doThrow(SolrServerException.class).when(solrServer).deleteByQuery("*:*", TIME_TO_COMMIT);
 
     try {
@@ -264,8 +263,8 @@ public class AbstractSolrServerTest {
     }
   }
 
-  @Test(expected = FacetedSearchException.class)
-  public void testEmptyIOException() throws FacetedSearchException, SolrServerException, IOException {
+  @Test(expected = IOException.class)
+  public void testEmptyIOException() throws SolrServerException, IOException {
     doThrow(IOException.class).when(solrServer).deleteByQuery("*:*", TIME_TO_COMMIT);
 
     try {
@@ -273,19 +272,6 @@ public class AbstractSolrServerTest {
     } finally {
       verify(solrServer).deleteByQuery("*:*", TIME_TO_COMMIT);
     }
-  }
-
-  @Test
-  public void testHandleException() {
-    String message = "test message";
-    Exception ex = new Exception(message);
-
-    try {
-      instance.handleException(ex);
-    } catch (FacetedSearchException e) {
-      assertEquals(message, e.getMessage());
-    }
-
   }
 
   @Test
@@ -380,7 +366,7 @@ public class AbstractSolrServerTest {
   }
 
   @Test
-  public void testSearch() throws FacetedSearchException, NoSuchFieldInIndexException, WrongFacetValueException, SolrServerException {
+  public void testSearch() throws NoSuchFieldInIndexException, WrongFacetValueException, SolrServerException {
     SolrQuery queryMock = mock(SolrQuery.class);
 
     instance.search(queryMock);
@@ -388,8 +374,8 @@ public class AbstractSolrServerTest {
     verify(solrServer).query(queryMock);
   }
 
-  @Test(expected = FacetedSearchException.class)
-  public void testSearchSolrServerException() throws NoSuchFieldInIndexException, WrongFacetValueException, SolrServerException, FacetedSearchException {
+  @Test(expected = SolrServerException.class)
+  public void testSearchSolrServerException() throws NoSuchFieldInIndexException, WrongFacetValueException, SolrServerException {
     doThrow(SolrServerException.class).when(solrServer).query(any(SolrQuery.class));
 
     SolrQuery queryMock = mock(SolrQuery.class);
@@ -403,7 +389,7 @@ public class AbstractSolrServerTest {
   }
 
   @Test
-  public void testShutdown() throws SolrServerException, IOException, FacetedSearchException {
+  public void testShutdown() throws SolrServerException, IOException {
 
     instance.shutdown();
 
@@ -413,8 +399,8 @@ public class AbstractSolrServerTest {
 
   }
 
-  @Test(expected = FacetedSearchException.class)
-  public void testShutdownSolrException() throws SolrServerException, IOException, FacetedSearchException {
+  @Test(expected = SolrServerException.class)
+  public void testShutdownSolrException() throws SolrServerException, IOException {
     doThrow(SolrServerException.class).when(solrServer).commit();
     instance.shutdown();
 
@@ -423,8 +409,8 @@ public class AbstractSolrServerTest {
     inOrder.verify(logger).error(anyString(), anyString());
   }
 
-  @Test(expected = FacetedSearchException.class)
-  public void testShutdownIOException() throws SolrServerException, IOException, FacetedSearchException {
+  @Test(expected = IOException.class)
+  public void testShutdownIOException() throws SolrServerException, IOException {
     doThrow(IOException.class).when(solrServer).commit();
     instance.shutdown();
 

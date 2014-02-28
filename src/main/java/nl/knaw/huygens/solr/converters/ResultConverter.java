@@ -16,8 +16,10 @@ public class ResultConverter implements QueryResponseConverter {
   public void convert(final FacetedSearchResult result, final QueryResponse queryResponse) {
     List<String> ids = Lists.newArrayList();
     for (SolrDocument doc : queryResponse.getResults()) {
-      ids.add(String.valueOf(doc.getFieldValue(SolrFields.DOC_ID)));
+      ids.add(String.valueOf(doc.getFieldValue(SolrFields.DOC_ID))); //TODO add raw result instead of ids.
     }
+
+    //TODO add maxScore, numFound, start
 
     result.setIds(ids);
   }

@@ -8,15 +8,15 @@ import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
 public class FacetListConverter implements QueryResponseConverter {
-  private final List<FacetDefinition> facetInfoList;
+  private final List<FacetDefinition> facetDefinitionList;
 
-  public FacetListConverter(List<FacetDefinition> facetInfoList) {
-    this.facetInfoList = facetInfoList;
+  public FacetListConverter(List<FacetDefinition> facetDefinitionList) {
+    this.facetDefinitionList = facetDefinitionList;
   }
 
   @Override
   public void convert(final FacetedSearchResult result, final QueryResponse queryResponse) {
-    for (FacetDefinition facetInfo : facetInfoList) {
+    for (FacetDefinition facetInfo : facetDefinitionList) {
       facetInfo.addFacetToResult(result, queryResponse);
     }
   }

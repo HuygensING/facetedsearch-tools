@@ -15,6 +15,7 @@ import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
 import nl.knaw.huygens.facetedsearch.model.WrongFacetValueException;
 
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +28,7 @@ public class FacetedSearchLibraryTest {
 
   private SolrQueryCreator queryCreatorMock;
   private SolrQuery queryMock;
-  private SolrCoreWrapper solrCoreMock;
+  private SolrSearcher solrCoreMock;
   private SearchResultBuilder searchResultBuilderMock;
   private QueryResponse queryResponseMock;
   private FacetedSearchResult searchResultMock;
@@ -38,7 +39,7 @@ public class FacetedSearchLibraryTest {
   public void setUp() {
     queryCreatorMock = mock(SolrQueryCreator.class);
     queryMock = mock(SolrQuery.class);
-    solrCoreMock = mock(SolrCoreWrapper.class);
+    solrCoreMock = mock(SolrSearcher.class);
     searchResultBuilderMock = mock(SearchResultBuilder.class);
     queryResponseMock = mock(QueryResponse.class);
     searchResultMock = mock(FacetedSearchResult.class);
@@ -49,7 +50,7 @@ public class FacetedSearchLibraryTest {
   }
 
   @Test
-  public void testSearch() throws NoSuchFieldInIndexException, WrongFacetValueException, FacetedSearchException {
+  public void testSearch() throws NoSuchFieldInIndexException, WrongFacetValueException, FacetedSearchException, SolrServerException {
     // when
     when(queryCreatorMock.createSearchQuery(any(DefaultFacetedSearchParameters.class))).thenReturn(queryMock);
     when(solrCoreMock.search(queryMock)).thenReturn(queryResponseMock);
@@ -67,38 +68,11 @@ public class FacetedSearchLibraryTest {
     assertThat(result, is(searchResultMock));
   }
 
-  @Test(expected = NoSuchFieldInIndexException.class)
-  public void TestSearchQueryCreatorThrowsNoSuchFieldInIndexException() throws NoSuchFieldInIndexException, WrongFacetValueException, FacetedSearchException {
-    testSearchQueryCreatorThrowsException(NoSuchFieldInIndexException.class);
-
-  }
-
-  @Test(expected = WrongFacetValueException.class)
-  public void TestSearchQueryCreatorThrowsWrongFacetValueException() throws NoSuchFieldInIndexException, WrongFacetValueException, FacetedSearchException {
-    testSearchQueryCreatorThrowsException(WrongFacetValueException.class);
-  }
-
-  private void testSearchQueryCreatorThrowsException(Class<? extends Exception> exception) throws NoSuchFieldInIndexException, WrongFacetValueException, FacetedSearchException {
-    // when
-    doThrow(exception).when(searchParametersMock).validate();
-    // action
-    try {
-      instance.search(searchParametersMock);
-    } finally {
-
-      // verify
-      verify(searchParametersMock).validate();
-      verify(queryCreatorMock, never()).createSearchQuery(searchParametersMock);
-      verify(solrCoreMock, never()).search(any(SolrQuery.class));
-      verify(searchResultBuilderMock, never()).build(any(QueryResponse.class));
-    }
-  }
-
   @Test(expected = FacetedSearchException.class)
-  public void testSearchSolrCoreWrapperThrowsAnIndexException() throws FacetedSearchException, NoSuchFieldInIndexException, WrongFacetValueException {
+  public void testSearchSolrCoreWrapperThrowsAnSolrServerException() throws NoSuchFieldInIndexException, WrongFacetValueException, SolrServerException, FacetedSearchException {
     // when
     when(queryCreatorMock.createSearchQuery(any(DefaultFacetedSearchParameters.class))).thenReturn(queryMock);
-    doThrow(FacetedSearchException.class).when(solrCoreMock).search(any(SolrQuery.class));
+    doThrow(SolrServerException.class).when(solrCoreMock).search(any(SolrQuery.class));
 
     try {
       instance.search(searchParametersMock);

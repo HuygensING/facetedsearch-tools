@@ -1,29 +1,35 @@
 package nl.knaw.huygens.solr;
 
+import java.util.List;
+
+import nl.knaw.huygens.facetedsearch.model.FacetDefinition;
+
 import com.google.common.base.Preconditions;
 
 public class AbstractSolrServerBuilder {
 
   private final SolrServerType serverType;
   private final int commitWithinSeconds;
+  private final List<FacetDefinition> facetDefinitions;
 
   private String coreName;
   private String solrDir;
   private String solrUrl;
 
-  public AbstractSolrServerBuilder(SolrServerType serverType, int commitWithinSeconds) {
+  public AbstractSolrServerBuilder(SolrServerType serverType, int commitWithinSeconds, List<FacetDefinition> facetDefinitions) {
     this.serverType = serverType;
     this.commitWithinSeconds = commitWithinSeconds;
+    this.facetDefinitions = facetDefinitions;
   }
 
-  public SolrCoreWrapper build() {
+  public SolrSearcher build() {
     switch (serverType) {
-    case LOCAL:
-      return createLocalSolrServer();
-    case REMOTE:
-      return createRemoteSolrServer();
-    default:
-      throw new RuntimeException(String.format("Server type %s not supported.", serverType));
+      case LOCAL:
+        return createLocalSolrServer();
+      case REMOTE:
+        return createRemoteSolrServer();
+      default:
+        throw new RuntimeException(String.format("Server type %s not supported.", serverType));
     }
   }
 
@@ -31,12 +37,12 @@ public class AbstractSolrServerBuilder {
     Preconditions.checkNotNull(coreName);
     Preconditions.checkNotNull(solrDir);
 
-    return new LocalSolrServer(solrDir, coreName, commitWithinSeconds);
+    return new LocalSolrServer(solrDir, coreName, commitWithinSeconds, facetDefinitions);
   }
 
   private RemoteSolrServer createRemoteSolrServer() {
     Preconditions.checkNotNull(solrUrl);
-    return new RemoteSolrServer(solrUrl, commitWithinSeconds);
+    return new RemoteSolrServer(solrUrl, commitWithinSeconds, facetDefinitions);
   }
 
   public AbstractSolrServerBuilder setCoreName(String coreName) {

@@ -4,22 +4,25 @@ import nl.knaw.huygens.facetedsearch.model.FacetedSearchParameters;
 import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
 import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
 import nl.knaw.huygens.facetedsearch.model.WrongFacetValueException;
+import nl.knaw.huygens.solr.converters.FacetListConverter;
+import nl.knaw.huygens.solr.converters.ResultConverter;
 
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
 public class FacetedSearchLibrary {
 
   private final SolrQueryCreator queryCreator;
-  private final SolrCoreWrapper solrCore;
+  private final SolrSearcher solrCore;
   private SearchResultBuilder searchResultBuilder;
 
-  public FacetedSearchLibrary(SolrCoreWrapper solrCore) {
+  public FacetedSearchLibrary(SolrSearcher solrCore) {
 
-    this(solrCore, new SolrQueryCreator(), null);
+    this(solrCore, new SolrQueryCreator(), new SearchResultBuilder(new FacetListConverter(solrCore.getFacetDefinitions()), new ResultConverter()));
   }
 
-  public FacetedSearchLibrary(SolrCoreWrapper solrCore, SolrQueryCreator queryCreator, SearchResultBuilder searchResultBuilder) {
+  public FacetedSearchLibrary(SolrSearcher solrCore, SolrQueryCreator queryCreator, SearchResultBuilder searchResultBuilder) {
     this.solrCore = solrCore;
     this.queryCreator = queryCreator;
     this.searchResultBuilder = searchResultBuilder;
@@ -37,7 +40,13 @@ public class FacetedSearchLibrary {
       FacetedSearchException {
     searchParameters.validate();
     SolrQuery query = queryCreator.createSearchQuery(searchParameters);
-    QueryResponse queryResponse = solrCore.search(query);
+    // TODO catch solr exception and throw FacetedSearchException
+    QueryResponse queryResponse;
+    try {
+      queryResponse = solrCore.search(query);
+    } catch (SolrServerException e) {
+      throw new FacetedSearchException(e.getMessage());
+    }
     FacetedSearchResult searchResult = searchResultBuilder.build(queryResponse);
 
     return searchResult;

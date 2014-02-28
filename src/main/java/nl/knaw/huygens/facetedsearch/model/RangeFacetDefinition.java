@@ -35,14 +35,10 @@ public class RangeFacetDefinition extends FacetDefinition {
 
   @Override
   public void addFacetToResult(FacetedSearchResult result, QueryResponse queryResponse) {
-    List<Long> values = Lists.newArrayList();
-    values.addAll(getValuesOfFacetField(queryResponse.getFacetField(lowerLimitField)));
-    values.addAll(getValuesOfFacetField(queryResponse.getFacetField(upperLimitField)));
+    long minValue = Collections.min(getValuesOfFacetField(queryResponse.getFacetField(lowerLimitField)));
+    long maxValue = Collections.max(getValuesOfFacetField(queryResponse.getFacetField(upperLimitField)));
 
-    Collections.sort(values);
-
-    result.addFacet(new RangeFacet(getName(), getTitle(), values.get(0), values.get(values.size() - 1)));
-
+    result.addFacet(new RangeFacet(getName(), getTitle(), minValue, maxValue));
   }
 
   private Collection<? extends Long> getValuesOfFacetField(FacetField facetField) {
