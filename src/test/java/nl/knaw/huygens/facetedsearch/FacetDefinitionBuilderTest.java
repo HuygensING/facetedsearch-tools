@@ -1,8 +1,9 @@
-package nl.knaw.huygens.solr;
+package nl.knaw.huygens.facetedsearch;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
+import nl.knaw.huygens.facetedsearch.FacetDefinitionBuilder;
 import nl.knaw.huygens.facetedsearch.model.FacetDefinition;
 import nl.knaw.huygens.facetedsearch.model.FacetType;
 import nl.knaw.huygens.facetedsearch.model.RangeFacetDefinition;

@@ -2,7 +2,7 @@ package nl.knaw.huygens.facetedsearch.model;
 
 import java.util.List;
 
-import nl.knaw.huygens.solr.SolrUtils;
+import nl.knaw.huygens.facetedsearch.SolrUtils;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;

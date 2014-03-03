@@ -1,4 +1,4 @@
-package nl.knaw.huygens.solr;
+package nl.knaw.huygens.facetedsearch;
 
 public class FacetedSearchException extends Exception {
   private static final long serialVersionUID = 1L;

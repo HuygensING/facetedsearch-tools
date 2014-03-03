@@ -11,9 +11,6 @@ import static org.mockito.Mockito.verify;
 import java.io.IOException;
 import java.util.List;
 
-import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
-import nl.knaw.huygens.facetedsearch.model.WrongFacetValueException;
-
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -366,7 +363,7 @@ public class AbstractSolrServerTest {
   }
 
   @Test
-  public void testSearch() throws NoSuchFieldInIndexException, WrongFacetValueException, SolrServerException {
+  public void testSearch() throws SolrServerException {
     SolrQuery queryMock = mock(SolrQuery.class);
 
     instance.search(queryMock);
@@ -375,7 +372,7 @@ public class AbstractSolrServerTest {
   }
 
   @Test(expected = SolrServerException.class)
-  public void testSearchSolrServerException() throws NoSuchFieldInIndexException, WrongFacetValueException, SolrServerException {
+  public void testSearchSolrServerException() throws SolrServerException {
     doThrow(SolrServerException.class).when(solrServer).query(any(SolrQuery.class));
 
     SolrQuery queryMock = mock(SolrQuery.class);

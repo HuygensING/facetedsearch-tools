@@ -1,4 +1,4 @@
-package nl.knaw.huygens.solr.converters;
+package nl.knaw.huygens.facetedsearch.converters;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.Map;
 
+import nl.knaw.huygens.facetedsearch.converters.ResultConverter;
 import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
 
 import org.apache.solr.client.solrj.response.QueryResponse;

@@ -1,8 +1,10 @@
-package nl.knaw.huygens.solr;
+package nl.knaw.huygens.facetedsearch;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+
+import nl.knaw.huygens.facetedsearch.SolrUtils;
 
 import org.junit.Test;
 

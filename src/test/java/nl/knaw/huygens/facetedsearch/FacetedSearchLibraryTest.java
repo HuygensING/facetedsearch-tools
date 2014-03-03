@@ -1,4 +1,4 @@
-package nl.knaw.huygens.solr;
+package nl.knaw.huygens.facetedsearch;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -9,6 +9,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import nl.knaw.huygens.facetedsearch.FacetedSearchException;
+import nl.knaw.huygens.facetedsearch.FacetedSearchLibrary;
+import nl.knaw.huygens.facetedsearch.SearchResultBuilder;
+import nl.knaw.huygens.facetedsearch.SolrQueryCreator;
+import nl.knaw.huygens.facetedsearch.SolrSearcher;
 import nl.knaw.huygens.facetedsearch.model.DefaultFacetedSearchParameters;
 import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
 import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;

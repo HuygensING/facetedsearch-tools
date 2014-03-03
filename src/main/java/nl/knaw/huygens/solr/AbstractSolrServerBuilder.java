@@ -2,6 +2,7 @@ package nl.knaw.huygens.solr;
 
 import java.util.List;
 
+import nl.knaw.huygens.facetedsearch.SolrSearcher;
 import nl.knaw.huygens.facetedsearch.model.FacetDefinition;
 
 import com.google.common.base.Preconditions;

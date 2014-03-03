@@ -1,4 +1,4 @@
-package nl.knaw.huygens.solr.converters;
+package nl.knaw.huygens.facetedsearch.converters;
 
 import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
 

@@ -1,4 +1,4 @@
-package nl.knaw.huygens.solr;
+package nl.knaw.huygens.facetedsearch;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -13,13 +13,11 @@ import nl.knaw.huygens.facetedsearch.model.DefaultFacetedSearchParameters;
 import nl.knaw.huygens.facetedsearch.model.FacetField;
 import nl.knaw.huygens.facetedsearch.model.FacetParameter;
 import nl.knaw.huygens.facetedsearch.model.HighlightingOptions;
-import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
 import nl.knaw.huygens.facetedsearch.model.QueryOptimizer;
 import nl.knaw.huygens.facetedsearch.model.RangeFacetField;
 import nl.knaw.huygens.facetedsearch.model.RangeParameter;
 import nl.knaw.huygens.facetedsearch.model.SortDirection;
 import nl.knaw.huygens.facetedsearch.model.SortParameter;
-import nl.knaw.huygens.facetedsearch.model.WrongFacetValueException;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
@@ -42,7 +40,7 @@ public class SolrQueryCreatorTest {
   }
 
   @Test
-  public void testCreateSearchQueryTerm() throws NoSuchFieldInIndexException, WrongFacetValueException {
+  public void testCreateSearchQueryTerm() {
     searchParameters.setTerm("test");
     searchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField"));
 
@@ -52,7 +50,7 @@ public class SolrQueryCreatorTest {
   }
 
   @Test
-  public void testCreateSearchQueryTermMultipleSearchFields() throws NoSuchFieldInIndexException, WrongFacetValueException {
+  public void testCreateSearchQueryTermMultipleSearchFields() {
     searchParameters.setTerm("test");
     searchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField", "testSearchField1"));
 
@@ -62,7 +60,7 @@ public class SolrQueryCreatorTest {
   }
 
   @Test
-  public void testCreateSearchQueryEmptyTerm() throws NoSuchFieldInIndexException, WrongFacetValueException {
+  public void testCreateSearchQueryEmptyTerm() {
     searchParameters.setTerm("");
     searchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField"));
 
@@ -73,7 +71,7 @@ public class SolrQueryCreatorTest {
   }
 
   @Test
-  public void testCreateSearchQueryMultipleTerms() throws NoSuchFieldInIndexException, WrongFacetValueException {
+  public void testCreateSearchQueryMultipleTerms() {
     searchParameters.setTerm("test1 test2");
     searchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField"));
 
@@ -83,7 +81,7 @@ public class SolrQueryCreatorTest {
   }
 
   @Test
-  public void testCreateSearchQueryTermSpecialCharacter() throws NoSuchFieldInIndexException, WrongFacetValueException {
+  public void testCreateSearchQueryTermSpecialCharacter() {
     searchParameters.setTerm("-test123");
     searchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField"));
     searchParameters.setFuzzy(true);
@@ -94,7 +92,7 @@ public class SolrQueryCreatorTest {
   }
 
   @Test
-  public void testCreateSearchQueryTermFuzzy() throws NoSuchFieldInIndexException, WrongFacetValueException {
+  public void testCreateSearchQueryTermFuzzy() {
     searchParameters.setTerm("test123");
     searchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField"));
     searchParameters.setFuzzy(true);
@@ -105,7 +103,7 @@ public class SolrQueryCreatorTest {
   }
 
   @Test
-  public void testCreateSearchQueryMultipleTermsFuzzy() throws NoSuchFieldInIndexException, WrongFacetValueException {
+  public void testCreateSearchQueryMultipleTermsFuzzy() {
     searchParameters.setTerm("test test2");
     searchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField"));
     searchParameters.setFuzzy(true);
@@ -117,7 +115,7 @@ public class SolrQueryCreatorTest {
   }
 
   @Test
-  public void testCreateSearchQueryTermNoFullTextSearchFields() throws NoSuchFieldInIndexException, WrongFacetValueException {
+  public void testCreateSearchQueryTermNoFullTextSearchFields() {
     searchParameters.setTerm("test");
 
     SolrQuery query = instance.createSearchQuery(searchParameters);
@@ -126,7 +124,7 @@ public class SolrQueryCreatorTest {
   }
 
   @Test
-  public void testCreateSearchQueryTermAndFacet() throws NoSuchFieldInIndexException, WrongFacetValueException {
+  public void testCreateSearchQueryTermAndFacet() {
     searchParameters.setTerm("test1");
     searchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField"));
     searchParameters.setFacetParameters(Lists.newArrayList(createFacetParameter("facetField", Lists.newArrayList("facetValue"))));
@@ -137,7 +135,7 @@ public class SolrQueryCreatorTest {
   }
 
   @Test
-  public void testCreateSearchQuerySortField() throws NoSuchFieldInIndexException, WrongFacetValueException {
+  public void testCreateSearchQuerySortField() {
     String sortFieldName = "name";
     searchParameters.setSortParameters(Lists.newArrayList(createSortParameter(sortFieldName, SortDirection.ASCENDING)));
 
@@ -150,7 +148,7 @@ public class SolrQueryCreatorTest {
   }
 
   @Test
-  public void testCreateSearchQueryMultipleSortFields() throws NoSuchFieldInIndexException, WrongFacetValueException {
+  public void testCreateSearchQueryMultipleSortFields() {
     String sortFieldName1 = "name";
     String sortFieldName2 = "name2";
     searchParameters.setSortParameters(Lists.newArrayList(createSortParameter(sortFieldName1, SortDirection.ASCENDING), createSortParameter(sortFieldName2, SortDirection.DESCENDING)));
@@ -168,7 +166,7 @@ public class SolrQueryCreatorTest {
   }
 
   @Test
-  public void testCreateSearchQueryFacet() throws NoSuchFieldInIndexException, WrongFacetValueException {
+  public void testCreateSearchQueryFacet() {
     searchParameters.setFacetParameters(Lists.newArrayList(createFacetParameter("facetField", Lists.newArrayList("facetValue"))));
 
     SolrQuery query = instance.createSearchQuery(searchParameters);
@@ -177,7 +175,7 @@ public class SolrQueryCreatorTest {
   }
 
   @Test
-  public void testCreateSearchQueryRangeFacet() throws NoSuchFieldInIndexException, WrongFacetValueException {
+  public void testCreateSearchQueryRangeFacet() {
     FacetParameter rangeFacet = createRangeFacetParameter("facetField", 20130101, 20140101);
     searchParameters.setFacetParameters(Lists.newArrayList(rangeFacet));
 
@@ -187,7 +185,7 @@ public class SolrQueryCreatorTest {
   }
 
   @Test
-  public void testCreateSearchQueryMultipleFacets() throws NoSuchFieldInIndexException, WrongFacetValueException {
+  public void testCreateSearchQueryMultipleFacets() {
     FacetParameter facet1 = createFacetParameter("facetField", Lists.newArrayList("facetValue"));
     FacetParameter facet2 = createFacetParameter("facetField2", Lists.newArrayList("facetValue2"));
     searchParameters.setFacetParameters(Lists.newArrayList(facet1, facet2));
@@ -198,7 +196,7 @@ public class SolrQueryCreatorTest {
   }
 
   @Test
-  public void testCreateSearchQueryResultField() throws NoSuchFieldInIndexException, WrongFacetValueException {
+  public void testCreateSearchQueryResultField() {
     searchParameters.setResultFields(Lists.newArrayList("resultField"));
 
     SolrQuery query = instance.createSearchQuery(searchParameters);
@@ -207,7 +205,7 @@ public class SolrQueryCreatorTest {
   }
 
   @Test
-  public void testCreateSearchQueryMultipleResultFields() throws NoSuchFieldInIndexException, WrongFacetValueException {
+  public void testCreateSearchQueryMultipleResultFields() {
     searchParameters.setResultFields(Lists.newArrayList("resultField", "resultField1"));
 
     SolrQuery query = instance.createSearchQuery(searchParameters);
@@ -217,7 +215,7 @@ public class SolrQueryCreatorTest {
   }
 
   @Test
-  public void testCreateSearchQueryFacetFields() throws NoSuchFieldInIndexException, WrongFacetValueException {
+  public void testCreateSearchQueryFacetFields() {
     searchParameters.setFacetFields(Lists.newArrayList(new FacetField("facetField")));
 
     SolrQuery query = instance.createSearchQuery(searchParameters);
@@ -227,7 +225,7 @@ public class SolrQueryCreatorTest {
   }
 
   @Test
-  public void testCreateSearchQueryRangeFacetFields() throws NoSuchFieldInIndexException, WrongFacetValueException {
+  public void testCreateSearchQueryRangeFacetFields() {
     List<FacetField> facetFields = Lists.<FacetField> newArrayList();
     facetFields.add(new RangeFacetField("rangeField", "lowerField", "upperField"));
     searchParameters.setFacetFields(facetFields);
@@ -238,7 +236,7 @@ public class SolrQueryCreatorTest {
   }
 
   @Test
-  public void testCreateSearchQueryDefaultQueryOptimizer() throws NoSuchFieldInIndexException, WrongFacetValueException {
+  public void testCreateSearchQueryDefaultQueryOptimizer() {
     searchParameters.setQueryOptimizer(new QueryOptimizer());
 
     SolrQuery query = instance.createSearchQuery(searchParameters);
@@ -249,7 +247,7 @@ public class SolrQueryCreatorTest {
   }
 
   @Test
-  public void testCreateSearchQueryCustomQueryOptimizer() throws NoSuchFieldInIndexException, WrongFacetValueException {
+  public void testCreateSearchQueryCustomQueryOptimizer() {
     QueryOptimizer queryOptimizer = new QueryOptimizer();
     queryOptimizer.setFacetLimit(60);
     queryOptimizer.setFacetMinCount(10);
@@ -264,7 +262,7 @@ public class SolrQueryCreatorTest {
   }
 
   @Test
-  public void testCreateSearchQueryNoQueryOptimizer() throws NoSuchFieldInIndexException, WrongFacetValueException {
+  public void testCreateSearchQueryNoQueryOptimizer() {
     SolrQuery query = instance.createSearchQuery(searchParameters);
 
     //Solr defaults
@@ -274,7 +272,7 @@ public class SolrQueryCreatorTest {
   }
 
   @Test
-  public void testCreateSearchQueryDefaultHightlightOptions() throws NoSuchFieldInIndexException, WrongFacetValueException {
+  public void testCreateSearchQueryDefaultHightlightOptions() {
     searchParameters.setHighlightingOptions(new HighlightingOptions());
     searchParameters.setTerm("test");
     searchParameters.setFullTextSearchFields(Lists.newArrayList("fullTextSearchField"));
@@ -291,7 +289,7 @@ public class SolrQueryCreatorTest {
   }
 
   @Test
-  public void testCreateSearchQueryCustomHightlightOptions() throws NoSuchFieldInIndexException, WrongFacetValueException {
+  public void testCreateSearchQueryCustomHightlightOptions() {
     searchParameters.setHighlightingOptions(new HighlightingOptions());
     searchParameters.setTerm("test");
     searchParameters.setFullTextSearchFields(Lists.newArrayList("fullTextSearchField"));
@@ -307,7 +305,7 @@ public class SolrQueryCreatorTest {
   }
 
   @Test
-  public void testCreateSearchQueryNoHightlightOptions() throws NoSuchFieldInIndexException, WrongFacetValueException {
+  public void testCreateSearchQueryNoHightlightOptions() {
     SolrQuery query = instance.createSearchQuery(searchParameters);
 
     assertEquals(false, query.getHighlight());

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
+import nl.knaw.huygens.facetedsearch.SolrSearcher;
 import nl.knaw.huygens.facetedsearch.model.FacetDefinition;
 
 import org.apache.solr.client.solrj.SolrQuery;

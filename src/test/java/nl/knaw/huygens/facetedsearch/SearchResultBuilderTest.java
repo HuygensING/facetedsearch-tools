@@ -1,13 +1,14 @@
-package nl.knaw.huygens.solr;
+package nl.knaw.huygens.facetedsearch;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import nl.knaw.huygens.facetedsearch.SearchResultBuilder;
+import nl.knaw.huygens.facetedsearch.converters.FacetListConverter;
+import nl.knaw.huygens.facetedsearch.converters.HighlightingConverter;
+import nl.knaw.huygens.facetedsearch.converters.ResultConverter;
 import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
-import nl.knaw.huygens.solr.converters.FacetListConverter;
-import nl.knaw.huygens.solr.converters.HighlightingConverter;
-import nl.knaw.huygens.solr.converters.ResultConverter;
 
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.junit.Test;
