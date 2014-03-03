@@ -13,15 +13,16 @@ public class FacetedSearchResult {
 
   private List<Facet> facets;
   private Map<String, List<String>> highlighting;
-  private List<String> ids;
   private List<Map<String, Object>> rawResults;
 
   public float getMaxScore() {
     return maxScore;
   }
 
-  public void setMaxScore(float maxScore) {
-    this.maxScore = maxScore;
+  public void setMaxScore(Float maxScore) {
+    if (maxScore != null) {
+      this.maxScore = maxScore;
+    }
   }
 
   public long getNumFound() {
@@ -54,14 +55,6 @@ public class FacetedSearchResult {
 
   public void setHighlighting(Map<String, List<String>> highlighting) {
     this.highlighting = highlighting;
-  }
-
-  public List<String> getIds() {
-    return ids;
-  }
-
-  public void setIds(List<String> ids) {
-    this.ids = ids;
   }
 
   public List<Map<String, Object>> getRawResults() {

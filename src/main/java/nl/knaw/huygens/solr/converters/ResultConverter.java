@@ -1,26 +1,43 @@
 package nl.knaw.huygens.solr.converters;
 
 import java.util.List;
+import java.util.Map;
 
 import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
-import nl.knaw.huygens.facetedsearch.model.SolrFields;
 
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
+import org.apache.solr.common.SolrDocumentList;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 public class ResultConverter implements QueryResponseConverter {
 
   @Override
   public void convert(final FacetedSearchResult result, final QueryResponse queryResponse) {
-    List<String> ids = Lists.newArrayList();
-    for (SolrDocument doc : queryResponse.getResults()) {
-      ids.add(String.valueOf(doc.getFieldValue(SolrFields.DOC_ID))); //TODO add raw result instead of ids.
+
+    SolrDocumentList solrDocList = queryResponse.getResults();
+    result.setMaxScore(solrDocList.getMaxScore());
+    result.setNumFound(solrDocList.getNumFound());
+    result.setOffset(solrDocList.getStart());
+
+    List<Map<String, Object>> rawResults = Lists.newArrayList();
+
+    for (SolrDocument doc : solrDocList) {
+      rawResults.add(getRawResultFromSolrDoc(doc));
     }
 
-    //TODO add maxScore, numFound, start
+    result.setRawResults(rawResults);
+  }
 
-    result.setIds(ids);
+  private Map<String, Object> getRawResultFromSolrDoc(SolrDocument doc) {
+    Map<String, Object> rawResult = Maps.newHashMap();
+
+    for (String fieldName : doc.getFieldNames()) {
+      rawResult.put(fieldName, doc.getFieldValue(fieldName));
+    }
+
+    return rawResult;
   }
 }
