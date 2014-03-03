@@ -30,14 +30,14 @@ import com.google.common.collect.Lists;
 public class FacetedSearchParamatersTest {
   private DefaultFacetedSearchParameters searchParameters;
   @Mock
-  private Map<String, FacetDefinition> facectDefinitionMapMock;
-  private FacetDefinition facetDefinitionMock;
+  private Map<String, DefaultFacetDefinition> facectDefinitionMapMock;
+  private DefaultFacetDefinition facetDefinitionMock;
   private String facetName = "testFacet";
 
   @Before
   public void setUp() {
     MockitoAnnotations.initMocks(this);
-    facetDefinitionMock = mock(FacetDefinition.class);
+    facetDefinitionMock = mock(DefaultFacetDefinition.class);
     searchParameters = new DefaultFacetedSearchParameters();
     searchParameters.setFacetDefinitionMap(facectDefinitionMapMock);
   }

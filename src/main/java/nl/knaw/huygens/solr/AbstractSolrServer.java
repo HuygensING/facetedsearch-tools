@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import nl.knaw.huygens.facetedsearch.SolrSearcher;
-import nl.knaw.huygens.facetedsearch.model.FacetDefinition;
+import nl.knaw.huygens.facetedsearch.model.DefaultFacetDefinition;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
@@ -18,12 +18,12 @@ public abstract class AbstractSolrServer implements SolrSearcher {
   public static final String KEY_NUMFOUND = "numFound";
 
   private final int commitWithin;
-  private final List<FacetDefinition> facetDefinitions;
+  private final List<DefaultFacetDefinition> facetDefinitions;
 
   /**
    * @param commitWithinInSeconds all the changes to the server will be committed within the this time. 
    */
-  public AbstractSolrServer(int commitWithinInSeconds, List<FacetDefinition> facetDefinitions) {
+  public AbstractSolrServer(int commitWithinInSeconds, List<DefaultFacetDefinition> facetDefinitions) {
     this.facetDefinitions = facetDefinitions;
     // solr uses commits within milliseconds.
     this.commitWithin = commitWithinInSeconds * 1000;
@@ -139,7 +139,7 @@ public abstract class AbstractSolrServer implements SolrSearcher {
   }
 
   @Override
-  public List<FacetDefinition> getFacetDefinitions() {
+  public List<DefaultFacetDefinition> getFacetDefinitions() {
     return this.facetDefinitions;
   }
 

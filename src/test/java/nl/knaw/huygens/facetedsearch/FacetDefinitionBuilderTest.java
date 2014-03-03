@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import nl.knaw.huygens.facetedsearch.FacetDefinitionBuilder;
+import nl.knaw.huygens.facetedsearch.model.DefaultFacetDefinition;
 import nl.knaw.huygens.facetedsearch.model.FacetDefinition;
 import nl.knaw.huygens.facetedsearch.model.FacetType;
 import nl.knaw.huygens.facetedsearch.model.RangeFacetDefinition;
@@ -18,10 +19,10 @@ public class FacetDefinitionBuilderTest {
   public void testBuildListFacetDefinition() {
     FacetDefinitionBuilder instance = new FacetDefinitionBuilder(name, title, FacetType.LIST);
 
-    FacetDefinition facetDefinition = instance.build();
+    DefaultFacetDefinition facetDefinition = instance.build();
 
     assertDefaultFacetDefinition(facetDefinition, FacetType.LIST);
-    assertThat(facetDefinition, is(instanceOf(FacetDefinition.class)));
+    assertThat(facetDefinition, is(instanceOf(DefaultFacetDefinition.class)));
 
   }
 
@@ -39,7 +40,7 @@ public class FacetDefinitionBuilderTest {
     String upperLimitField = "upperField";
     instance.setUpperLimitField(upperLimitField);
 
-    FacetDefinition facetDefinition = instance.build();
+    DefaultFacetDefinition facetDefinition = instance.build();
 
     assertDefaultFacetDefinition(facetDefinition, FacetType.RANGE);
     assertThat(facetDefinition, is(instanceOf(RangeFacetDefinition.class)));

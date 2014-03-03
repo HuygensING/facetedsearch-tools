@@ -23,7 +23,7 @@ public class FacetDefinitionTest {
   // Currently the default implementation.
   public void testAddFacetToResultWithListFacet() {
     // setup instance
-    FacetDefinition instance = new FacetDefinition().setName(facetName).setTitle(facetTitle).setType(FacetType.LIST);
+    FacetDefinition instance = new DefaultFacetDefinition().setName(facetName).setTitle(facetTitle).setType(FacetType.LIST);
 
     // mocks
     QueryResponse queryResponseMock = mock(QueryResponse.class);

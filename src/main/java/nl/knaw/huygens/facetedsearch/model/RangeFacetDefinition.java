@@ -10,7 +10,7 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 
 import com.google.common.collect.Lists;
 
-public class RangeFacetDefinition extends FacetDefinition {
+public class RangeFacetDefinition extends DefaultFacetDefinition {
 
   private String upperLimitField;
   private String lowerLimitField;

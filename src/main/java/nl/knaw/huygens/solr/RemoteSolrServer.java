@@ -2,7 +2,7 @@ package nl.knaw.huygens.solr;
 
 import java.util.List;
 
-import nl.knaw.huygens.facetedsearch.model.FacetDefinition;
+import nl.knaw.huygens.facetedsearch.model.DefaultFacetDefinition;
 
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
@@ -15,7 +15,7 @@ public class RemoteSolrServer extends AbstractSolrServer {
   private final String solrUrl;
   private SolrServer server;
 
-  public RemoteSolrServer(String solrUrl, int commitWithinInSeconds, List<FacetDefinition> facetDefinitions) {
+  public RemoteSolrServer(String solrUrl, int commitWithinInSeconds, List<DefaultFacetDefinition> facetDefinitions) {
     super(commitWithinInSeconds, facetDefinitions);
     this.solrUrl = solrUrl;
     createServer();

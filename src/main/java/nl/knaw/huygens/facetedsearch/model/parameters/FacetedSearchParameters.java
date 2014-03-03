@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import nl.knaw.huygens.facetedsearch.model.DefaultFacetDefinition;
 import nl.knaw.huygens.facetedsearch.model.FacetDefinition;
 import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
 import nl.knaw.huygens.facetedsearch.model.WrongFacetValueException;
@@ -20,7 +21,7 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
   private List<String> fullTextSearchFields; // set in back-end
   private List<FacetField> facetFields = Lists.newArrayList(); // set in back-end
   private List<FacetParameter> facetParameters = Lists.newArrayList(); // set in front-end
-  private Map<String, FacetDefinition> facetDefinitionMap; // set in back-end
+  private Map<String, DefaultFacetDefinition> facetDefinitionMap; // set in back-end
   private List<String> resultFields = Lists.newArrayList(); // set in back-end
   private boolean fuzzy = false; // set in front-end
   private List<SortParameter> sortParameters = Lists.newArrayList(); // set in front-end
@@ -99,11 +100,11 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
     return (T) this;
   }
 
-  public Map<String, FacetDefinition> getFacetDefinitionMap() {
+  public Map<String, DefaultFacetDefinition> getFacetDefinitionMap() {
     return facetDefinitionMap;
   }
 
-  public T setFacetDefinitionMap(Map<String, FacetDefinition> facetDefinitionMap) {
+  public T setFacetDefinitionMap(Map<String, DefaultFacetDefinition> facetDefinitionMap) {
     this.facetDefinitionMap = facetDefinitionMap;
     return (T) this;
   }

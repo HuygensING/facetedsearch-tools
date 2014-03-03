@@ -3,7 +3,7 @@ package nl.knaw.huygens.solr;
 import java.util.List;
 
 import nl.knaw.huygens.facetedsearch.SolrSearcher;
-import nl.knaw.huygens.facetedsearch.model.FacetDefinition;
+import nl.knaw.huygens.facetedsearch.model.DefaultFacetDefinition;
 
 import com.google.common.base.Preconditions;
 
@@ -11,13 +11,13 @@ public class AbstractSolrServerBuilder {
 
   private final SolrServerType serverType;
   private final int commitWithinSeconds;
-  private final List<FacetDefinition> facetDefinitions;
+  private final List<DefaultFacetDefinition> facetDefinitions;
 
   private String coreName;
   private String solrDir;
   private String solrUrl;
 
-  public AbstractSolrServerBuilder(SolrServerType serverType, int commitWithinSeconds, List<FacetDefinition> facetDefinitions) {
+  public AbstractSolrServerBuilder(SolrServerType serverType, int commitWithinSeconds, List<DefaultFacetDefinition> facetDefinitions) {
     this.serverType = serverType;
     this.commitWithinSeconds = commitWithinSeconds;
     this.facetDefinitions = facetDefinitions;
