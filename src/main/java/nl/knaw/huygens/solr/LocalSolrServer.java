@@ -3,7 +3,7 @@ package nl.knaw.huygens.solr;
 import java.io.IOException;
 import java.util.List;
 
-import nl.knaw.huygens.facetedsearch.model.DefaultFacetDefinition;
+import nl.knaw.huygens.facetedsearch.definition.FacetDefinition;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrServer;
@@ -25,7 +25,7 @@ public class LocalSolrServer extends AbstractSolrServer {
   private CoreContainer container;
   private SolrServer server;
 
-  public LocalSolrServer(String solrDir, String coreName, int commitWithinInSeconds, List<DefaultFacetDefinition> facetDefinitions) {
+  public LocalSolrServer(String solrDir, String coreName, int commitWithinInSeconds, List<FacetDefinition> facetDefinitions) {
     super(commitWithinInSeconds, facetDefinitions);
     this.solrDir = StringUtils.defaultIfBlank(solrDir, SOLR_DIRECTORY);
     this.coreName = StringUtils.defaultIfBlank(coreName, "core1");

@@ -5,6 +5,8 @@ import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import nl.knaw.huygens.facetedsearch.definition.FacetDefinition;
+import nl.knaw.huygens.facetedsearch.definition.RangeFacetDefinition;
 
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;

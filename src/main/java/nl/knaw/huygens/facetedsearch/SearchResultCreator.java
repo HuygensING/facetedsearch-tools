@@ -5,11 +5,11 @@ import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
 
 import org.apache.solr.client.solrj.response.QueryResponse;
 
-public class SearchResultBuilder {
+public class SearchResultCreator {
 
   private final QueryResponseConverter[] converters;
 
-  public SearchResultBuilder(QueryResponseConverter... converters) {
+  public SearchResultCreator(QueryResponseConverter... converters) {
     this.converters = converters;
   }
 

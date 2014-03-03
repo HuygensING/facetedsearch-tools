@@ -11,9 +11,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import nl.knaw.huygens.facetedsearch.FacetedSearchException;
 import nl.knaw.huygens.facetedsearch.FacetedSearchLibrary;
-import nl.knaw.huygens.facetedsearch.SearchResultBuilder;
+import nl.knaw.huygens.facetedsearch.SearchResultCreator;
 import nl.knaw.huygens.facetedsearch.SolrQueryCreator;
-import nl.knaw.huygens.facetedsearch.SolrSearcher;
+import nl.knaw.huygens.facetedsearch.definition.SolrSearcher;
 import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
 import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
 import nl.knaw.huygens.facetedsearch.model.WrongFacetValueException;
@@ -34,7 +34,7 @@ public class FacetedSearchLibraryTest {
   private SolrQueryCreator queryCreatorMock;
   private SolrQuery queryMock;
   private SolrSearcher solrCoreMock;
-  private SearchResultBuilder searchResultBuilderMock;
+  private SearchResultCreator searchResultBuilderMock;
   private QueryResponse queryResponseMock;
   private FacetedSearchResult searchResultMock;
 
@@ -45,7 +45,7 @@ public class FacetedSearchLibraryTest {
     queryCreatorMock = mock(SolrQueryCreator.class);
     queryMock = mock(SolrQuery.class);
     solrCoreMock = mock(SolrSearcher.class);
-    searchResultBuilderMock = mock(SearchResultBuilder.class);
+    searchResultBuilderMock = mock(SearchResultCreator.class);
     queryResponseMock = mock(QueryResponse.class);
     searchResultMock = mock(FacetedSearchResult.class);
     searchParametersMock = mock(DefaultFacetedSearchParameters.class);

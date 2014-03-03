@@ -4,7 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import nl.knaw.huygens.facetedsearch.SearchResultBuilder;
+import nl.knaw.huygens.facetedsearch.SearchResultCreator;
 import nl.knaw.huygens.facetedsearch.converters.FacetListConverter;
 import nl.knaw.huygens.facetedsearch.converters.HighlightingConverter;
 import nl.knaw.huygens.facetedsearch.converters.ResultConverter;
@@ -24,7 +24,7 @@ public class SearchResultBuilderTest {
     ResultConverter resultConverterMock = mock(ResultConverter.class);
 
     final FacetedSearchResult searchResultMock = mock(FacetedSearchResult.class);
-    SearchResultBuilder instance = new SearchResultBuilder(facetConverterMock, highlightingConverterMock, resultConverterMock) {
+    SearchResultCreator instance = new SearchResultCreator(facetConverterMock, highlightingConverterMock, resultConverterMock) {
       protected FacetedSearchResult createFacetedSearchResult() {
         return searchResultMock;
       }

@@ -1,8 +1,6 @@
-package nl.knaw.huygens.facetedsearch;
+package nl.knaw.huygens.facetedsearch.definition;
 
-import nl.knaw.huygens.facetedsearch.model.DefaultFacetDefinition;
 import nl.knaw.huygens.facetedsearch.model.FacetType;
-import nl.knaw.huygens.facetedsearch.model.RangeFacetDefinition;
 
 import com.google.common.base.Preconditions;
 
@@ -31,7 +29,7 @@ public class FacetDefinitionBuilder {
     return this;
   }
 
-  public DefaultFacetDefinition build() {
+  public FacetDefinition build() {
     switch (type) {
       case RANGE:
         return buildRangeFacetDefinition();
@@ -40,7 +38,7 @@ public class FacetDefinitionBuilder {
     }
   }
 
-  private DefaultFacetDefinition buildRangeFacetDefinition() {
+  private FacetDefinition buildRangeFacetDefinition() {
     Preconditions.checkNotNull(lowerLimitField);
     Preconditions.checkNotNull(upperLimitField);
 
@@ -48,9 +46,9 @@ public class FacetDefinitionBuilder {
         .setName(name).setTitle(title).setType(type);
   }
 
-  private DefaultFacetDefinition buildDefaultFacetDefinition() {
+  private FacetDefinition buildDefaultFacetDefinition() {
 
-    return new DefaultFacetDefinition().setName(name).setTitle(title).setType(type);
+    return new FacetDefinition().setName(name).setTitle(title).setType(type);
   }
 
 }

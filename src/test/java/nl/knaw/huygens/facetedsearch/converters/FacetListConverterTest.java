@@ -3,7 +3,7 @@ package nl.knaw.huygens.facetedsearch.converters;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import nl.knaw.huygens.facetedsearch.converters.FacetListConverter;
-import nl.knaw.huygens.facetedsearch.model.DefaultFacetDefinition;
+import nl.knaw.huygens.facetedsearch.definition.FacetDefinition;
 import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
 
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -17,7 +17,7 @@ public class FacetListConverterTest {
   private FacetedSearchResult resultMock;
   private QueryResponse queryResponseMock;
 
-  public void setUp(DefaultFacetDefinition... facetInfos) {
+  public void setUp(FacetDefinition... facetInfos) {
 
     instance = new FacetListConverter(Lists.newArrayList(facetInfos));
 
@@ -28,7 +28,7 @@ public class FacetListConverterTest {
   @Test
   public void testConvertOneFacet() {
     // mock
-    DefaultFacetDefinition facetInfo = mock(DefaultFacetDefinition.class);
+    FacetDefinition facetInfo = mock(FacetDefinition.class);
 
     // setup
     setUp(facetInfo);
@@ -44,9 +44,9 @@ public class FacetListConverterTest {
   public void testConvertMultipleFacets() {
 
     // mock
-    DefaultFacetDefinition facetInfo1 = mock(DefaultFacetDefinition.class);
-    DefaultFacetDefinition facetInfo2 = mock(DefaultFacetDefinition.class);
-    DefaultFacetDefinition facetInfo3 = mock(DefaultFacetDefinition.class);
+    FacetDefinition facetInfo1 = mock(FacetDefinition.class);
+    FacetDefinition facetInfo2 = mock(FacetDefinition.class);
+    FacetDefinition facetInfo3 = mock(FacetDefinition.class);
 
     // setup
     setUp(facetInfo1, facetInfo2, facetInfo3);

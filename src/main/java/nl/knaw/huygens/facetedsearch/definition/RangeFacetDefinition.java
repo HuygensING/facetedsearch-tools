@@ -1,8 +1,11 @@
-package nl.knaw.huygens.facetedsearch.model;
+package nl.knaw.huygens.facetedsearch.definition;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
+import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
+import nl.knaw.huygens.facetedsearch.model.RangeFacet;
 
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
@@ -10,7 +13,7 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 
 import com.google.common.collect.Lists;
 
-public class RangeFacetDefinition extends DefaultFacetDefinition {
+public class RangeFacetDefinition extends FacetDefinition {
 
   private String upperLimitField;
   private String lowerLimitField;

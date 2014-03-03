@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.Map;
 
+import nl.knaw.huygens.facetedsearch.definition.FacetDefinition;
 import nl.knaw.huygens.facetedsearch.model.parameters.DefaultFacetParameter;
 import nl.knaw.huygens.facetedsearch.model.parameters.DefaultFacetedSearchParameters;
 import nl.knaw.huygens.facetedsearch.model.parameters.FacetField;
@@ -30,14 +31,14 @@ import com.google.common.collect.Lists;
 public class FacetedSearchParamatersTest {
   private DefaultFacetedSearchParameters searchParameters;
   @Mock
-  private Map<String, DefaultFacetDefinition> facectDefinitionMapMock;
-  private DefaultFacetDefinition facetDefinitionMock;
+  private Map<String, FacetDefinition> facectDefinitionMapMock;
+  private FacetDefinition facetDefinitionMock;
   private String facetName = "testFacet";
 
   @Before
   public void setUp() {
     MockitoAnnotations.initMocks(this);
-    facetDefinitionMock = mock(DefaultFacetDefinition.class);
+    facetDefinitionMock = mock(FacetDefinition.class);
     searchParameters = new DefaultFacetedSearchParameters();
     searchParameters.setFacetDefinitionMap(facectDefinitionMapMock);
   }

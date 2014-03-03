@@ -8,6 +8,9 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
+import nl.knaw.huygens.facetedsearch.definition.FacetDefinition;
+import nl.knaw.huygens.facetedsearch.definition.FacetDefinition;
+
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.junit.Test;
@@ -23,7 +26,7 @@ public class FacetDefinitionTest {
   // Currently the default implementation.
   public void testAddFacetToResultWithListFacet() {
     // setup instance
-    FacetDefinition instance = new DefaultFacetDefinition().setName(facetName).setTitle(facetTitle).setType(FacetType.LIST);
+    FacetDefinition instance = new FacetDefinition().setName(facetName).setTitle(facetTitle).setType(FacetType.LIST);
 
     // mocks
     QueryResponse queryResponseMock = mock(QueryResponse.class);

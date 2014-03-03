@@ -1,8 +1,6 @@
-package nl.knaw.huygens.facetedsearch;
+package nl.knaw.huygens.facetedsearch.definition;
 
 import java.util.List;
-
-import nl.knaw.huygens.facetedsearch.model.DefaultFacetDefinition;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -13,6 +11,6 @@ public interface SolrSearcher {
 
   QueryResponse search(SolrQuery query) throws SolrServerException;
 
-  List<DefaultFacetDefinition> getFacetDefinitions();
+  List<FacetDefinition> getFacetDefinitions();
 
 }
