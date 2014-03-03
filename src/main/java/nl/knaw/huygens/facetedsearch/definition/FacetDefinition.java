@@ -61,10 +61,12 @@ public class FacetDefinition {
   }
 
   public boolean isValidFacetField(FacetField facetField) {
-    throw new UnsupportedOperationException("Yet to be implemented");
+    // TODO add validation
+    return true;
   }
 
   public boolean isValidFacetParameter(FacetParameter facetParameter) {
-    throw new UnsupportedOperationException("Yet to be implemented");
+    // TODO add validation
+    return true;
   }
 }
