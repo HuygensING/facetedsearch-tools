@@ -1,4 +1,4 @@
-package nl.knaw.huygens.facetedsearch.model;
+package nl.knaw.huygens.facetedsearch.definition;
 
 import static nl.knaw.huygens.facetedsearch.model.DefaultFacetMatcher.defaultFacethasCharacteristics;
 import static org.mockito.Matchers.argThat;
@@ -10,6 +10,9 @@ import java.util.List;
 
 import nl.knaw.huygens.facetedsearch.definition.FacetDefinition;
 import nl.knaw.huygens.facetedsearch.definition.FacetDefinition;
+import nl.knaw.huygens.facetedsearch.model.FacetOption;
+import nl.knaw.huygens.facetedsearch.model.FacetType;
+import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
 
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;

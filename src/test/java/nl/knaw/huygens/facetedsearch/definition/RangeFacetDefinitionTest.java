@@ -1,4 +1,4 @@
-package nl.knaw.huygens.facetedsearch.model;
+package nl.knaw.huygens.facetedsearch.definition;
 
 import static nl.knaw.huygens.facetedsearch.model.RangeFacetMatcher.rangeFacetHasCharacteristics;
 import static org.mockito.Matchers.argThat;
@@ -7,6 +7,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import nl.knaw.huygens.facetedsearch.definition.FacetDefinition;
 import nl.knaw.huygens.facetedsearch.definition.RangeFacetDefinition;
+import nl.knaw.huygens.facetedsearch.model.FacetType;
+import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
 
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
