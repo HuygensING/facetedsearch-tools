@@ -2,12 +2,12 @@ package nl.knaw.huygens.facetedsearch;
 
 import java.util.List;
 
-import nl.knaw.huygens.facetedsearch.model.FacetParameter;
-import nl.knaw.huygens.facetedsearch.model.FacetedSearchParameters;
-import nl.knaw.huygens.facetedsearch.model.HighlightingOptions;
 import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
-import nl.knaw.huygens.facetedsearch.model.QueryOptimizer;
-import nl.knaw.huygens.facetedsearch.model.SortParameter;
+import nl.knaw.huygens.facetedsearch.model.parameters.FacetParameter;
+import nl.knaw.huygens.facetedsearch.model.parameters.FacetedSearchParameters;
+import nl.knaw.huygens.facetedsearch.model.parameters.HighlightingOptions;
+import nl.knaw.huygens.facetedsearch.model.parameters.QueryOptimizer;
+import nl.knaw.huygens.facetedsearch.model.parameters.SortParameter;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;

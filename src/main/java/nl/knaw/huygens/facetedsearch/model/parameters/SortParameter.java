@@ -1,4 +1,5 @@
-package nl.knaw.huygens.facetedsearch.model;
+package nl.knaw.huygens.facetedsearch.model.parameters;
+
 
 public class SortParameter {
   private String fieldname;

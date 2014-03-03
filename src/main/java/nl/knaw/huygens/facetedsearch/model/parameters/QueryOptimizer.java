@@ -1,4 +1,4 @@
-package nl.knaw.huygens.facetedsearch.model;
+package nl.knaw.huygens.facetedsearch.model.parameters;
 
 /**
  * A class that contains information to tweak a solr query.

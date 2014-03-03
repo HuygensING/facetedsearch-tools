@@ -1,7 +1,7 @@
 package nl.knaw.huygens.facetedsearch;
 
-import nl.knaw.huygens.facetedsearch.model.FacetParameter;
-import nl.knaw.huygens.facetedsearch.model.SortParameter;
+import nl.knaw.huygens.facetedsearch.model.parameters.FacetParameter;
+import nl.knaw.huygens.facetedsearch.model.parameters.SortParameter;
 
 /**
  * This interface is used to validate the faceted search parameters.

@@ -1,9 +1,13 @@
-package nl.knaw.huygens.facetedsearch.model;
+package nl.knaw.huygens.facetedsearch.model.parameters;
 
 import java.util.List;
 import java.util.Map;
 
 import javax.xml.bind.annotation.XmlRootElement;
+
+import nl.knaw.huygens.facetedsearch.model.FacetDefinition;
+import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
+import nl.knaw.huygens.facetedsearch.model.WrongFacetValueException;
 
 import org.apache.commons.lang.StringUtils;
 

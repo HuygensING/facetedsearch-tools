@@ -1,4 +1,4 @@
-package nl.knaw.huygens.facetedsearch.model;
+package nl.knaw.huygens.facetedsearch.model.parameters;
 
 /**
  * Default implementation of {@code FacetedSearchParameters}.

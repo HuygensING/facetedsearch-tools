@@ -1,4 +1,4 @@
-package nl.knaw.huygens.facetedsearch.model;
+package nl.knaw.huygens.facetedsearch.model.parameters;
 
 public enum SortDirection {
   ASCENDING("asc"), DESCENDING("desc");

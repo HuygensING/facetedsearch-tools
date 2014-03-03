@@ -2,6 +2,8 @@ package nl.knaw.huygens.facetedsearch.model;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import nl.knaw.huygens.facetedsearch.model.parameters.FacetField;
+import nl.knaw.huygens.facetedsearch.model.parameters.RangeFacetField;
 
 import org.junit.Before;
 import org.junit.Test;

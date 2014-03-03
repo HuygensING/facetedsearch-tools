@@ -8,16 +8,16 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
-import nl.knaw.huygens.facetedsearch.model.DefaultFacetParameter;
-import nl.knaw.huygens.facetedsearch.model.DefaultFacetedSearchParameters;
-import nl.knaw.huygens.facetedsearch.model.FacetField;
-import nl.knaw.huygens.facetedsearch.model.FacetParameter;
-import nl.knaw.huygens.facetedsearch.model.HighlightingOptions;
-import nl.knaw.huygens.facetedsearch.model.QueryOptimizer;
-import nl.knaw.huygens.facetedsearch.model.RangeFacetField;
-import nl.knaw.huygens.facetedsearch.model.RangeParameter;
-import nl.knaw.huygens.facetedsearch.model.SortDirection;
-import nl.knaw.huygens.facetedsearch.model.SortParameter;
+import nl.knaw.huygens.facetedsearch.model.parameters.DefaultFacetParameter;
+import nl.knaw.huygens.facetedsearch.model.parameters.DefaultFacetedSearchParameters;
+import nl.knaw.huygens.facetedsearch.model.parameters.FacetField;
+import nl.knaw.huygens.facetedsearch.model.parameters.FacetParameter;
+import nl.knaw.huygens.facetedsearch.model.parameters.HighlightingOptions;
+import nl.knaw.huygens.facetedsearch.model.parameters.QueryOptimizer;
+import nl.knaw.huygens.facetedsearch.model.parameters.RangeFacetField;
+import nl.knaw.huygens.facetedsearch.model.parameters.RangeParameter;
+import nl.knaw.huygens.facetedsearch.model.parameters.SortDirection;
+import nl.knaw.huygens.facetedsearch.model.parameters.SortParameter;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;

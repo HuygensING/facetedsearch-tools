@@ -14,10 +14,10 @@ import nl.knaw.huygens.facetedsearch.FacetedSearchLibrary;
 import nl.knaw.huygens.facetedsearch.SearchResultBuilder;
 import nl.knaw.huygens.facetedsearch.SolrQueryCreator;
 import nl.knaw.huygens.facetedsearch.SolrSearcher;
-import nl.knaw.huygens.facetedsearch.model.DefaultFacetedSearchParameters;
 import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
 import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
 import nl.knaw.huygens.facetedsearch.model.WrongFacetValueException;
+import nl.knaw.huygens.facetedsearch.model.parameters.DefaultFacetedSearchParameters;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;

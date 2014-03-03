@@ -2,10 +2,10 @@ package nl.knaw.huygens.facetedsearch;
 
 import nl.knaw.huygens.facetedsearch.converters.FacetListConverter;
 import nl.knaw.huygens.facetedsearch.converters.ResultConverter;
-import nl.knaw.huygens.facetedsearch.model.FacetedSearchParameters;
 import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
 import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
 import nl.knaw.huygens.facetedsearch.model.WrongFacetValueException;
+import nl.knaw.huygens.facetedsearch.model.parameters.FacetedSearchParameters;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;

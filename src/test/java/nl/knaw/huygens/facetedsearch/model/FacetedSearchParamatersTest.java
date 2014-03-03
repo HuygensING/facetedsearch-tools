@@ -11,6 +11,13 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.Map;
 
+import nl.knaw.huygens.facetedsearch.model.parameters.DefaultFacetParameter;
+import nl.knaw.huygens.facetedsearch.model.parameters.DefaultFacetedSearchParameters;
+import nl.knaw.huygens.facetedsearch.model.parameters.FacetField;
+import nl.knaw.huygens.facetedsearch.model.parameters.FacetParameter;
+import nl.knaw.huygens.facetedsearch.model.parameters.SortDirection;
+import nl.knaw.huygens.facetedsearch.model.parameters.SortParameter;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
