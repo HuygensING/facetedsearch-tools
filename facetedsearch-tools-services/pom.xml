@@ -7,4 +7,31 @@
   </parent>
   <artifactId>facetedsearch-tools-services</artifactId>
   <name>Faceted search tools services</name>
+  
+  <dependencies>
+    <!-- Main dependencies -->
+    <!-- solr -->
+    <dependency>
+      <artifactId>solr-core</artifactId>
+      <groupId>org.apache.solr</groupId>
+      <version>${solr.version}</version>
+      <type>jar</type>
+    </dependency>
+    <!-- End of main dependencies -->
+    
+    <!-- Test dependencies -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>${assertj-core.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- End of test dependencies -->
+  </dependencies>
 </project>

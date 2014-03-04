@@ -1,4 +1,4 @@
-package nl.knaw.huygens.facetedsearch;
+package nl.knaw.huygens.facetedsearch.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

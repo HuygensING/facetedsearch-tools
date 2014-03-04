@@ -10,10 +10,20 @@
   <description>Contains the interfaces that should be implemented by the client.</description>
   
   <dependencies>
+    <!-- Main dependencies -->
     <dependency>
       <groupId>nl.knaw.huygens</groupId>
       <artifactId>facetedsearch-tools-model</artifactId>
       <version>${project.version}</version>
     </dependency>
+    
+    <!-- solr -->
+    <dependency>
+      <artifactId>solr-core</artifactId>
+      <groupId>org.apache.solr</groupId>
+      <version>${solr.version}</version>
+      <type>jar</type>
+    </dependency>
+    <!-- End of main dependencies -->
   </dependencies>
 </project>
