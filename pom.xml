@@ -4,6 +4,8 @@
   <groupId>nl.knaw.huygens</groupId>
   <artifactId>facetedsearch-tools</artifactId>
   <version>1.0.0-SNAPSHOT</version>
+  
+  <name>Faceted search tools</name>
 
   <distributionManagement>
     <repository>
@@ -212,4 +214,11 @@
     <maven>3.0</maven>
   </prerequisites>
 
+  <packaging>pom</packaging>
+  <modules>
+    <module>facetedsearch-tools-definition</module>
+    <module>facetedsearch-tools-lib</module>
+    <module>facetedsearch-tools-model</module>
+    <module>facetedsearch-tools-services</module>
+  </modules>
 </project>
