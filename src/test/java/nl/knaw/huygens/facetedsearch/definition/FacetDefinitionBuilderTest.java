@@ -3,11 +3,10 @@ package nl.knaw.huygens.facetedsearch.definition;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
-import nl.knaw.huygens.facetedsearch.definition.FacetDefinition;
-import nl.knaw.huygens.facetedsearch.definition.FacetDefinition;
-import nl.knaw.huygens.facetedsearch.definition.FacetDefinitionBuilder;
-import nl.knaw.huygens.facetedsearch.definition.RangeFacetDefinition;
+import nl.knaw.huygens.facetedsearch.model.FacetDefinition;
+import nl.knaw.huygens.facetedsearch.model.FacetDefinitionBuilder;
 import nl.knaw.huygens.facetedsearch.model.FacetType;
+import nl.knaw.huygens.facetedsearch.model.RangeFacetDefinition;
 
 import org.junit.Test;
 

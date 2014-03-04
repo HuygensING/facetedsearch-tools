@@ -5,8 +5,7 @@ import java.util.Map;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import nl.knaw.huygens.facetedsearch.definition.FacetDefinition;
-import nl.knaw.huygens.facetedsearch.definition.FacetDefinition;
+import nl.knaw.huygens.facetedsearch.model.FacetDefinition;
 import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
 import nl.knaw.huygens.facetedsearch.model.WrongFacetValueException;
 

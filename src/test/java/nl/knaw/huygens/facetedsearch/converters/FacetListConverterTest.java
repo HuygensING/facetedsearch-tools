@@ -3,7 +3,7 @@ package nl.knaw.huygens.facetedsearch.converters;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import nl.knaw.huygens.facetedsearch.converters.FacetListConverter;
-import nl.knaw.huygens.facetedsearch.definition.FacetDefinition;
+import nl.knaw.huygens.facetedsearch.model.FacetDefinition;
 import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
 
 import org.apache.solr.client.solrj.response.QueryResponse;

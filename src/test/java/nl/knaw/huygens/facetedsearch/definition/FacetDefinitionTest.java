@@ -8,8 +8,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
-import nl.knaw.huygens.facetedsearch.definition.FacetDefinition;
-import nl.knaw.huygens.facetedsearch.definition.FacetDefinition;
+import nl.knaw.huygens.facetedsearch.model.FacetDefinition;
 import nl.knaw.huygens.facetedsearch.model.FacetOption;
 import nl.knaw.huygens.facetedsearch.model.FacetType;
 import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;

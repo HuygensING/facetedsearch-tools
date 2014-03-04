@@ -1,6 +1,4 @@
-package nl.knaw.huygens.facetedsearch.definition;
-
-import nl.knaw.huygens.facetedsearch.model.FacetType;
+package nl.knaw.huygens.facetedsearch.model;
 
 import com.google.common.base.Preconditions;
 

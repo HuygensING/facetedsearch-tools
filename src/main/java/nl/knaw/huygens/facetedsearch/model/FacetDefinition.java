@@ -1,9 +1,5 @@
-package nl.knaw.huygens.facetedsearch.definition;
+package nl.knaw.huygens.facetedsearch.model;
 
-import nl.knaw.huygens.facetedsearch.model.DefaultFacet;
-import nl.knaw.huygens.facetedsearch.model.FacetOption;
-import nl.knaw.huygens.facetedsearch.model.FacetType;
-import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
 import nl.knaw.huygens.facetedsearch.model.parameters.FacetField;
 import nl.knaw.huygens.facetedsearch.model.parameters.FacetParameter;
 
