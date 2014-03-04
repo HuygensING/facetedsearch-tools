@@ -41,7 +41,6 @@ public class FacetedSearchLibrary {
       FacetedSearchException {
     searchParameters.validate();
     SolrQuery query = queryCreator.createSearchQuery(searchParameters);
-    // TODO catch solr exception and throw FacetedSearchException
     QueryResponse queryResponse;
     try {
       queryResponse = solrCore.search(query);
