@@ -52,8 +52,4 @@ public class FacetedSearchLibrary {
     return searchResult;
   }
 
-  protected void setSearchResultBuilder(SearchResultCreator searchResultBuilder) {
-    this.searchResultBuilder = searchResultBuilder;
-  }
-
 }
