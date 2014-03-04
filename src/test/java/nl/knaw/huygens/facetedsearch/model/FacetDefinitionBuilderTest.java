@@ -1,4 +1,4 @@
-package nl.knaw.huygens.facetedsearch.definition;
+package nl.knaw.huygens.facetedsearch.model;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;

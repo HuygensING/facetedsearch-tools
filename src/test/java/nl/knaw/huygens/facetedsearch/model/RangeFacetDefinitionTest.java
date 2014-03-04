@@ -1,4 +1,4 @@
-package nl.knaw.huygens.facetedsearch.definition;
+package nl.knaw.huygens.facetedsearch.model;
 
 import static nl.knaw.huygens.facetedsearch.model.RangeFacetMatcher.rangeFacetHasCharacteristics;
 import static org.mockito.Matchers.argThat;
