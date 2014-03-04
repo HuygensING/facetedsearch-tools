@@ -3,6 +3,8 @@ package nl.knaw.huygens.facetedsearch.model;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Lists;
+
 /**
  * This class contains the data of a search result, collected and converted.  
  */
@@ -13,7 +15,7 @@ public class FacetedSearchResult {
 
   private List<Facet> facets;
   private Map<String, List<String>> highlighting;
-  private List<Map<String, Object>> rawResults;
+  private List<Map<String, Object>> rawResults = Lists.newArrayList();
 
   public float getMaxScore() {
     return maxScore;
@@ -68,5 +70,9 @@ public class FacetedSearchResult {
   public void addFacet(Facet facet) {
     this.facets.add(facet);
 
+  }
+
+  public void addRawResult(Map<String, Object> rawResult) {
+    this.rawResults.add(rawResult);
   }
 }
