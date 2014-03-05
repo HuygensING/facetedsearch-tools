@@ -5,7 +5,6 @@ import nl.knaw.huygens.facetedsearch.converters.ResultConverter;
 import nl.knaw.huygens.facetedsearch.definition.SolrSearcher;
 import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
 import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
-import nl.knaw.huygens.facetedsearch.model.WrongFacetValueException;
 import nl.knaw.huygens.facetedsearch.model.parameters.FacetedSearchParameters;
 
 import org.apache.solr.client.solrj.SolrQuery;
@@ -37,9 +36,8 @@ public class FacetedSearchLibrary {
    * @throws NoSuchFieldInIndexException when the {@code searchParameters} contain a field or a facet that is not recognized.
    * @throws FacetedSearchException when the search fails to execute.
    */
-  public <T extends FacetedSearchParameters<T>> FacetedSearchResult search(FacetedSearchParameters<T> searchParameters) throws NoSuchFieldInIndexException, WrongFacetValueException,
-      FacetedSearchException {
-    searchParameters.validate();
+  public <T extends FacetedSearchParameters<T>> FacetedSearchResult search(FacetedSearchParameters<T> searchParameters) throws NoSuchFieldInIndexException, FacetedSearchException {
+    searchParameters.validate(solrCore.getFacetDefinitionMap());
     SolrQuery query = queryCreator.createSearchQuery(searchParameters);
     QueryResponse queryResponse;
     try {

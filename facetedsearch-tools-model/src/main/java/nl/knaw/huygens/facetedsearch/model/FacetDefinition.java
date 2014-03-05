@@ -1,8 +1,5 @@
 package nl.knaw.huygens.facetedsearch.model;
 
-import nl.knaw.huygens.facetedsearch.model.parameters.FacetField;
-import nl.knaw.huygens.facetedsearch.model.parameters.FacetParameter;
-
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.apache.solr.client.solrj.response.FacetField.Count;
@@ -54,15 +51,5 @@ public class FacetDefinition {
     }
 
     result.addFacet(facet);
-  }
-
-  public boolean isValidFacetField(FacetField facetField) {
-    // TODO add validation
-    return true;
-  }
-
-  public boolean isValidFacetParameter(FacetParameter facetParameter) {
-    // TODO add validation
-    return true;
   }
 }

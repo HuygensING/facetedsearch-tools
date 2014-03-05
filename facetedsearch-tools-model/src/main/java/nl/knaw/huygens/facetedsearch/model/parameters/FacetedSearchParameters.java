@@ -7,7 +7,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import nl.knaw.huygens.facetedsearch.model.FacetDefinition;
 import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
-import nl.knaw.huygens.facetedsearch.model.WrongFacetValueException;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -20,7 +19,6 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
   private List<String> fullTextSearchFields; // set in back-end
   private List<FacetField> facetFields = Lists.newArrayList(); // set in back-end
   private List<FacetParameter> facetParameters = Lists.newArrayList(); // set in front-end
-  private Map<String, FacetDefinition> facetDefinitionMap; // set in back-end
   private List<String> resultFields = Lists.newArrayList(); // set in back-end
   private boolean fuzzy = false; // set in front-end
   private List<SortParameter> sortParameters = Lists.newArrayList(); // set in front-end
@@ -99,15 +97,6 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
     return (T) this;
   }
 
-  public Map<String, FacetDefinition> getFacetDefinitionMap() {
-    return facetDefinitionMap;
-  }
-
-  public T setFacetDefinitionMap(Map<String, FacetDefinition> facetDefinitionMap) {
-    this.facetDefinitionMap = facetDefinitionMap;
-    return (T) this;
-  }
-
   public List<SortParameter> getSortParameters() {
     return sortParameters;
   }
@@ -134,72 +123,50 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
   }
 
   /**
-   * Get a single {@code FacetInfo} of corresponding with the {@code facetFieldName}.
-   * @param facetFieldName the name of the facet to get the {@code FacetInfo} for.
-   * @return the {@code FacetInfo} if exists else null. 
-   */
-  public FacetDefinition getFacetInfo(String facetFieldName) {
-    return facetDefinitionMap.get(facetFieldName);
-  }
-
-  public List<FacetDefinition> getFacetInfoForRequest() {
-    List<FacetDefinition> facetInfos = Lists.newArrayList();
-    for (String facetFieldName : getFacetFields()) {
-      facetInfos.add(getFacetInfo(facetFieldName));
-    }
-
-    return facetInfos;
-  }
-
-  /**
    * Validates the model if all the fields defined by the user exist and have the right value. 
+   * @param facetDefinitionMap a map that contains information about the facets.
    * @throws NoSuchFieldInIndexException when a field is found that does not exist.
-   * @throws WrongFacetValueException when a facet has the wrong value.
    */
-  public void validate() throws NoSuchFieldInIndexException, WrongFacetValueException {
+  public void validate(Map<String, FacetDefinition> facetDefinitionMap) throws NoSuchFieldInIndexException {
     for (FacetField facetField : facetFields) {
-      if (!isValidFacetField(facetField)) {
+      if (!doesFacetFieldExist(facetField, facetDefinitionMap)) {
         throw new NoSuchFieldInIndexException(facetField.getName());
       }
     }
 
     for (FacetParameter facetParameter : facetParameters) {
-      if (!isValidFacetParameter(facetParameter)) {
+      if (!doesFacetParameterExist(facetParameter, facetDefinitionMap)) {
         throw new NoSuchFieldInIndexException(facetParameter.getName());
       }
     }
 
     for (String resultField : resultFields) {
-      if (!isValidResultField(resultField)) {
+      if (!doesResultFieldExist(resultField, facetDefinitionMap)) {
         throw new NoSuchFieldInIndexException(resultField);
       }
     }
 
     for (SortParameter sortParameter : sortParameters) {
-      if (!isValidSortParamater(sortParameter)) {
+      if (!doesSortParamaterExist(sortParameter, facetDefinitionMap)) {
         throw new NoSuchFieldInIndexException(sortParameter.getFieldname());
       }
     }
 
   }
 
-  private boolean isValidSortParamater(SortParameter sortParameter) {
-    return facetDefinitionMap.get(sortParameter.getFieldname()) != null;
+  private boolean doesSortParamaterExist(SortParameter sortParameter, Map<String, FacetDefinition> facetDefinitionMap) {
+    return facetDefinitionMap.containsKey(sortParameter.getFieldname());
   }
 
-  private boolean isValidResultField(String resultField) {
-    return facetDefinitionMap.get(resultField) != null;
+  private boolean doesResultFieldExist(String resultField, Map<String, FacetDefinition> facetDefinitionMap) {
+    return facetDefinitionMap.containsKey(resultField);
   }
 
-  private boolean isValidFacetParameter(FacetParameter facetParameter) {
-    FacetDefinition definition = facetDefinitionMap.get(facetParameter.getName());
-
-    return definition != null && definition.isValidFacetParameter(facetParameter);
+  private boolean doesFacetParameterExist(FacetParameter facetParameter, Map<String, FacetDefinition> facetDefinitionMap) {
+    return facetDefinitionMap.containsKey(facetParameter.getName());
   }
 
-  private boolean isValidFacetField(FacetField facetField) {
-    FacetDefinition definition = facetDefinitionMap.get(facetField.getName());
-
-    return definition != null && definition.isValidFacetField(facetField);
+  private boolean doesFacetFieldExist(FacetField facetField, Map<String, FacetDefinition> facetDefinitionMap) {
+    return facetDefinitionMap.containsKey(facetField.getName());
   }
 }

@@ -1,9 +1,17 @@
 package nl.knaw.huygens.facetedsearch.model.parameters;
 
-
 public class SortParameter {
   private String fieldname;
   private SortDirection direction = SortDirection.ASCENDING;
+
+  public SortParameter() {
+
+  }
+
+  public SortParameter(String fieldName, SortDirection direction) {
+    fieldname = fieldName;
+    this.direction = direction;
+  }
 
   public String getFieldname() {
     return fieldname;
