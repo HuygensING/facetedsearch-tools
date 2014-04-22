@@ -9,6 +9,8 @@ public class SearchResultCreator {
 
   private final QueryResponseConverter[] converters;
 
+  // TODO: create default constructor
+
   public SearchResultCreator(QueryResponseConverter... converters) {
     this.converters = converters;
   }

@@ -7,7 +7,7 @@ import nl.knaw.huygens.facetedsearch.model.parameters.FacetField;
 import org.junit.Before;
 import org.junit.Test;
 
-public class FaceFieldTest {
+public class FacetFieldTest {
   private static final String FACET_NAME = "facetField";
   private FacetField instance;
 
