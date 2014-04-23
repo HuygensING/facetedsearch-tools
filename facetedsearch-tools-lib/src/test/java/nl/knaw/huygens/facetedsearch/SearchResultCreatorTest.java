@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verify;
 import nl.knaw.huygens.facetedsearch.converters.FacetListConverter;
 import nl.knaw.huygens.facetedsearch.converters.ResultConverter;
 import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
+import nl.knaw.huygens.facetedsearch.model.parameters.DefaultFacetedSearchParameters;
 
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.junit.Test;
@@ -19,6 +20,7 @@ public class SearchResultCreatorTest {
     QueryResponse queryResponseMock = mock(QueryResponse.class);
     FacetListConverter facetConverterMock = mock(FacetListConverter.class);
     ResultConverter resultConverterMock = mock(ResultConverter.class);
+    DefaultFacetedSearchParameters searchParameters = new DefaultFacetedSearchParameters();
 
     final FacetedSearchResult searchResultMock = mock(FacetedSearchResult.class);
     SearchResultCreator instance = new SearchResultCreator(facetConverterMock, resultConverterMock) {
@@ -28,11 +30,12 @@ public class SearchResultCreatorTest {
     };
 
     //action
-    FacetedSearchResult result = instance.build(queryResponseMock);
+    FacetedSearchResult result = instance.build(queryResponseMock, searchParameters);
 
     // verify
-    verify(facetConverterMock).convert(result, queryResponseMock);
-    verify(resultConverterMock).convert(result, queryResponseMock);
+    verify(facetConverterMock).convert(searchResultMock, queryResponseMock);
+    verify(resultConverterMock).convert(searchResultMock, queryResponseMock);
+    verify(result).addSearchParameters(searchParameters);
 
     assertThat(result, is(searchResultMock));
   }

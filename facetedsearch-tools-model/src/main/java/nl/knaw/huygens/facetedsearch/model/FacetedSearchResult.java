@@ -3,6 +3,9 @@ package nl.knaw.huygens.facetedsearch.model;
 import java.util.List;
 import java.util.Map;
 
+import nl.knaw.huygens.facetedsearch.model.parameters.FacetedSearchParameters;
+import nl.knaw.huygens.facetedsearch.model.parameters.SortParameter;
+
 import com.google.common.collect.Lists;
 
 /**
@@ -16,6 +19,8 @@ public class FacetedSearchResult {
   private List<Facet> facets;
   private Map<String, List<String>> highlighting;
   private List<Map<String, Object>> rawResults = Lists.newArrayList();
+  private List<SortParameter> sort;
+  private String term;
 
   public float getMaxScore() {
     return maxScore;
@@ -59,6 +64,10 @@ public class FacetedSearchResult {
     this.highlighting = highlighting;
   }
 
+  /**
+   * Returns a list of a maps. The map has as key the field name. The value is the original value.
+   * @return
+   */
   public List<Map<String, Object>> getRawResults() {
     return rawResults;
   }
@@ -74,5 +83,27 @@ public class FacetedSearchResult {
 
   public void addRawResult(Map<String, Object> rawResult) {
     this.rawResults.add(rawResult);
+  }
+
+  public void setTerm(String term) {
+    this.term = term;
+  }
+
+  public String getTerm() {
+    return term;
+  }
+
+  public void setSort(List<SortParameter> sort) {
+    this.sort = sort;
+  }
+
+  public List<SortParameter> getSort() {
+    return this.sort;
+  }
+
+  public <T extends FacetedSearchParameters<T>> void addSearchParameters(FacetedSearchParameters<T> facetedSearchParameters) {
+    this.term = facetedSearchParameters.getTerm();
+    this.sort = facetedSearchParameters.getSortParameters();
+
   }
 }

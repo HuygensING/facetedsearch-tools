@@ -1,7 +1,5 @@
 package nl.knaw.huygens.facetedsearch;
 
-import nl.knaw.huygens.facetedsearch.converters.FacetListConverter;
-import nl.knaw.huygens.facetedsearch.converters.ResultConverter;
 import nl.knaw.huygens.facetedsearch.definition.SolrSearcher;
 import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
 import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
@@ -15,11 +13,11 @@ public class FacetedSearchLibrary {
 
   private final SolrQueryCreator queryCreator;
   private final SolrSearcher solrCore;
-  private SearchResultCreator searchResultBuilder;
+  private final SearchResultCreator searchResultBuilder;
 
   public FacetedSearchLibrary(SolrSearcher solrCore) {
 
-    this(solrCore, new SolrQueryCreator(), new SearchResultCreator(new FacetListConverter(solrCore.getFacetDefinitions()), new ResultConverter()));
+    this(solrCore, new SolrQueryCreator(), new SearchResultCreator(solrCore.getFacetDefinitions()));
   }
 
   public FacetedSearchLibrary(SolrSearcher solrCore, SolrQueryCreator queryCreator, SearchResultCreator searchResultBuilder) {
@@ -45,7 +43,7 @@ public class FacetedSearchLibrary {
     } catch (SolrServerException e) {
       throw new FacetedSearchException(e.getMessage());
     }
-    FacetedSearchResult searchResult = searchResultBuilder.build(queryResponse);
+    FacetedSearchResult searchResult = searchResultBuilder.build(queryResponse, searchParameters);
 
     return searchResult;
   }

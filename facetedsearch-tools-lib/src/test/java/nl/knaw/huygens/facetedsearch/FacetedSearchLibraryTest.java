@@ -4,10 +4,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.Map;
@@ -63,7 +63,7 @@ public class FacetedSearchLibraryTest {
     when(queryCreatorMock.createSearchQuery(any(DefaultFacetedSearchParameters.class))).thenReturn(queryMock);
     when(solrCoreMock.getFacetDefinitionMap()).thenReturn(facectDefinitionMapMock);
     when(solrCoreMock.search(queryMock)).thenReturn(queryResponseMock);
-    when(searchResultBuilderMock.build(queryResponseMock)).thenReturn(searchResultMock);
+    when(searchResultBuilderMock.build(queryResponseMock, searchParametersMock)).thenReturn(searchResultMock);
 
     // action
     FacetedSearchResult result = instance.search(searchParametersMock);
@@ -74,7 +74,7 @@ public class FacetedSearchLibraryTest {
     inOrder.verify(searchParametersMock).validate(facectDefinitionMapMock);
     inOrder.verify(queryCreatorMock).createSearchQuery(searchParametersMock);
     inOrder.verify(solrCoreMock).search(queryMock);
-    inOrder.verify(searchResultBuilderMock).build(queryResponseMock);
+    inOrder.verify(searchResultBuilderMock).build(queryResponseMock, searchParametersMock);
     assertThat(result, is(searchResultMock));
   }
 
@@ -98,7 +98,7 @@ public class FacetedSearchLibraryTest {
       verify(searchParametersMock).validate(facectDefinitionMapMock);
       verify(queryCreatorMock, never()).createSearchQuery(searchParametersMock);
       verify(solrCoreMock, never()).search(any(SolrQuery.class));
-      verify(searchResultBuilderMock, never()).build(any(QueryResponse.class));
+      verifyZeroInteractions(queryCreatorMock, solrCoreMock, searchResultBuilderMock);
     }
   }
 
@@ -112,12 +112,11 @@ public class FacetedSearchLibraryTest {
     try {
       instance.search(searchParametersMock);
     } finally {
-      InOrder inOrder = inOrder(searchParametersMock, queryCreatorMock, solrCoreMock);
-      inOrder.verify(solrCoreMock).getFacetDefinitionMap();
-      inOrder.verify(searchParametersMock).validate(facectDefinitionMapMock);
-      inOrder.verify(queryCreatorMock).createSearchQuery(searchParametersMock);
-      inOrder.verify(solrCoreMock).search(queryMock);
-      verify(searchResultBuilderMock, never()).build(any(QueryResponse.class));
+      verify(solrCoreMock).getFacetDefinitionMap();
+      verify(searchParametersMock).validate(facectDefinitionMapMock);
+      verify(queryCreatorMock).createSearchQuery(searchParametersMock);
+      verify(solrCoreMock).search(queryMock);
+      verifyZeroInteractions(searchResultBuilderMock);
     }
 
   }

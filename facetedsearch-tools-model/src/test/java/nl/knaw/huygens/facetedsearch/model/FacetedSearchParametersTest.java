@@ -24,7 +24,7 @@ import org.mockito.MockitoAnnotations;
 
 import com.google.common.collect.Lists;
 
-public class FacetedSearchParamatersTest {
+public class FacetedSearchParametersTest {
   private static final String SECOND_SORT_PARAM = "sortParam2";
   private static final String FIRST_SORT_PARAM = "sortParam1";
   private static final String SECOND_FACET_PARAM = "defaultParam";
