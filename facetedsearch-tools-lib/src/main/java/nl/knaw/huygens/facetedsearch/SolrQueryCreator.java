@@ -2,6 +2,7 @@ package nl.knaw.huygens.facetedsearch;
 
 import java.util.List;
 
+import nl.knaw.huygens.facetedsearch.model.FacetDefinition;
 import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
 import nl.knaw.huygens.facetedsearch.model.parameters.FacetParameter;
 import nl.knaw.huygens.facetedsearch.model.parameters.FacetedSearchParameters;
@@ -18,11 +19,23 @@ import org.apache.solr.common.params.HighlightParams;
 
 public class SolrQueryCreator {
 
+  private final List<FacetDefinition> facetDefinitions;
+  private final FacetFieldCollector facetFieldFinder;
+
+  public SolrQueryCreator(List<FacetDefinition> facetDefinitions, FacetFieldCollector facetFieldFinder) {
+    this.facetDefinitions = facetDefinitions;
+    this.facetFieldFinder = facetFieldFinder;
+  }
+
+  public SolrQueryCreator(List<FacetDefinition> facetDefinitions) {
+    this(facetDefinitions, new FacetFieldCollector());
+  }
+
   public <T extends FacetedSearchParameters<T>> SolrQuery createSearchQuery(FacetedSearchParameters<T> searchParameters) {
     SolrQuery query = new SolrQuery();
     query.setQuery(createQuery(searchParameters));
     query.setFields(getResultFields(searchParameters));
-    query.addFacetField(getFacetFields(searchParameters));
+    query.addFacetField(this.facetFieldFinder.find(facetDefinitions));
     query = setSort(query, searchParameters);
     query = setHighlighting(query, searchParameters);
 
@@ -60,11 +73,6 @@ public class SolrQueryCreator {
   private <T extends FacetedSearchParameters<T>> String[] getResultFields(FacetedSearchParameters<T> searchParameters) {
 
     return searchParameters.getResultFields().toArray(new String[0]);
-  }
-
-  private <T extends FacetedSearchParameters<T>> String[] getFacetFields(FacetedSearchParameters<T> searchParameters) {
-
-    return searchParameters.getFacetFields().toArray(new String[0]);
   }
 
   private <T extends FacetedSearchParameters<T>> String createQuery(FacetedSearchParameters<T> searchParameters) {

@@ -5,16 +5,17 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
 
+import nl.knaw.huygens.facetedsearch.model.FacetDefinition;
 import nl.knaw.huygens.facetedsearch.model.parameters.DefaultFacetParameter;
 import nl.knaw.huygens.facetedsearch.model.parameters.DefaultFacetedSearchParameters;
-import nl.knaw.huygens.facetedsearch.model.parameters.FacetField;
 import nl.knaw.huygens.facetedsearch.model.parameters.FacetParameter;
 import nl.knaw.huygens.facetedsearch.model.parameters.HighlightingOptions;
 import nl.knaw.huygens.facetedsearch.model.parameters.QueryOptimizer;
-import nl.knaw.huygens.facetedsearch.model.parameters.RangeFacetField;
 import nl.knaw.huygens.facetedsearch.model.parameters.RangeParameter;
 import nl.knaw.huygens.facetedsearch.model.parameters.SortDirection;
 import nl.knaw.huygens.facetedsearch.model.parameters.SortParameter;
@@ -32,11 +33,15 @@ import com.google.common.collect.Lists;
 public class SolrQueryCreatorTest {
   private DefaultFacetedSearchParameters searchParameters;
   private SolrQueryCreator instance;
+  private List<FacetDefinition> definitions;
+  private FacetFieldCollector facetFieldFinder;
 
   @Before
   public void setUp() {
+    facetFieldFinder = mock(FacetFieldCollector.class);
+    definitions = Lists.newArrayList();
     searchParameters = new DefaultFacetedSearchParameters();
-    instance = new SolrQueryCreator();
+    instance = new SolrQueryCreator(definitions, facetFieldFinder);
   }
 
   @Test
@@ -216,23 +221,13 @@ public class SolrQueryCreatorTest {
 
   @Test
   public void testCreateSearchQueryFacetFields() {
-    searchParameters.setFacetFields(Lists.newArrayList(new FacetField("facetField")));
+
+    when(facetFieldFinder.find(definitions)).thenReturn(new String[] { "facetField" });
 
     SolrQuery query = instance.createSearchQuery(searchParameters);
 
     assertArrayEquals(new String[] { "facetField" }, query.getFacetFields());
     assertEquals(true, query.getBool(FacetParams.FACET)); // this boolean is set automagically
-  }
-
-  @Test
-  public void testCreateSearchQueryRangeFacetFields() {
-    List<FacetField> facetFields = Lists.<FacetField> newArrayList();
-    facetFields.add(new RangeFacetField("rangeField", "lowerField", "upperField"));
-    searchParameters.setFacetFields(facetFields);
-
-    SolrQuery query = instance.createSearchQuery(searchParameters);
-
-    assertArrayEquals(new String[] { "lowerField", "upperField" }, query.getFacetFields());
   }
 
   @Test
