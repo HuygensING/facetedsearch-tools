@@ -16,7 +16,7 @@ public class FacetedSearchResult {
   private long numFound;
   private long offset;
 
-  private List<Facet> facets;
+  private List<Facet> facets = Lists.newArrayList();
   private Map<String, List<String>> highlighting;
   private List<Map<String, Object>> rawResults = Lists.newArrayList();
   private List<SortParameter> sort;
