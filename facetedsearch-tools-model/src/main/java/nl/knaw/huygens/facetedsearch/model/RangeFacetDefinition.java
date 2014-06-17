@@ -51,4 +51,9 @@ public class RangeFacetDefinition extends FacetDefinition {
     return values;
   }
 
+  @Override
+  public Collection<String> getFields() {
+    return Lists.newArrayList(lowerLimitField, upperLimitField);
+  }
+
 }

@@ -1,17 +1,15 @@
 package nl.knaw.huygens.facetedsearch.model;
 
 import static nl.knaw.huygens.facetedsearch.model.DefaultFacetMatcher.defaultFacethasCharacteristics;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.Collection;
 import java.util.List;
-
-import nl.knaw.huygens.facetedsearch.model.FacetDefinition;
-import nl.knaw.huygens.facetedsearch.model.FacetOption;
-import nl.knaw.huygens.facetedsearch.model.FacetType;
-import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
 
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -56,6 +54,15 @@ public class FacetDefinitionTest {
         new FacetOption(nameSecondOption, countSecondOption));
 
     inOrder.verify(searchResultMock).addFacet(argThat(defaultFacethasCharacteristics(facetName, facetTitle, expectedOptions)));
+  }
+
+  @Test
+  public void testGetFields() {
+    FacetDefinition facetDefinition = new FacetDefinition().setName(facetName).setTitle(facetTitle);
+
+    Collection<String> actualFields = facetDefinition.getFields();
+
+    assertThat(actualFields, containsInAnyOrder(facetName));
   }
 
 }

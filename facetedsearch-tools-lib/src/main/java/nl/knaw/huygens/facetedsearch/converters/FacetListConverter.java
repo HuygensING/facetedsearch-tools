@@ -16,8 +16,8 @@ public class FacetListConverter implements QueryResponseConverter {
 
   @Override
   public void convert(final FacetedSearchResult result, final QueryResponse queryResponse) {
-    for (FacetDefinition facetInfo : facetDefinitionList) {
-      facetInfo.addFacetToResult(result, queryResponse);
+    for (FacetDefinition facetDefinition : facetDefinitionList) {
+      facetDefinition.addFacetToResult(result, queryResponse);
     }
   }
 }
