@@ -34,31 +34,6 @@ public class DefaultFacetParameter extends FacetParameter {
     return builder.build();
   }
 
-  private long lowerLimit = -1;
-  private long upperLimit = -1;
-
-  public DefaultFacetParameter setLowerLimit(long lowerLimit) {
-    this.lowerLimit = lowerLimit;
-    return this;
-  }
-
-  public long getLowerLimit() {
-    return lowerLimit;
-  }
-
-  public DefaultFacetParameter setUpperLimit(long upperLimit) {
-    this.upperLimit = upperLimit;
-    return this;
-  }
-
-  public long getUpperLimit() {
-    return upperLimit;
-  }
-
-  public boolean isRangeFacetParameter() {
-    return lowerLimit != -1 && upperLimit != -1;
-  }
-
   @Override
   public String getQueryValue() {
     List<String> values = this.getValues();
