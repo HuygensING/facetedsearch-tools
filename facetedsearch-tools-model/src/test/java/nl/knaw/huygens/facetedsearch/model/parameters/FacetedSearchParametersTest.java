@@ -1,4 +1,4 @@
-package nl.knaw.huygens.facetedsearch.model;
+package nl.knaw.huygens.facetedsearch.model.parameters;
 
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
@@ -8,6 +8,8 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Map;
 
+import nl.knaw.huygens.facetedsearch.model.FacetDefinition;
+import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
 import nl.knaw.huygens.facetedsearch.model.parameters.DefaultFacetParameter;
 import nl.knaw.huygens.facetedsearch.model.parameters.DefaultFacetedSearchParameters;
 import nl.knaw.huygens.facetedsearch.model.parameters.FacetField;
