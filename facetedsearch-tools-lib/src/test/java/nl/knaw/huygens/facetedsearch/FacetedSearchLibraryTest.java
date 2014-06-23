@@ -9,14 +9,11 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
-
-import java.util.Map;
-
 import nl.knaw.huygens.facetedsearch.definition.SolrSearcher;
-import nl.knaw.huygens.facetedsearch.model.FacetDefinition;
 import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
 import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
 import nl.knaw.huygens.facetedsearch.model.parameters.DefaultFacetedSearchParameters;
+import nl.knaw.huygens.facetedsearch.model.parameters.IndexDescription;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -40,7 +37,7 @@ public class FacetedSearchLibraryTest {
   private FacetedSearchResult searchResultMock;
   private DefaultFacetedSearchParameters searchParametersMock;
   @Mock
-  private Map<String, FacetDefinition> facectDefinitionMapMock;
+  private IndexDescription facectDefinitionMapMock;
 
   @Before
   public void setUp() {
@@ -61,7 +58,7 @@ public class FacetedSearchLibraryTest {
   public void testSearch() throws NoSuchFieldInIndexException, FacetedSearchException, SolrServerException {
     // when
     when(queryCreatorMock.createSearchQuery(any(DefaultFacetedSearchParameters.class))).thenReturn(queryMock);
-    when(solrCoreMock.getFacetDefinitionMap()).thenReturn(facectDefinitionMapMock);
+    when(solrCoreMock.getIndexDescription()).thenReturn(facectDefinitionMapMock);
     when(solrCoreMock.search(queryMock)).thenReturn(queryResponseMock);
     when(searchResultBuilderMock.build(queryResponseMock, searchParametersMock)).thenReturn(searchResultMock);
 
@@ -70,7 +67,7 @@ public class FacetedSearchLibraryTest {
 
     // verify
     InOrder inOrder = Mockito.inOrder(searchParametersMock, queryCreatorMock, solrCoreMock, searchResultBuilderMock);
-    inOrder.verify(solrCoreMock).getFacetDefinitionMap();
+    inOrder.verify(solrCoreMock).getIndexDescription();
     inOrder.verify(searchParametersMock).validate(facectDefinitionMapMock);
     inOrder.verify(queryCreatorMock).createSearchQuery(searchParametersMock);
     inOrder.verify(solrCoreMock).search(queryMock);
@@ -86,7 +83,7 @@ public class FacetedSearchLibraryTest {
 
   private void testSearchSearchParametersValidateThrowsException(Class<? extends Exception> exception) throws NoSuchFieldInIndexException, FacetedSearchException, SolrServerException {
     // when
-    when(solrCoreMock.getFacetDefinitionMap()).thenReturn(facectDefinitionMapMock);
+    when(solrCoreMock.getIndexDescription()).thenReturn(facectDefinitionMapMock);
     doThrow(exception).when(searchParametersMock).validate(facectDefinitionMapMock);
     // action
     try {
@@ -94,7 +91,7 @@ public class FacetedSearchLibraryTest {
     } finally {
 
       // verify
-      verify(solrCoreMock).getFacetDefinitionMap();
+      verify(solrCoreMock).getIndexDescription();
       verify(searchParametersMock).validate(facectDefinitionMapMock);
       verify(queryCreatorMock, never()).createSearchQuery(searchParametersMock);
       verify(solrCoreMock, never()).search(any(SolrQuery.class));
@@ -106,13 +103,13 @@ public class FacetedSearchLibraryTest {
   public void testSearchSolrCoreWrapperThrowsAnSolrServerException() throws NoSuchFieldInIndexException, SolrServerException, FacetedSearchException {
     // when
     when(queryCreatorMock.createSearchQuery(any(DefaultFacetedSearchParameters.class))).thenReturn(queryMock);
-    when(solrCoreMock.getFacetDefinitionMap()).thenReturn(facectDefinitionMapMock);
+    when(solrCoreMock.getIndexDescription()).thenReturn(facectDefinitionMapMock);
     doThrow(SolrServerException.class).when(solrCoreMock).search(any(SolrQuery.class));
 
     try {
       instance.search(searchParametersMock);
     } finally {
-      verify(solrCoreMock).getFacetDefinitionMap();
+      verify(solrCoreMock).getIndexDescription();
       verify(searchParametersMock).validate(facectDefinitionMapMock);
       verify(queryCreatorMock).createSearchQuery(searchParametersMock);
       verify(solrCoreMock).search(queryMock);

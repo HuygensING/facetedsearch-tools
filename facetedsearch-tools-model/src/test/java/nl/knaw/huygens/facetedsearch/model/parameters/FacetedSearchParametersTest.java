@@ -1,23 +1,17 @@
 package nl.knaw.huygens.facetedsearch.model.parameters;
 
+import static nl.knaw.huygens.facetedsearch.model.parameters.FacetFieldNameMatcher.facetFieldWithName;
+import static nl.knaw.huygens.facetedsearch.model.parameters.FacetParameterNameMatcher.facetParameterWithName;
+import static nl.knaw.huygens.facetedsearch.model.parameters.SortParameterNameMatcher.sortParameterWithName;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
-import java.util.Map;
 
-import nl.knaw.huygens.facetedsearch.model.FacetDefinition;
 import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
-import nl.knaw.huygens.facetedsearch.model.parameters.DefaultFacetParameter;
-import nl.knaw.huygens.facetedsearch.model.parameters.DefaultFacetedSearchParameters;
-import nl.knaw.huygens.facetedsearch.model.parameters.FacetField;
-import nl.knaw.huygens.facetedsearch.model.parameters.FacetParameter;
-import nl.knaw.huygens.facetedsearch.model.parameters.RangeFacetField;
-import nl.knaw.huygens.facetedsearch.model.parameters.RangeParameter;
-import nl.knaw.huygens.facetedsearch.model.parameters.SortDirection;
-import nl.knaw.huygens.facetedsearch.model.parameters.SortParameter;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +31,7 @@ public class FacetedSearchParametersTest {
   private static final String FIRST_FACET_FIELD = "facetField";
   private DefaultFacetedSearchParameters instance;
   @Mock
-  private Map<String, FacetDefinition> facectDefinitionMapMock;
+  private IndexDescription indexDescriptionMock;
 
   @Before
   public void setUp() {
@@ -71,37 +65,41 @@ public class FacetedSearchParametersTest {
   @Test
   public void testValidateAllValid() throws NoSuchFieldInIndexException {
     //when
-    when(facectDefinitionMapMock.containsKey(anyString())).thenReturn(true);
+    when(indexDescriptionMock.doesFacetFieldExist(any(FacetField.class))).thenReturn(true);
+    when(indexDescriptionMock.doesFacetParameterExist(any(FacetParameter.class))).thenReturn(true);
+    when(indexDescriptionMock.doesResultFieldExist(anyString())).thenReturn(true);
+    when(indexDescriptionMock.doesSortParameterExist(any(SortParameter.class))).thenReturn(true);
 
     // action
-    instance.validate(facectDefinitionMapMock);
+    instance.validate(indexDescriptionMock);
 
     // verify
-    verify(facectDefinitionMapMock).containsKey(FIRST_FACET_FIELD);
-    verify(facectDefinitionMapMock).containsKey(SECOND_FACET_FIELD);
-    verify(facectDefinitionMapMock).containsKey(SECOND_FACET_PARAM);
-    verify(facectDefinitionMapMock).containsKey(FIRST_FACET_PARAM);
-    verify(facectDefinitionMapMock).containsKey(FIRST_RESULT_FIELD);
-    verify(facectDefinitionMapMock).containsKey(SECOND_RESULT_FIELD);
-    verify(facectDefinitionMapMock).containsKey(FIRST_SORT_PARAM);
-    verify(facectDefinitionMapMock).containsKey(SECOND_SORT_PARAM);
+    verify(indexDescriptionMock).doesFacetFieldExist(facetFieldWithName(FIRST_FACET_FIELD));
+    verify(indexDescriptionMock).doesFacetFieldExist(facetFieldWithName(SECOND_FACET_FIELD));
+    verify(indexDescriptionMock).doesFacetParameterExist(facetParameterWithName(FIRST_FACET_PARAM));
+    verify(indexDescriptionMock).doesFacetParameterExist(facetParameterWithName(SECOND_FACET_PARAM));
+    verify(indexDescriptionMock).doesResultFieldExist(FIRST_RESULT_FIELD);
+    verify(indexDescriptionMock).doesResultFieldExist(SECOND_RESULT_FIELD);
+    verify(indexDescriptionMock).doesSortParameterExist(sortParameterWithName(FIRST_SORT_PARAM));
+    verify(indexDescriptionMock).doesSortParameterExist(sortParameterWithName(SECOND_SORT_PARAM));
   }
 
   @Test(expected = NoSuchFieldInIndexException.class)
   public void testValidateUnknownFacetField() throws NoSuchFieldInIndexException {
 
     //when
-    when(facectDefinitionMapMock.containsKey(anyString())).thenReturn(true);
-    when(facectDefinitionMapMock.containsKey(SECOND_FACET_FIELD)).thenReturn(false);
+    when(indexDescriptionMock.doesFacetFieldExist(any(FacetField.class))).thenReturn(true);
+
+    when(indexDescriptionMock.doesFacetFieldExist(facetFieldWithName(SECOND_FACET_FIELD))).thenReturn(false);
 
     try {
       // action
-      instance.validate(facectDefinitionMapMock);
+      instance.validate(indexDescriptionMock);
     } finally {
       // verify
-      verify(facectDefinitionMapMock).containsKey(FIRST_FACET_FIELD);
-      verify(facectDefinitionMapMock).containsKey(SECOND_FACET_FIELD);
-      verifyNoMoreInteractions(facectDefinitionMapMock);
+      verify(indexDescriptionMock).doesFacetFieldExist(facetFieldWithName(FIRST_FACET_FIELD));
+      verify(indexDescriptionMock).doesFacetFieldExist(facetFieldWithName(SECOND_FACET_FIELD));
+      verifyNoMoreInteractions(indexDescriptionMock);
     }
   }
 
@@ -109,78 +107,86 @@ public class FacetedSearchParametersTest {
   public void testValidateFirstFacetFieldUnknown() throws NoSuchFieldInIndexException {
 
     //when
-    when(facectDefinitionMapMock.containsKey(anyString())).thenReturn(true);
-    when(facectDefinitionMapMock.containsKey(FIRST_FACET_FIELD)).thenReturn(false);
+    when(indexDescriptionMock.doesFacetFieldExist(facetFieldWithName(FIRST_FACET_FIELD))).thenReturn(false);
 
     try {
       // action
-      instance.validate(facectDefinitionMapMock);
+      instance.validate(indexDescriptionMock);
     } finally {
       // verify
-      verify(facectDefinitionMapMock).containsKey(FIRST_FACET_FIELD);
-      verifyNoMoreInteractions(facectDefinitionMapMock);
+      verify(indexDescriptionMock).doesFacetFieldExist(facetFieldWithName(FIRST_FACET_FIELD));
+      verifyNoMoreInteractions(indexDescriptionMock);
     }
   }
 
   @Test(expected = NoSuchFieldInIndexException.class)
   public void testValidateUnknownFacetParameter() throws NoSuchFieldInIndexException {
     //when
-    when(facectDefinitionMapMock.containsKey(anyString())).thenReturn(true);
-    when(facectDefinitionMapMock.containsKey(SECOND_FACET_PARAM)).thenReturn(false);
+    when(indexDescriptionMock.doesFacetFieldExist(any(FacetField.class))).thenReturn(true);
+    when(indexDescriptionMock.doesFacetParameterExist(any(FacetParameter.class))).thenReturn(true);
+
+    when(indexDescriptionMock.doesFacetParameterExist(facetParameterWithName(SECOND_FACET_PARAM))).thenReturn(false);
 
     try {
       // action
-      instance.validate(facectDefinitionMapMock);
+      instance.validate(indexDescriptionMock);
     } finally {
       // verify
-      verify(facectDefinitionMapMock).containsKey(FIRST_FACET_FIELD);
-      verify(facectDefinitionMapMock).containsKey(SECOND_FACET_FIELD);
-      verify(facectDefinitionMapMock).containsKey(FIRST_FACET_PARAM);
-      verify(facectDefinitionMapMock).containsKey(SECOND_FACET_PARAM);
-      verifyNoMoreInteractions(facectDefinitionMapMock);
+      verify(indexDescriptionMock).doesFacetFieldExist(facetFieldWithName(FIRST_FACET_FIELD));
+      verify(indexDescriptionMock).doesFacetFieldExist(facetFieldWithName(SECOND_FACET_FIELD));
+      verify(indexDescriptionMock).doesFacetParameterExist(facetParameterWithName(FIRST_FACET_PARAM));
+      verify(indexDescriptionMock).doesFacetParameterExist(facetParameterWithName(SECOND_FACET_PARAM));
+      verifyNoMoreInteractions(indexDescriptionMock);
     }
   }
 
   @Test(expected = NoSuchFieldInIndexException.class)
   public void testValidateUnknownResultField() throws NoSuchFieldInIndexException {
     //when
-    when(facectDefinitionMapMock.containsKey(anyString())).thenReturn(true);
-    when(facectDefinitionMapMock.containsKey(SECOND_RESULT_FIELD)).thenReturn(false);
+    when(indexDescriptionMock.doesFacetFieldExist(any(FacetField.class))).thenReturn(true);
+    when(indexDescriptionMock.doesFacetParameterExist(any(FacetParameter.class))).thenReturn(true);
+    when(indexDescriptionMock.doesResultFieldExist(anyString())).thenReturn(true);
+
+    when(indexDescriptionMock.doesResultFieldExist(SECOND_RESULT_FIELD)).thenReturn(false);
 
     try {
       // action
-      instance.validate(facectDefinitionMapMock);
+      instance.validate(indexDescriptionMock);
     } finally {
       // verify
-      verify(facectDefinitionMapMock).containsKey(FIRST_FACET_FIELD);
-      verify(facectDefinitionMapMock).containsKey(SECOND_FACET_FIELD);
-      verify(facectDefinitionMapMock).containsKey(FIRST_FACET_PARAM);
-      verify(facectDefinitionMapMock).containsKey(SECOND_FACET_PARAM);
-      verify(facectDefinitionMapMock).containsKey(FIRST_RESULT_FIELD);
-      verify(facectDefinitionMapMock).containsKey(SECOND_RESULT_FIELD);
-      verifyNoMoreInteractions(facectDefinitionMapMock);
+      verify(indexDescriptionMock).doesFacetFieldExist(facetFieldWithName(FIRST_FACET_FIELD));
+      verify(indexDescriptionMock).doesFacetFieldExist(facetFieldWithName(SECOND_FACET_FIELD));
+      verify(indexDescriptionMock).doesFacetParameterExist(facetParameterWithName(FIRST_FACET_PARAM));
+      verify(indexDescriptionMock).doesFacetParameterExist(facetParameterWithName(SECOND_FACET_PARAM));
+      verify(indexDescriptionMock).doesResultFieldExist(FIRST_RESULT_FIELD);
+      verify(indexDescriptionMock).doesResultFieldExist(SECOND_RESULT_FIELD);
+      verifyNoMoreInteractions(indexDescriptionMock);
     }
   }
 
   @Test(expected = NoSuchFieldInIndexException.class)
   public void testValidateUnknownSortParameter() throws NoSuchFieldInIndexException {
     //when
-    when(facectDefinitionMapMock.containsKey(anyString())).thenReturn(true);
-    when(facectDefinitionMapMock.containsKey(FIRST_SORT_PARAM)).thenReturn(false);
+    when(indexDescriptionMock.doesFacetFieldExist(any(FacetField.class))).thenReturn(true);
+    when(indexDescriptionMock.doesFacetParameterExist(any(FacetParameter.class))).thenReturn(true);
+    when(indexDescriptionMock.doesResultFieldExist(anyString())).thenReturn(true);
+    when(indexDescriptionMock.doesSortParameterExist(any(SortParameter.class))).thenReturn(true);
+
+    when(indexDescriptionMock.doesSortParameterExist(sortParameterWithName(FIRST_SORT_PARAM))).thenReturn(false);
 
     try {
       // action
-      instance.validate(facectDefinitionMapMock);
+      instance.validate(indexDescriptionMock);
     } finally {
       // verify
-      verify(facectDefinitionMapMock).containsKey(FIRST_FACET_FIELD);
-      verify(facectDefinitionMapMock).containsKey(SECOND_FACET_FIELD);
-      verify(facectDefinitionMapMock).containsKey(FIRST_FACET_PARAM);
-      verify(facectDefinitionMapMock).containsKey(SECOND_FACET_PARAM);
-      verify(facectDefinitionMapMock).containsKey(FIRST_RESULT_FIELD);
-      verify(facectDefinitionMapMock).containsKey(SECOND_RESULT_FIELD);
-      verify(facectDefinitionMapMock).containsKey(FIRST_SORT_PARAM);
-      verifyNoMoreInteractions(facectDefinitionMapMock);
+      verify(indexDescriptionMock).doesFacetFieldExist(facetFieldWithName(FIRST_FACET_FIELD));
+      verify(indexDescriptionMock).doesFacetFieldExist(facetFieldWithName(SECOND_FACET_FIELD));
+      verify(indexDescriptionMock).doesFacetParameterExist(facetParameterWithName(FIRST_FACET_PARAM));
+      verify(indexDescriptionMock).doesFacetParameterExist(facetParameterWithName(SECOND_FACET_PARAM));
+      verify(indexDescriptionMock).doesResultFieldExist(FIRST_RESULT_FIELD);
+      verify(indexDescriptionMock).doesResultFieldExist(SECOND_RESULT_FIELD);
+      verify(indexDescriptionMock).doesSortParameterExist(sortParameterWithName(FIRST_SORT_PARAM));
+      verifyNoMoreInteractions(indexDescriptionMock);
     }
   }
 

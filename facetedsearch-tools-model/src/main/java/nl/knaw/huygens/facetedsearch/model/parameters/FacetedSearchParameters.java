@@ -1,11 +1,9 @@
 package nl.knaw.huygens.facetedsearch.model.parameters;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import nl.knaw.huygens.facetedsearch.model.FacetDefinition;
 import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
 
 import org.apache.commons.lang.StringUtils;
@@ -124,49 +122,33 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
 
   /**
    * Validates the model if all the fields defined by the user exist and have the right value. 
-   * @param facetDefinitionMap a map that contains information about the facets.
+   * @param indexDescription a map that contains information about the facets.
    * @throws NoSuchFieldInIndexException when a field is found that does not exist.
    */
-  public void validate(Map<String, FacetDefinition> facetDefinitionMap) throws NoSuchFieldInIndexException {
+  public void validate(IndexDescription indexDescription) throws NoSuchFieldInIndexException {
     for (FacetField facetField : facetFields) {
-      if (!doesFacetFieldExist(facetField, facetDefinitionMap)) {
+      if (!indexDescription.doesFacetFieldExist(facetField)) {
         throw new NoSuchFieldInIndexException(facetField.getName());
       }
     }
 
     for (FacetParameter facetParameter : facetParameters) {
-      if (!doesFacetParameterExist(facetParameter, facetDefinitionMap)) {
+      if (!indexDescription.doesFacetParameterExist(facetParameter)) {
         throw new NoSuchFieldInIndexException(facetParameter.getName());
       }
     }
 
     for (String resultField : resultFields) {
-      if (!doesResultFieldExist(resultField, facetDefinitionMap)) {
+      if (!indexDescription.doesResultFieldExist(resultField)) {
         throw new NoSuchFieldInIndexException(resultField);
       }
     }
 
     for (SortParameter sortParameter : sortParameters) {
-      if (!doesSortParamaterExist(sortParameter, facetDefinitionMap)) {
+      if (!indexDescription.doesSortParameterExist(sortParameter)) {
         throw new NoSuchFieldInIndexException(sortParameter.getFieldname());
       }
     }
 
-  }
-
-  private boolean doesSortParamaterExist(SortParameter sortParameter, Map<String, FacetDefinition> facetDefinitionMap) {
-    return facetDefinitionMap.containsKey(sortParameter.getFieldname());
-  }
-
-  private boolean doesResultFieldExist(String resultField, Map<String, FacetDefinition> facetDefinitionMap) {
-    return facetDefinitionMap.containsKey(resultField);
-  }
-
-  private boolean doesFacetParameterExist(FacetParameter facetParameter, Map<String, FacetDefinition> facetDefinitionMap) {
-    return facetDefinitionMap.containsKey(facetParameter.getName());
-  }
-
-  private boolean doesFacetFieldExist(FacetField facetField, Map<String, FacetDefinition> facetDefinitionMap) {
-    return facetDefinitionMap.containsKey(facetField.getName());
   }
 }
