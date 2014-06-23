@@ -1,6 +1,7 @@
 package nl.knaw.huygens.facetedsearch.model.parameters;
 
 import java.util.List;
+import java.util.Map;
 
 import nl.knaw.huygens.facetedsearch.model.FacetDefinition;
 
@@ -9,25 +10,32 @@ import nl.knaw.huygens.facetedsearch.model.FacetDefinition;
  * - Facets / facet fields
  * - Sort fields
  * - Full text search fields
+ * - Other Solr fields
  */
 public class IndexDescription {
-  public IndexDescription(List<FacetDefinition> facetDefinitions) {
+  private final List<String> sortFieldList;
+  private final Map<String, FacetDefinition> facetDefinitionMap;
+  private final List<String> allIndexedFields;
 
-  }
-
-  public boolean doesSortParameterExist(SortParameter sortParameter) {
-    throw new UnsupportedOperationException();
-  }
-
-  public boolean doesResultFieldExist(String resultField) {
-    throw new UnsupportedOperationException();
-  }
-
-  public boolean doesFacetParameterExist(FacetParameter facetParameter) {
-    throw new UnsupportedOperationException();
+  public IndexDescription(Map<String, FacetDefinition> facetDefinitionMap, List<String> sortFieldList, List<String> allIndexedFieldsMock) {
+    this.facetDefinitionMap = facetDefinitionMap;
+    this.sortFieldList = sortFieldList;
+    this.allIndexedFields = allIndexedFieldsMock;
   }
 
   public boolean doesFacetFieldExist(FacetField facetField) {
-    throw new UnsupportedOperationException();
+    return facetDefinitionMap.containsKey(facetField.getName());
+  }
+
+  public boolean doesFacetParameterExist(FacetParameter facetParameter) {
+    return facetDefinitionMap.containsKey(facetParameter.getName());
+  }
+
+  public boolean doesResultFieldExist(String resultField) {
+    return allIndexedFields.contains(resultField);
+  }
+
+  public boolean doesSortParameterExist(SortParameter sortParameter) {
+    return sortFieldList.contains(sortParameter.getFieldname());
   }
 }
