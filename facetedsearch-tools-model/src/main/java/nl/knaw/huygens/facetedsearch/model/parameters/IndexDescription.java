@@ -5,6 +5,8 @@ import java.util.Map;
 
 import nl.knaw.huygens.facetedsearch.model.FacetDefinition;
 
+import com.google.common.collect.Lists;
+
 /**
  * Describes the index:
  * - Facets / facet fields
@@ -37,5 +39,15 @@ public class IndexDescription {
 
   public boolean doesSortParameterExist(SortParameter sortParameter) {
     return sortFieldList.contains(sortParameter.getFieldname());
+  }
+
+  public String[] findFacetFields() {
+    List<String> facetFields = Lists.newArrayList();
+
+    for (FacetDefinition facetDefinition : facetDefinitionMap.values()) {
+      facetFields.addAll(facetDefinition.getFields());
+    }
+
+    return facetFields.toArray(new String[0]);
   }
 }

@@ -1,16 +1,22 @@
 package nl.knaw.huygens.facetedsearch.model.parameters;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.Map;
 
 import nl.knaw.huygens.facetedsearch.model.FacetDefinition;
+import nl.knaw.huygens.facetedsearch.model.RangeFacetDefinition;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import com.google.common.collect.Lists;
 
 public class IndexDescriptionTest {
 
@@ -82,4 +88,24 @@ public class IndexDescriptionTest {
     verify(sortFieldListMock).contains(fieldName);
   }
 
+  @Test
+  public void testFindFacetFields() {
+    // setup
+    final String facetName = "test";
+    FacetDefinition facetDefinition = new FacetDefinition().setName(facetName);
+    final String lowerLimitField = "lowerLimitField";
+    final String upperLimitField = "upperLimitField";
+    RangeFacetDefinition rangeDefinition = new RangeFacetDefinition() //
+        .setLowerLimitField(lowerLimitField) //
+        .setUpperLimitField(upperLimitField);
+
+    when(facetDefinitionMapMock.values()).thenReturn(Lists.newArrayList(facetDefinition, rangeDefinition));
+
+    // action
+    String[] facetFields = instance.findFacetFields();
+
+    // verify
+    verify(facetDefinitionMapMock).values();
+    assertThat(Lists.newArrayList(facetFields), containsInAnyOrder(facetName, lowerLimitField, upperLimitField));
+  }
 }
