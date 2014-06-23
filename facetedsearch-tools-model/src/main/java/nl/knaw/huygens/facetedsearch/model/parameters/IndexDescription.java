@@ -21,11 +21,13 @@ public class IndexDescription {
   private final List<String> sortFieldList;
   private final Map<String, FacetDefinition> facetDefinitionMap;
   private final List<String> allIndexedFields;
+  private final List<String> fullTextSearchFields;
 
-  public IndexDescription(Map<String, FacetDefinition> facetDefinitionMap, List<String> sortFieldList, List<String> allIndexedFieldsMock) {
+  public IndexDescription(Map<String, FacetDefinition> facetDefinitionMap, List<String> sortFieldList, List<String> fullTextSearchFields, List<String> allIndexedFields) {
     this.facetDefinitionMap = facetDefinitionMap;
     this.sortFieldList = sortFieldList;
-    this.allIndexedFields = allIndexedFieldsMock;
+    this.fullTextSearchFields = fullTextSearchFields;
+    this.allIndexedFields = allIndexedFields;
   }
 
   public boolean doesFacetFieldExist(FacetField facetField) {
@@ -58,5 +60,9 @@ public class IndexDescription {
     for (FacetDefinition facetDefinition : facetDefinitionMap.values()) {
       facetDefinition.addFacetToResult(searchResult, queryResponse);
     }
+  }
+
+  public boolean doesFullTextSearchFieldExist(String fieldName) {
+    return fullTextSearchFields.contains(fieldName);
   }
 }

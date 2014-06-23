@@ -27,6 +27,8 @@ public class IndexDescriptionTest {
   private List<String> sortFieldListMock;
   @Mock
   List<String> allIndexedFieldsMock;
+  @Mock
+  List<String> fullTextSearchFieldsMock;
 
   @Mock
   private Map<String, FacetDefinition> facetDefinitionMapMock;
@@ -37,7 +39,7 @@ public class IndexDescriptionTest {
   public void setUp() {
     MockitoAnnotations.initMocks(this);
 
-    instance = new IndexDescription(facetDefinitionMapMock, sortFieldListMock, allIndexedFieldsMock);
+    instance = new IndexDescription(facetDefinitionMapMock, sortFieldListMock, fullTextSearchFieldsMock, allIndexedFieldsMock);
   }
 
   @Test
@@ -89,6 +91,18 @@ public class IndexDescriptionTest {
 
     // verify
     verify(sortFieldListMock).contains(fieldName);
+  }
+
+  @Test
+  public void testDoesFullTextSearchFieldsExist() {
+    // setup
+    String fieldName = "testField";
+
+    // action
+    instance.doesFullTextSearchFieldExist(fieldName);
+
+    // verify
+    verify(fullTextSearchFieldsMock).contains(fieldName);
   }
 
   @Test
