@@ -10,11 +10,11 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
-import nl.knaw.huygens.facetedsearch.model.FacetDefinition;
 import nl.knaw.huygens.facetedsearch.model.parameters.DefaultFacetParameter;
 import nl.knaw.huygens.facetedsearch.model.parameters.DefaultFacetedSearchParameters;
 import nl.knaw.huygens.facetedsearch.model.parameters.FacetParameter;
 import nl.knaw.huygens.facetedsearch.model.parameters.HighlightingOptions;
+import nl.knaw.huygens.facetedsearch.model.parameters.IndexDescription;
 import nl.knaw.huygens.facetedsearch.model.parameters.QueryOptimizer;
 import nl.knaw.huygens.facetedsearch.model.parameters.RangeParameter;
 import nl.knaw.huygens.facetedsearch.model.parameters.SortDirection;
@@ -33,15 +33,13 @@ import com.google.common.collect.Lists;
 public class SolrQueryCreatorTest {
   private DefaultFacetedSearchParameters searchParameters;
   private SolrQueryCreator instance;
-  private List<FacetDefinition> definitions;
-  private FacetFieldCollector facetFieldFinder;
+  private IndexDescription indexDefinition;
 
   @Before
   public void setUp() {
-    facetFieldFinder = mock(FacetFieldCollector.class);
-    definitions = Lists.newArrayList();
+    indexDefinition = mock(IndexDescription.class);
     searchParameters = new DefaultFacetedSearchParameters();
-    instance = new SolrQueryCreator(definitions, facetFieldFinder);
+    instance = new SolrQueryCreator(indexDefinition);
   }
 
   @Test
@@ -222,7 +220,7 @@ public class SolrQueryCreatorTest {
   @Test
   public void testCreateSearchQueryFacetFields() {
 
-    when(facetFieldFinder.find(definitions)).thenReturn(new String[] { "facetField" });
+    when(indexDefinition.findFacetFields()).thenReturn(new String[] { "facetField" });
 
     SolrQuery query = instance.createSearchQuery(searchParameters);
 
