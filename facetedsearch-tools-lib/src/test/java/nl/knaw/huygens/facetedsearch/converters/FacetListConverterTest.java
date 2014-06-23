@@ -2,24 +2,26 @@ package nl.knaw.huygens.facetedsearch.converters;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import nl.knaw.huygens.facetedsearch.converters.FacetListConverter;
-import nl.knaw.huygens.facetedsearch.model.FacetDefinition;
 import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
+import nl.knaw.huygens.facetedsearch.model.parameters.IndexDescription;
 
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.junit.Before;
 import org.junit.Test;
-
-import com.google.common.collect.Lists;
 
 public class FacetListConverterTest {
 
   private FacetListConverter instance;
   private FacetedSearchResult resultMock;
   private QueryResponse queryResponseMock;
+  private IndexDescription indexDescription;
 
-  public void setUp(FacetDefinition... facetInfos) {
+  @Before
+  public void setUp() {
 
-    instance = new FacetListConverter(Lists.newArrayList(facetInfos));
+    indexDescription = mock(IndexDescription.class);
+
+    instance = new FacetListConverter(indexDescription);
 
     resultMock = mock(FacetedSearchResult.class);
     queryResponseMock = mock(QueryResponse.class);
@@ -27,37 +29,10 @@ public class FacetListConverterTest {
 
   @Test
   public void testConvertOneFacet() {
-    // mock
-    FacetDefinition facetInfo = mock(FacetDefinition.class);
-
-    // setup
-    setUp(facetInfo);
-
     // action
     instance.convert(resultMock, queryResponseMock);
 
     //verify
-    verify(facetInfo).addFacetToResult(resultMock, queryResponseMock);
+    verify(indexDescription).addFacetDataToSearchResult(resultMock, queryResponseMock);
   }
-
-  @Test
-  public void testConvertMultipleFacets() {
-
-    // mock
-    FacetDefinition facetInfo1 = mock(FacetDefinition.class);
-    FacetDefinition facetInfo2 = mock(FacetDefinition.class);
-    FacetDefinition facetInfo3 = mock(FacetDefinition.class);
-
-    // setup
-    setUp(facetInfo1, facetInfo2, facetInfo3);
-
-    // action
-    instance.convert(resultMock, queryResponseMock);
-
-    //verify
-    verify(facetInfo1).addFacetToResult(resultMock, queryResponseMock);
-    verify(facetInfo2).addFacetToResult(resultMock, queryResponseMock);
-    verify(facetInfo3).addFacetToResult(resultMock, queryResponseMock);
-  }
-
 }

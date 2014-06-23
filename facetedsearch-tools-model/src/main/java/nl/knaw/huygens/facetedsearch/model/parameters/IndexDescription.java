@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import nl.knaw.huygens.facetedsearch.model.FacetDefinition;
+import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
+
+import org.apache.solr.client.solrj.response.QueryResponse;
 
 import com.google.common.collect.Lists;
 
@@ -49,5 +52,11 @@ public class IndexDescription {
     }
 
     return facetFields.toArray(new String[0]);
+  }
+
+  public void addFacetDataToSearchResult(FacetedSearchResult searchResult, QueryResponse queryResponse) {
+    for (FacetDefinition facetDefinition : facetDefinitionMap.values()) {
+      facetDefinition.addFacetToResult(searchResult, queryResponse);
+    }
   }
 }

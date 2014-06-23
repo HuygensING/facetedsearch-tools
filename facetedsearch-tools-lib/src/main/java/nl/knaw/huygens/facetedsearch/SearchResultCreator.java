@@ -1,13 +1,11 @@
 package nl.knaw.huygens.facetedsearch;
 
-import java.util.List;
-
 import nl.knaw.huygens.facetedsearch.converters.FacetListConverter;
 import nl.knaw.huygens.facetedsearch.converters.QueryResponseConverter;
 import nl.knaw.huygens.facetedsearch.converters.ResultConverter;
-import nl.knaw.huygens.facetedsearch.model.FacetDefinition;
 import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
 import nl.knaw.huygens.facetedsearch.model.parameters.FacetedSearchParameters;
+import nl.knaw.huygens.facetedsearch.model.parameters.IndexDescription;
 
 import org.apache.solr.client.solrj.response.QueryResponse;
 
@@ -15,8 +13,8 @@ public class SearchResultCreator {
 
   private final QueryResponseConverter[] converters;
 
-  public SearchResultCreator(List<FacetDefinition> facetDefinitions) {
-    this(new FacetListConverter(facetDefinitions), new ResultConverter());
+  public SearchResultCreator(IndexDescription indexDescription) {
+    this(new FacetListConverter(indexDescription), new ResultConverter());
   }
 
   public SearchResultCreator(QueryResponseConverter... converters) {

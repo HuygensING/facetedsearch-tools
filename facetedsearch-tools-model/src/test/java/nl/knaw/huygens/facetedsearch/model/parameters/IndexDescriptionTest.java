@@ -2,6 +2,7 @@ package nl.knaw.huygens.facetedsearch.model.parameters;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -9,8 +10,10 @@ import java.util.List;
 import java.util.Map;
 
 import nl.knaw.huygens.facetedsearch.model.FacetDefinition;
+import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
 import nl.knaw.huygens.facetedsearch.model.RangeFacetDefinition;
 
+import org.apache.solr.client.solrj.response.QueryResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -107,5 +110,44 @@ public class IndexDescriptionTest {
     // verify
     verify(facetDefinitionMapMock).values();
     assertThat(Lists.newArrayList(facetFields), containsInAnyOrder(facetName, lowerLimitField, upperLimitField));
+  }
+
+  @Test
+  public void testAddFacetDataToSearchResultSingleFacet() {
+    // setup
+    FacetDefinition facetDefinitionMock = mock(FacetDefinition.class);
+    when(facetDefinitionMapMock.values()).thenReturn(Lists.newArrayList(facetDefinitionMock));
+
+    FacetedSearchResult searchResult = new FacetedSearchResult();
+    QueryResponse queryResponse = mock(QueryResponse.class);
+
+    // action
+    instance.addFacetDataToSearchResult(searchResult, queryResponse);
+
+    // verify
+    verify(facetDefinitionMock).addFacetToResult(searchResult, queryResponse);
+  }
+
+  @Test
+  public void testAddFacetDataToSearchResultMultipleFacets() {
+    // setup
+    FacetDefinition facetDefinitionMock1 = mock(FacetDefinition.class);
+    FacetDefinition facetDefinitionMock2 = mock(FacetDefinition.class);
+    FacetDefinition facetDefinitionMock3 = mock(FacetDefinition.class);
+
+    when(facetDefinitionMapMock.values()).thenReturn( // 
+        Lists.newArrayList( //
+            facetDefinitionMock1, //
+            facetDefinitionMock2, //
+            facetDefinitionMock3));
+
+    FacetedSearchResult searchResult = new FacetedSearchResult();
+    QueryResponse queryResponse = mock(QueryResponse.class);
+
+    // action
+    instance.addFacetDataToSearchResult(searchResult, queryResponse);
+
+    // verify
+    verify(facetDefinitionMock1).addFacetToResult(searchResult, queryResponse);
   }
 }
