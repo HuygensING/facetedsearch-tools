@@ -1,5 +1,6 @@
 package nl.knaw.huygens.facetedsearch.model.parameters;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -18,12 +19,12 @@ import com.google.common.collect.Lists;
  * - Other Solr fields
  */
 public class IndexDescription {
-  private final List<String> sortFieldList;
+  private final Collection<String> sortFieldList;
   private final Map<String, FacetDefinition> facetDefinitionMap;
-  private final List<String> allIndexedFields;
-  private final List<String> fullTextSearchFields;
+  private final Collection<String> allIndexedFields;
+  private final Collection<String> fullTextSearchFields;
 
-  public IndexDescription(Map<String, FacetDefinition> facetDefinitionMap, List<String> sortFieldList, List<String> fullTextSearchFields, List<String> allIndexedFields) {
+  public IndexDescription(Map<String, FacetDefinition> facetDefinitionMap, Collection<String> sortFieldList, Collection<String> fullTextSearchFields, Collection<String> allIndexedFields) {
     this.facetDefinitionMap = facetDefinitionMap;
     this.sortFieldList = sortFieldList;
     this.fullTextSearchFields = fullTextSearchFields;
