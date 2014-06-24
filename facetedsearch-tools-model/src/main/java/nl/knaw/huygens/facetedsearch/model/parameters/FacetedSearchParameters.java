@@ -150,5 +150,11 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
       }
     }
 
+    for (String fullTextSearchField : fullTextSearchFields) {
+      if (!indexDescription.doesFullTextSearchFieldExist(fullTextSearchField)) {
+        throw new NoSuchFieldInIndexException(fullTextSearchField);
+      }
+    }
+
   }
 }
