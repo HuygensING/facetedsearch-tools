@@ -131,6 +131,6 @@ public class SolrQueryCreator {
 
   private SortClause createSortClause(SortParameter sortParameter) {
     ORDER order = ORDER.valueOf(sortParameter.getDirection().toString());
-    return new SortClause(sortParameter.getFieldname(), order);
+    return new SortClause(sortParameter.getFieldName(), order);
   }
 }

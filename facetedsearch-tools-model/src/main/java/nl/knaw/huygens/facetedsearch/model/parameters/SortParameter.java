@@ -13,7 +13,7 @@ public class SortParameter {
     this.direction = direction;
   }
 
-  public String getFieldname() {
+  public String getFieldName() {
     return fieldname;
   }
 

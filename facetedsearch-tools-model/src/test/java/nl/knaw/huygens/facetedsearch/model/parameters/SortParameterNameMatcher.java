@@ -22,7 +22,7 @@ public class SortParameterNameMatcher extends TypeSafeMatcher<SortParameter> {
 
   @Override
   protected boolean matchesSafely(SortParameter item) {
-    return Objects.equal(name, item.getFieldname());
+    return Objects.equal(name, item.getFieldName());
   }
 
   public static SortParameter sortParameterWithName(String name) {

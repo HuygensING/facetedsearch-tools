@@ -2,8 +2,10 @@ package nl.knaw.huygens.facetedsearch.model.parameters;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -69,7 +71,7 @@ public class IndexDescriptionTest {
   }
 
   @Test
-  public void testDoesResultFieldFacetExist() {
+  public void testDoesResultFieldExist() {
     // setup
     String resultFieldName = "testField";
 
@@ -78,6 +80,16 @@ public class IndexDescriptionTest {
 
     // verify
     verify(allIndexedFieldsMock).contains(resultFieldName);
+  }
+
+  @Test
+  public void testDoesResultFieldExistShouldReturnTrueIfScoreIsUsed() {
+    // action
+    boolean exists = instance.doesResultFieldExist(IndexDescription.SCORE);
+
+    // verify
+    verifyZeroInteractions(allIndexedFieldsMock);
+    assertThat(exists, is(true));
   }
 
   @Test
@@ -91,6 +103,19 @@ public class IndexDescriptionTest {
 
     // verify
     verify(sortFieldListMock).contains(fieldName);
+  }
+
+  @Test
+  public void testDoesSortParameterExistShouldReturnTrueIfScoreIsUsed() {
+    // setup
+    final SortParameter sortParameter = new SortParameter(IndexDescription.SCORE, SortDirection.ASCENDING);
+
+    // action
+    boolean exists = instance.doesSortParameterExist(sortParameter);
+
+    // verify
+    verifyZeroInteractions(sortFieldListMock);
+    assertThat(exists, is(true));
   }
 
   @Test

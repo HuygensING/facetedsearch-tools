@@ -146,7 +146,7 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
 
     for (SortParameter sortParameter : sortParameters) {
       if (!indexDescription.doesSortParameterExist(sortParameter)) {
-        throw new NoSuchFieldInIndexException(sortParameter.getFieldname());
+        throw new NoSuchFieldInIndexException(sortParameter.getFieldName());
       }
     }
 

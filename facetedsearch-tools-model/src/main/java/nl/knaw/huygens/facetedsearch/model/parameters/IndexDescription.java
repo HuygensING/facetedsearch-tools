@@ -9,6 +9,7 @@ import nl.knaw.huygens.facetedsearch.model.FacetedSearchResult;
 
 import org.apache.solr.client.solrj.response.QueryResponse;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 
 /**
@@ -19,6 +20,8 @@ import com.google.common.collect.Lists;
  * - Other Solr fields
  */
 public class IndexDescription {
+  public static final String SCORE = "score";
+
   private final Collection<String> sortFieldList;
   private final Map<String, FacetDefinition> facetDefinitionMap;
   private final Collection<String> allIndexedFields;
@@ -40,11 +43,16 @@ public class IndexDescription {
   }
 
   public boolean doesResultFieldExist(String resultField) {
-    return allIndexedFields.contains(resultField);
+    return isScoreField(resultField) ? true : allIndexedFields.contains(resultField);
   }
 
   public boolean doesSortParameterExist(SortParameter sortParameter) {
-    return sortFieldList.contains(sortParameter.getFieldname());
+    final String fieldName = sortParameter.getFieldName();
+    return isScoreField(fieldName) ? true : sortFieldList.contains(fieldName);
+  }
+
+  private boolean isScoreField(String fieldName) {
+    return Objects.equal(SCORE, fieldName);
   }
 
   public String[] findFacetFields() {
