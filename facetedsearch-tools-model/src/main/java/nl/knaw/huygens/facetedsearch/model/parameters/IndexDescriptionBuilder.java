@@ -13,7 +13,7 @@ import com.google.common.collect.Maps;
  *
  */
 public class IndexDescriptionBuilder {
-  private Map<String, FacetDefinition> facetDefinitionMap = Maps.newHashMap();
+  private Map<String, FacetDefinition> facetDefinitionMap;
   private Collection<String> sortFields;
   private Collection<String> allIndexedFields;
   private Collection<String> fullTextSearchFields;
@@ -23,6 +23,7 @@ public class IndexDescriptionBuilder {
   }
 
   public IndexDescriptionBuilder setFacetDefinitions(List<FacetDefinition> facetDefinitions) {
+    facetDefinitionMap = Maps.newHashMap();
     for (FacetDefinition facetDefinition : facetDefinitions) {
       facetDefinitionMap.put(facetDefinition.getName(), facetDefinition);
     }
