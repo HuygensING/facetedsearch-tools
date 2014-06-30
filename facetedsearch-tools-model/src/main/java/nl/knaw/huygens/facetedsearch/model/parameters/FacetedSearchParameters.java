@@ -20,7 +20,7 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
   private List<String> resultFields = Lists.newArrayList(); // set in back-end
   private boolean fuzzy = false; // set in front-end
   private List<SortParameter> sortParameters = Lists.newArrayList(); // set in front-end
-  private QueryOptimizer queryOptimizer; // set in back-end
+  private QueryOptimizer queryOptimizer = new QueryOptimizer(); // set in back-end
   private HighlightingOptions highlightingOptions; // set in back-end
 
   public T setTerm(final String term) {

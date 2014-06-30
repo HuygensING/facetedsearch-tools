@@ -255,7 +255,18 @@ public class SolrQueryCreatorTest {
   }
 
   @Test
-  public void testCreateSearchQueryNoQueryOptimizer() {
+  public void testCreateSearchQueryNoQueryOptimizerSpecified() {
+    SolrQuery query = instance.createSearchQuery(searchParameters);
+
+    // Default QueryOptimizer defaults
+    assertEquals(new Integer(50000), query.getRows());
+    assertEquals(10000, query.getFacetLimit());
+    assertEquals(1, query.getFacetMinCount());
+  }
+
+  @Test
+  public void testCreateSearchQueryExplicitlySetToNull() {
+    searchParameters.setQueryOptimizer(null);
     SolrQuery query = instance.createSearchQuery(searchParameters);
 
     //Solr defaults
