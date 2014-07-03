@@ -14,7 +14,7 @@ import com.google.common.collect.Lists;
 @XmlRootElement
 public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
   private String term = "*"; // set in front-end
-  private List<String> fullTextSearchFields; // set in back-end
+  private List<String> fullTextSearchFields = Lists.newArrayList(); // set in back-end
   private List<FacetField> facetFields = Lists.newArrayList(); // set in back-end
   private List<FacetParameter> facetParameters = Lists.newArrayList(); // set in front-end
   private List<String> resultFields = Lists.newArrayList(); // set in back-end
