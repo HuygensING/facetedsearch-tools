@@ -77,7 +77,7 @@ public class SolrQueryCreator {
 
     String prefix = "";
     String term = searchParameters.getTerm();
-    if (fullTextSearchFields != null && !isWildCardQuery(term)) {
+    if (areFullTextSearchFieldsDefined(fullTextSearchFields) && !isWildCardQuery(term)) {
       for (String field : fullTextSearchFields) {
         builder.append(prefix).append(useFacets ? "+" : "").append(field).append(":");
         builder.append(formatTerm(term, searchParameters.isFuzzy()));
@@ -97,6 +97,10 @@ public class SolrQueryCreator {
     }
 
     return builder.toString();
+  }
+
+  private boolean areFullTextSearchFieldsDefined(List<String> fullTextSearchFields) {
+    return fullTextSearchFields != null && !fullTextSearchFields.isEmpty();
   }
 
   private boolean isWildCardQuery(String term) {
