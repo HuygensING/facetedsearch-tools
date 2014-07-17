@@ -69,6 +69,11 @@ public class FacetedSearchParametersTest {
     return new SortParameter(name, SortDirection.ASCENDING);
   }
 
+  @Test(expected = NullPointerException.class)
+  public void testSetFacetParametersWithNull() {
+    instance.setFacetParameters(null);
+  }
+
   @Test
   public void testValidateAllValid() throws NoSuchFieldInIndexException {
     //when

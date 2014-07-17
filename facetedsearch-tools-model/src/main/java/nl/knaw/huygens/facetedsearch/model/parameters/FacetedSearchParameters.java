@@ -8,6 +8,7 @@ import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
 @SuppressWarnings("unchecked")
@@ -90,8 +91,13 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
     return facetParameters;
   }
 
-  public T setFacetParameters(List<FacetParameter> fp) {
-    this.facetParameters = fp;
+  public T setFacetParameters(List<FacetParameter> parameters) {
+    facetParameters = Preconditions.checkNotNull(parameters);
+    return (T) this;
+  }
+
+  public T addFacetParameter(FacetParameter parameter) {
+    facetParameters.add(parameter);
     return (T) this;
   }
 
