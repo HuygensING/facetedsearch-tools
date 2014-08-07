@@ -6,9 +6,20 @@ import com.google.common.collect.Lists;
 
 public class DefaultFacet extends Facet {
   private List<FacetOption> options;
+  private FacetType facetType;
 
+  /**
+   * Defaults the type to {@link FacetType.LIST}
+   * @param name the name of the facet
+   * @param title the title of the facet
+   */
   public DefaultFacet(String name, String title) {
+    this(name, title, FacetType.LIST);
+  }
+
+  public DefaultFacet(String name, String title, FacetType type) {
     super(name, title);
+    facetType = type;
     options = Lists.<FacetOption> newArrayList();
   }
 
@@ -51,7 +62,7 @@ public class DefaultFacet extends Facet {
 
   @Override
   public FacetType getType() {
-    return FacetType.LIST;
+    return facetType;
   }
 
   public void addOption(FacetOption option) {

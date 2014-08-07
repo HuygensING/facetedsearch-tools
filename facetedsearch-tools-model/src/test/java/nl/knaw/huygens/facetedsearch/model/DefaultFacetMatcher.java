@@ -13,11 +13,13 @@ public class DefaultFacetMatcher extends TypeSafeMatcher<DefaultFacet> {
   private final String name;
   private final String title;
   private final List<FacetOption> options;
+  private final FacetType facetType;
 
-  public DefaultFacetMatcher(String name, String title, List<FacetOption> options) {
+  public DefaultFacetMatcher(String name, String title, List<FacetOption> options, FacetType facetType) {
     this.name = name;
     this.title = title;
     this.options = options;
+    this.facetType = facetType;
   }
 
   @Override
@@ -30,12 +32,16 @@ public class DefaultFacetMatcher extends TypeSafeMatcher<DefaultFacet> {
   @Override
   protected boolean matchesSafely(DefaultFacet item) {
 
-    return name.equals(item.getName()) && title.equals(item.getTitle()) //
-        && containsInAnyOrder(options.toArray(new FacetOption[0])).matches(item.getOptions());
+    boolean isEqual = name.equals(item.getName());
+    isEqual &= title.equals(item.getTitle());
+    isEqual &= containsInAnyOrder(options.toArray(new FacetOption[0])).matches(item.getOptions());
+    isEqual &= (facetType == item.getType());
+
+    return isEqual;
   }
 
   @Factory
-  public static Matcher<DefaultFacet> defaultFacethasCharacteristics(String name, String title, List<FacetOption> options) {
-    return new DefaultFacetMatcher(name, title, options);
+  public static Matcher<DefaultFacet> defaultFacethasCharacteristics(String name, String title, List<FacetOption> options, FacetType facetType) {
+    return new DefaultFacetMatcher(name, title, options, facetType);
   }
 }

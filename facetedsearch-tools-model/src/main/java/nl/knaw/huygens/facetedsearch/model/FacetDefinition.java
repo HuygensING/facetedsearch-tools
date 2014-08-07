@@ -47,7 +47,7 @@ public class FacetDefinition {
   }
 
   public void addFacetToResult(FacetedSearchResult result, QueryResponse queryResponse) {
-    DefaultFacet facet = new DefaultFacet(getName(), getTitle());
+    DefaultFacet facet = new DefaultFacet(getName(), getTitle(), getType());
     org.apache.solr.client.solrj.response.FacetField solrField = queryResponse.getFacetField(getName());
 
     for (Count count : solrField.getValues()) {
