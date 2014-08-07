@@ -1,15 +1,20 @@
 package nl.knaw.huygens.solr;
 
+import java.io.IOException;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import nl.knaw.huygens.LoggableObject;
 import nl.knaw.huygens.solr.FacetCount.Option;
 
 import org.apache.solr.client.solrj.SolrServer;
+import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.request.LukeRequest;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.common.SolrInputDocument;
+import org.apache.solr.common.util.NamedList;
 
 public abstract class AbstractSolrServer extends LoggableObject implements SolrServerWrapper {
 	public static final String KEY_NUMFOUND = "numFound";
@@ -91,6 +96,12 @@ public abstract class AbstractSolrServer extends LoggableObject implements SolrS
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
+	public Date getLastModified() throws SolrServerException, IOException {
+		NamedList<Object> namedList = server.request(new LukeRequest());
+		NamedList<Object> index = (NamedList<Object>) namedList.get("index");
+		return (Date) index.get("lastModified");
+	}
 	//  /**
 	//   * Returns a map with facet counts, using a (persistent) id as key.
 	//   * The map is empty if the field does not exist or has no values.
