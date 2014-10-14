@@ -50,11 +50,13 @@ public class FacetDefinition {
     DefaultFacet facet = new DefaultFacet(getName(), getTitle(), getType());
     org.apache.solr.client.solrj.response.FacetField solrField = queryResponse.getFacetField(getName());
 
-    for (Count count : solrField.getValues()) {
-      facet.addOption(new FacetOption(count.getName(), count.getCount()));
+    if (solrField != null) {
+      for (Count count : solrField.getValues()) {
+        facet.addOption(new FacetOption(count.getName(), count.getCount()));
+      }
+      result.addFacet(facet);
     }
 
-    result.addFacet(facet);
   }
 
   public Collection<String> getFields() {
