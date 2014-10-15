@@ -6,7 +6,6 @@ import nl.knaw.huygens.facetedsearch.model.NoSuchFieldInIndexException;
 import nl.knaw.huygens.facetedsearch.model.parameters.FacetParameter;
 import nl.knaw.huygens.facetedsearch.model.parameters.FacetedSearchParameters;
 import nl.knaw.huygens.facetedsearch.model.parameters.HighlightingOptions;
-import nl.knaw.huygens.facetedsearch.model.parameters.IndexDescription;
 import nl.knaw.huygens.facetedsearch.model.parameters.QueryOptimizer;
 import nl.knaw.huygens.facetedsearch.model.parameters.SortParameter;
 import nl.knaw.huygens.facetedsearch.services.SolrUtils;
@@ -19,23 +18,24 @@ import org.apache.solr.common.params.HighlightParams;
 
 public class SolrQueryCreator {
 
-  private final IndexDescription indexDescription;
-
-  public SolrQueryCreator(IndexDescription indexDescription) {
-    this.indexDescription = indexDescription;
-  }
-
   public <T extends FacetedSearchParameters<T>> SolrQuery createSearchQuery(FacetedSearchParameters<T> searchParameters) {
     SolrQuery query = new SolrQuery();
     query.setQuery(createQuery(searchParameters));
     query.setFields(getResultFields(searchParameters));
-    query.addFacetField(indexDescription.findFacetFields());
+    addFacetFields(searchParameters, query);
     query = setSort(query, searchParameters);
     query = setHighlighting(query, searchParameters);
 
     optimizeQuery(query, searchParameters);
 
     return query;
+  }
+
+  private <T extends FacetedSearchParameters<T>> void addFacetFields(FacetedSearchParameters<T> searchParameters, SolrQuery query) {
+    List<String> facetFields = searchParameters.getFacetFields();
+    if (facetFields != null) {
+      query.addFacetField(facetFields.toArray(new String[] {}));
+    }
   }
 
   private <T extends FacetedSearchParameters<T>> SolrQuery optimizeQuery(SolrQuery query, FacetedSearchParameters<T> searchParameters) {

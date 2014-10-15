@@ -17,7 +17,7 @@ public class FacetedSearchLibrary {
 
   public FacetedSearchLibrary(SolrSearcher solrCore) {
 
-    this(solrCore, new SolrQueryCreator(solrCore.getIndexDescription()), new SearchResultCreator(solrCore.getIndexDescription()));
+    this(solrCore, new SolrQueryCreator(), new SearchResultCreator(solrCore.getIndexDescription()));
   }
 
   public FacetedSearchLibrary(SolrSearcher solrCore, SolrQueryCreator queryCreator, SearchResultCreator searchResultBuilder) {
