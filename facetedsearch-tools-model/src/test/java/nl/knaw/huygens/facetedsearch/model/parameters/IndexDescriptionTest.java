@@ -2,7 +2,9 @@ package nl.knaw.huygens.facetedsearch.model.parameters;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -134,12 +136,10 @@ public class IndexDescriptionTest {
   public void testFindFacetFields() {
     // setup
     final String facetName = "test";
-    FacetDefinition facetDefinition = new FacetDefinition().setName(facetName);
+    FacetDefinition facetDefinition = createFacetDefinitionWithName(facetName);
     final String lowerLimitField = "lowerLimitField";
     final String upperLimitField = "upperLimitField";
-    RangeFacetDefinition rangeDefinition = new RangeFacetDefinition() //
-        .setLowerLimitField(lowerLimitField) //
-        .setUpperLimitField(upperLimitField);
+    RangeFacetDefinition rangeDefinition = createRangeDefinitionWithFields(lowerLimitField, upperLimitField);
 
     when(facetDefinitionMapMock.values()).thenReturn(Lists.newArrayList(facetDefinition, rangeDefinition));
 
@@ -149,6 +149,39 @@ public class IndexDescriptionTest {
     // verify
     verify(facetDefinitionMapMock).values();
     assertThat(Lists.newArrayList(facetFields), containsInAnyOrder(facetName, lowerLimitField, upperLimitField));
+  }
+
+  private RangeFacetDefinition createRangeDefinitionWithFields(final String lowerLimitField, final String upperLimitField) {
+    RangeFacetDefinition rangeDefinition = new RangeFacetDefinition() //
+        .setLowerLimitField(lowerLimitField) //
+        .setUpperLimitField(upperLimitField);
+    return rangeDefinition;
+  }
+
+  private FacetDefinition createFacetDefinitionWithName(final String facetName) {
+    FacetDefinition facetDefinition = new FacetDefinition().setName(facetName);
+    return facetDefinition;
+  }
+
+  @Test
+  public void getFacetFieldsReturnsAListWithTheFacetDefinitionsConvertedToFacetField() {
+    // setup
+    FacetDefinition facetDefinitionMock = mock(FacetDefinition.class);
+    RangeFacetDefinition rangeDefinitionMock = mock(RangeFacetDefinition.class);
+
+    // when
+    when(facetDefinitionMapMock.values()).thenReturn(Lists.newArrayList(facetDefinitionMock, rangeDefinitionMock));
+    when(facetDefinitionMock.toFacetField()).thenReturn(mock(FacetField.class));
+    when(rangeDefinitionMock.toFacetField()).thenReturn(mock(FacetField.class));
+
+    // action
+    List<FacetField> facetFields = instance.getFacetFields();
+
+    // verify
+    verify(facetDefinitionMock).toFacetField();
+    verify(rangeDefinitionMock).toFacetField();
+    assertThat(facetFields, is(notNullValue()));
+    assertThat(facetFields.size(), is(equalTo(2)));
   }
 
   @Test

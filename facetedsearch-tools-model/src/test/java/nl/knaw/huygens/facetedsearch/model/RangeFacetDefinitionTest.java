@@ -1,6 +1,7 @@
 package nl.knaw.huygens.facetedsearch.model;
 
 import static nl.knaw.huygens.facetedsearch.model.RangeFacetMatcher.rangeFacetHasCharacteristics;
+import static nl.knaw.huygens.facetedsearch.model.parameters.FacetFieldMatcher.rangeFacetFieldLike;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.mockito.Matchers.any;
@@ -101,5 +102,16 @@ public class RangeFacetDefinitionTest {
     Collection<String> actualFields = instance.getFields();
 
     assertThat(actualFields, containsInAnyOrder(LOWER_LIMIT_FIELD, UPPER_LIMIT_FIELD));
+  }
+
+  @Test
+  public void toFacetFieldConvertsTheRangeDefinitionToRangeFacetField() {
+    // setup
+    FacetDefinition instance = new RangeFacetDefinition() //
+        .setLowerLimitField(LOWER_LIMIT_FIELD) //
+        .setUpperLimitField(UPPER_LIMIT_FIELD) //
+        .setName(FACET_NAME);
+
+    assertThat(instance.toFacetField(), rangeFacetFieldLike(FACET_NAME, LOWER_LIMIT_FIELD, UPPER_LIMIT_FIELD));
   }
 }

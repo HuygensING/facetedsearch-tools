@@ -2,6 +2,8 @@ package nl.knaw.huygens.facetedsearch.model;
 
 import java.util.Collection;
 
+import nl.knaw.huygens.facetedsearch.model.parameters.FacetField;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.apache.solr.client.solrj.response.FacetField.Count;
@@ -61,5 +63,9 @@ public class FacetDefinition {
 
   public Collection<String> getFields() {
     return Lists.newArrayList(name);
+  }
+
+  public FacetField toFacetField() {
+    return new FacetField(name);
   }
 }

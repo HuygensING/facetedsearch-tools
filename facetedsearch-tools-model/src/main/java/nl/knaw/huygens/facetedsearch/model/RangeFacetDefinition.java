@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import nl.knaw.huygens.facetedsearch.model.parameters.RangeFacetField;
+
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -58,4 +60,9 @@ public class RangeFacetDefinition extends FacetDefinition {
     return Lists.newArrayList(lowerLimitField, upperLimitField);
   }
 
+  @Override
+  public nl.knaw.huygens.facetedsearch.model.parameters.FacetField toFacetField() {
+    RangeFacetField field = new RangeFacetField(getName(), lowerLimitField, upperLimitField);
+    return field;
+  }
 }

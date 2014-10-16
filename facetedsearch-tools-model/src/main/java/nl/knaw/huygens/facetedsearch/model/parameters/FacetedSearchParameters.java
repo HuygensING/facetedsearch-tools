@@ -45,7 +45,8 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
   }
 
   /**
-   * Set the facets that should be shown in the result.
+   * Set the facets that should be shown in the result. 
+   * When no facet fields are defined, no facet counts will be returned.
    * @param facetFields a list with the fields.
    * @return the current instance of the {@code FacetedSearchParameters}, for the builder pattern.
    */

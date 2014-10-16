@@ -74,4 +74,14 @@ public class IndexDescription {
   public boolean doesFullTextSearchFieldExist(String fieldName) {
     return fullTextSearchFields.contains(fieldName);
   }
+
+  public List<FacetField> getFacetFields() {
+    List<FacetField> facetFields = Lists.newArrayList();
+
+    for (FacetDefinition facetDefinition : facetDefinitionMap.values()) {
+      facetFields.add(facetDefinition.toFacetField());
+    }
+
+    return facetFields;
+  }
 }

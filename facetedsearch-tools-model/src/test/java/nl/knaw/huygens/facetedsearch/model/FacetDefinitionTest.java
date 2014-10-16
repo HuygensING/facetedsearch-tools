@@ -1,6 +1,7 @@
 package nl.knaw.huygens.facetedsearch.model;
 
 import static nl.knaw.huygens.facetedsearch.model.DefaultFacetMatcher.defaultFacethasCharacteristics;
+import static nl.knaw.huygens.facetedsearch.model.parameters.FacetFieldMatcher.facetFieldLike;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.mockito.Matchers.any;
@@ -119,6 +120,17 @@ public class FacetDefinitionTest {
     Collection<String> actualFields = facetDefinition.getFields();
 
     assertThat(actualFields, containsInAnyOrder(facetName));
+  }
+
+  @Test
+  public void toFacetFieldConvertsTheFacetDefinitionToFacetField() {
+    FacetDefinition facetDefinition = new FacetDefinition()//
+        .setName(facetName)//
+        .setTitle(facetTitle);
+
+    nl.knaw.huygens.facetedsearch.model.parameters.FacetField field = facetDefinition.toFacetField();
+
+    assertThat(field, facetFieldLike(facetName));
   }
 
 }
