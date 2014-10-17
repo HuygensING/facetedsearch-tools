@@ -1,28 +1,19 @@
 package nl.knaw.huygens.facetedsearch.query;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasItemInArray;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import nl.knaw.huygens.facetedsearch.model.parameters.DefaultFacetParameter;
 import nl.knaw.huygens.facetedsearch.model.parameters.DefaultFacetedSearchParameters;
 import nl.knaw.huygens.facetedsearch.model.parameters.FacetField;
-import nl.knaw.huygens.facetedsearch.model.parameters.FacetParameter;
 import nl.knaw.huygens.facetedsearch.model.parameters.HighlightingOptions;
-import nl.knaw.huygens.facetedsearch.model.parameters.IndexDescription;
 import nl.knaw.huygens.facetedsearch.model.parameters.QueryOptimizer;
-import nl.knaw.huygens.facetedsearch.model.parameters.RangeParameter;
 import nl.knaw.huygens.facetedsearch.model.parameters.SortDirection;
 import nl.knaw.huygens.facetedsearch.model.parameters.SortParameter;
-import nl.knaw.huygens.facetedsearch.query.SolrQueryCreator;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
@@ -37,108 +28,11 @@ import com.google.common.collect.Lists;
 public class SolrQueryCreatorTest {
   private DefaultFacetedSearchParameters searchParameters;
   private SolrQueryCreator instance;
-  private IndexDescription indexDefinition;
 
   @Before
   public void setUp() {
-    indexDefinition = mock(IndexDescription.class);
     searchParameters = new DefaultFacetedSearchParameters();
     instance = new SolrQueryCreator();
-  }
-
-  @Test
-  public void testCreateSearchQueryTerm() {
-    searchParameters.setTerm("test");
-    searchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField"));
-
-    SolrQuery query = instance.createSearchQuery(searchParameters);
-
-    assertEquals("testSearchField:test", query.getQuery());
-  }
-
-  @Test
-  public void testCreateSearchQueryTermMultipleSearchFields() {
-    searchParameters.setTerm("test");
-    searchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField", "testSearchField1"));
-
-    SolrQuery query = instance.createSearchQuery(searchParameters);
-
-    assertEquals("testSearchField:test testSearchField1:test", query.getQuery());
-  }
-
-  @Test
-  public void testCreateSearchQueryEmptyTerm() {
-    searchParameters.setTerm("");
-    searchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField"));
-
-    SolrQuery query = instance.createSearchQuery(searchParameters);
-
-    assertEquals("*:*", query.getQuery());
-
-  }
-
-  @Test
-  public void testCreateSearchQueryMultipleTerms() {
-    searchParameters.setTerm("test1 test2");
-    searchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField"));
-
-    SolrQuery query = instance.createSearchQuery(searchParameters);
-
-    assertEquals("testSearchField:(test1 test2)", query.getQuery());
-  }
-
-  @Test
-  public void testCreateSearchQueryTermSpecialCharacter() {
-    searchParameters.setTerm("-test123");
-    searchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField"));
-    searchParameters.setFuzzy(true);
-
-    SolrQuery query = instance.createSearchQuery(searchParameters);
-
-    assertThat(query.getQuery(), startsWith("testSearchField:-test123"));
-  }
-
-  @Test
-  public void testCreateSearchQueryTermFuzzy() {
-    searchParameters.setTerm("test123");
-    searchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField"));
-    searchParameters.setFuzzy(true);
-
-    SolrQuery query = instance.createSearchQuery(searchParameters);
-
-    assertThat(query.getQuery(), startsWith("testSearchField:test123~"));
-  }
-
-  @Test
-  public void testCreateSearchQueryMultipleTermsFuzzy() {
-    searchParameters.setTerm("test test2");
-    searchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField"));
-    searchParameters.setFuzzy(true);
-
-    SolrQuery query = instance.createSearchQuery(searchParameters);
-
-    assertThat(query.getQuery(), containsString("test~"));
-    assertThat(query.getQuery(), containsString("test2~"));
-  }
-
-  @Test
-  public void testCreateSearchQueryTermNoFullTextSearchFields() {
-    searchParameters.setTerm("test");
-
-    SolrQuery query = instance.createSearchQuery(searchParameters);
-
-    assertEquals("*:*", query.getQuery());
-  }
-
-  @Test
-  public void testCreateSearchQueryTermAndFacet() {
-    searchParameters.setTerm("test1");
-    searchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField"));
-    searchParameters.setFacetParameters(Lists.newArrayList(createFacetParameter("facetField", Lists.newArrayList("facetValue"))));
-
-    SolrQuery query = instance.createSearchQuery(searchParameters);
-
-    assertEquals("+testSearchField:test1 +facetField:facetValue", query.getQuery());
   }
 
   @Test
@@ -170,36 +64,6 @@ public class SolrQueryCreatorTest {
 
     assertEquals(ORDER.desc, sortClause2.getOrder());
     assertEquals(sortFieldName2, sortClause2.getItem());
-  }
-
-  @Test
-  public void testCreateSearchQueryFacet() {
-    searchParameters.setFacetParameters(Lists.newArrayList(createFacetParameter("facetField", Lists.newArrayList("facetValue"))));
-
-    SolrQuery query = instance.createSearchQuery(searchParameters);
-
-    assertEquals("+facetField:facetValue", query.getQuery().trim());
-  }
-
-  @Test
-  public void testCreateSearchQueryRangeFacet() {
-    FacetParameter rangeFacet = createRangeFacetParameter("facetField", 20130101, 20140101);
-    searchParameters.setFacetParameters(Lists.newArrayList(rangeFacet));
-
-    SolrQuery query = instance.createSearchQuery(searchParameters);
-
-    assertEquals("+facetField:[20130101 TO 20140101]", query.getQuery().trim());
-  }
-
-  @Test
-  public void testCreateSearchQueryMultipleFacets() {
-    FacetParameter facet1 = createFacetParameter("facetField", Lists.newArrayList("facetValue"));
-    FacetParameter facet2 = createFacetParameter("facetField2", Lists.newArrayList("facetValue2"));
-    searchParameters.setFacetParameters(Lists.newArrayList(facet1, facet2));
-
-    SolrQuery query = instance.createSearchQuery(searchParameters);
-
-    assertEquals("+facetField:facetValue +facetField2:facetValue2", query.getQuery().trim());
   }
 
   @Test
@@ -320,18 +184,6 @@ public class SolrQueryCreatorTest {
     SolrQuery query = instance.createSearchQuery(searchParameters);
 
     assertEquals(false, query.getHighlight());
-  }
-
-  private FacetParameter createFacetParameter(String name, List<String> values) {
-    DefaultFacetParameter facetParameter = new DefaultFacetParameter(name, values);
-
-    return facetParameter;
-  }
-
-  private FacetParameter createRangeFacetParameter(String name, int lowerLimit, int upperLimit) {
-    RangeParameter rangeFacet = new RangeParameter(name, lowerLimit, upperLimit);
-
-    return rangeFacet;
   }
 
   private SortParameter createSortParameter(String name, SortDirection direction) {
