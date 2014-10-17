@@ -4,7 +4,7 @@ import nl.knaw.huygens.facetedsearch.model.parameters.FacetedSearchParameters;
 
 import org.apache.solr.client.solrj.SolrQuery;
 
-public class SolrResultFieldBuilder implements SolrQueryBuilder {
+public class ResultFieldBuilder implements SolrQueryBuilder {
 
   @Override
   public <T extends FacetedSearchParameters<T>> void build(SolrQuery query, FacetedSearchParameters<T> searchParameters) {

@@ -8,7 +8,7 @@ public class SolrQueryCreator {
   private SolrQueryBuilder[] builders;
 
   public SolrQueryCreator() {
-    this(new QueryStringBuilder(), new SolrResultFieldBuilder(), new FacetFieldBuilder(), //
+    this(new QueryStringBuilder(), new ResultFieldBuilder(), new FacetFieldBuilder(), //
         new SortBuilder(), new HighlightingBuilder(), new QueryOptimizerBuilder());
   }
 
