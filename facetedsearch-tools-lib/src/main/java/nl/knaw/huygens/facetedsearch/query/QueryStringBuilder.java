@@ -4,6 +4,7 @@ import java.util.List;
 
 import nl.knaw.huygens.facetedsearch.model.parameters.FacetParameter;
 import nl.knaw.huygens.facetedsearch.model.parameters.FacetedSearchParameters;
+import nl.knaw.huygens.facetedsearch.model.parameters.FullTextSearchParameter;
 import nl.knaw.huygens.facetedsearch.services.SolrUtils;
 
 import org.apache.commons.lang.StringUtils;
@@ -20,17 +21,31 @@ public class QueryStringBuilder implements SolrQueryBuilder {
     List<String> fullTextSearchFields = searchParameters.getFullTextSearchFields();
     List<FacetParameter> facetValues = searchParameters.getFacetValues();
     boolean useFacets = facetValues != null && !facetValues.isEmpty();
+    List<FullTextSearchParameter> fullTextSearchParameters = searchParameters.getFullTextSearchParameters();
+    boolean useFullTextParameters = fullTextSearchParameters != null && !fullTextSearchParameters.isEmpty();
 
     String prefix = "";
     String term = searchParameters.getTerm();
-    if (areFullTextSearchFieldsDefined(fullTextSearchFields) && !isWildCardQuery(term)) {
+
+    if ((isWildCardQuery(term) || !areFullTextSearchFieldsDefined(fullTextSearchFields)) //
+        && !useFacets && !useFullTextParameters) {
+      builder.append("*:*");
+    } else if (areFullTextSearchFieldsDefined(fullTextSearchFields)) {
+
+      if (useFullTextParameters) {
+        filterFullTextSearchFields(fullTextSearchParameters, fullTextSearchFields);
+        for (FullTextSearchParameter fullTextSearchParameter : fullTextSearchParameters) {
+          appendPrefix(builder, useFacets, prefix).//
+              append(fullTextSearchParameter.getQueryValue(term));
+          prefix = " ";
+        }
+      }
+
       for (String field : fullTextSearchFields) {
-        builder.append(prefix).append(useFacets ? "+" : "").append(field).append(":");
+        appendPrefix(builder, useFacets, prefix).append(field).append(":");
         builder.append(formatTerm(term, searchParameters.isFuzzy()));
         prefix = " "; // separate the search field searches
       }
-    } else if (!useFacets) {
-      builder.append("*:*");
     }
 
     if (useFacets) {
@@ -42,6 +57,16 @@ public class QueryStringBuilder implements SolrQueryBuilder {
       }
     }
     query.setQuery(builder.toString());
+  }
+
+  private StringBuilder appendPrefix(StringBuilder builder, boolean useFacets, String prefix) {
+    return builder.append(prefix).append(useFacets ? "+" : "");
+  }
+
+  private void filterFullTextSearchFields(List<FullTextSearchParameter> fullTextSearchParameters, List<String> fullTextSearchFields) {
+    for (FullTextSearchParameter fullTextSearchParameter : fullTextSearchParameters) {
+      fullTextSearchFields.remove(fullTextSearchParameter.getName());
+    }
   }
 
   private boolean areFullTextSearchFieldsDefined(List<String> fullTextSearchFields) {

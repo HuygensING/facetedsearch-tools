@@ -23,6 +23,7 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
   private List<SortParameter> sortParameters = Lists.newArrayList(); // set in front-end
   private QueryOptimizer queryOptimizer = new QueryOptimizer(); // set in back-end
   private HighlightingOptions highlightingOptions; // set in back-end
+  private List<FullTextSearchParameter> fullTextSearchParameters;
 
   public T setTerm(final String term) {
     if (StringUtils.isNotBlank(term)) {
@@ -102,6 +103,14 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
     return (T) this;
   }
 
+  public List<FullTextSearchParameter> getFullTextSearchParameters() {
+    return fullTextSearchParameters;
+  }
+
+  public void setFullTextSearchParameters(List<FullTextSearchParameter> fullTextSearchParameters) {
+    this.fullTextSearchParameters = fullTextSearchParameters;
+  }
+
   public List<SortParameter> getSortParameters() {
     return sortParameters;
   }
@@ -164,4 +173,5 @@ public class FacetedSearchParameters<T extends FacetedSearchParameters<T>> {
     }
 
   }
+
 }
