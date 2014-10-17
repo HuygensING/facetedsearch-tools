@@ -35,7 +35,7 @@ public class QueryStringBuilderTest {
   }
 
   @Test
-  public void testCreateSearchQueryTerm() {
+  public void testBuildWithTerm() {
     facetedSearchParameters.setTerm("test");
     facetedSearchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField"));
 
@@ -45,7 +45,7 @@ public class QueryStringBuilderTest {
   }
 
   @Test
-  public void testCreateSearchQueryTermMultipleSearchFields() {
+  public void testBuildWithTermMultipleSearchFields() {
     facetedSearchParameters.setTerm("test");
     facetedSearchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField", "testSearchField1"));
 
@@ -55,7 +55,7 @@ public class QueryStringBuilderTest {
   }
 
   @Test
-  public void testCreateSearchQueryEmptyTerm() {
+  public void testBuildWithEmptyTerm() {
     facetedSearchParameters.setTerm("");
     facetedSearchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField"));
 
@@ -66,7 +66,7 @@ public class QueryStringBuilderTest {
   }
 
   @Test
-  public void testCreateSearchQueryMultipleTerms() {
+  public void testBuildWithMultipleTerms() {
     facetedSearchParameters.setTerm("test1 test2");
     facetedSearchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField"));
 
@@ -76,7 +76,7 @@ public class QueryStringBuilderTest {
   }
 
   @Test
-  public void testCreateSearchQueryTermSpecialCharacter() {
+  public void testBuildWithTermSpecialCharacter() {
     facetedSearchParameters.setTerm("-test123");
     facetedSearchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField"));
     facetedSearchParameters.setFuzzy(true);
@@ -87,7 +87,7 @@ public class QueryStringBuilderTest {
   }
 
   @Test
-  public void testCreateSearchQueryTermFuzzy() {
+  public void testBuildWithTermFuzzy() {
     facetedSearchParameters.setTerm("test123");
     facetedSearchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField"));
     facetedSearchParameters.setFuzzy(true);
@@ -98,7 +98,7 @@ public class QueryStringBuilderTest {
   }
 
   @Test
-  public void testCreateSearchQueryMultipleTermsFuzzy() {
+  public void testBuildWithMultipleTermsFuzzy() {
     facetedSearchParameters.setTerm("test test2");
     facetedSearchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField"));
     facetedSearchParameters.setFuzzy(true);
@@ -110,7 +110,7 @@ public class QueryStringBuilderTest {
   }
 
   @Test
-  public void testCreateSearchQueryTermNoFullTextSearchFields() {
+  public void testBuildWithTermNoFullTextSearchFields() {
     facetedSearchParameters.setTerm("test");
 
     instance.build(query, facetedSearchParameters);
@@ -119,7 +119,7 @@ public class QueryStringBuilderTest {
   }
 
   @Test
-  public void testCreateSearchQueryTermAndFacet() {
+  public void testBuildWithTermAndFacet() {
     facetedSearchParameters.setTerm("test1");
     facetedSearchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField"));
     facetedSearchParameters.setFacetParameters(Lists.newArrayList(createFacetParameter("facetField", Lists.newArrayList("facetValue"))));
@@ -130,7 +130,7 @@ public class QueryStringBuilderTest {
   }
 
   @Test
-  public void testCreateSearchQueryRangeFacet() {
+  public void testBuildWithRangeFacet() {
     FacetParameter rangeFacet = createRangeFacetParameter("facetField", 20130101, 20140101);
     facetedSearchParameters.setFacetParameters(Lists.newArrayList(rangeFacet));
 
@@ -140,7 +140,7 @@ public class QueryStringBuilderTest {
   }
 
   @Test
-  public void testCreateSearchQueryFacet() {
+  public void testBuildWithFacet() {
     FacetParameter facetParameter = createFacetParameter("facetField", Lists.newArrayList("facetValue"));
     facetedSearchParameters.setFacetParameters(Lists.newArrayList(facetParameter));
 
@@ -150,7 +150,7 @@ public class QueryStringBuilderTest {
   }
 
   @Test
-  public void testCreateSearchQueryMultipleFacets() {
+  public void testBuildWithMultipleFacets() {
     FacetParameter facet1 = createFacetParameter("facetField", Lists.newArrayList("facetValue"));
     FacetParameter facet2 = createFacetParameter("facetField2", Lists.newArrayList("facetValue2"));
     facetedSearchParameters.setFacetParameters(Lists.newArrayList(facet1, facet2));
