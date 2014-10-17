@@ -1,4 +1,4 @@
-package nl.knaw.huygens.facetedsearch;
+package nl.knaw.huygens.facetedsearch.query;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -22,6 +22,7 @@ import nl.knaw.huygens.facetedsearch.model.parameters.QueryOptimizer;
 import nl.knaw.huygens.facetedsearch.model.parameters.RangeParameter;
 import nl.knaw.huygens.facetedsearch.model.parameters.SortDirection;
 import nl.knaw.huygens.facetedsearch.model.parameters.SortParameter;
+import nl.knaw.huygens.facetedsearch.query.SolrQueryCreator;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;

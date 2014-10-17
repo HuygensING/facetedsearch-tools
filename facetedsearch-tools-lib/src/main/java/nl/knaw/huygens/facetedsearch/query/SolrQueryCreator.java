@@ -1,4 +1,4 @@
-package nl.knaw.huygens.facetedsearch;
+package nl.knaw.huygens.facetedsearch.query;
 
 import java.util.List;
 
