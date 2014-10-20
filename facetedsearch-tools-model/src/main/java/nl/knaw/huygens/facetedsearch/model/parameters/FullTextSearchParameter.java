@@ -4,6 +4,8 @@ public class FullTextSearchParameter {
   private String name;
   private String term;
 
+  public FullTextSearchParameter() {}
+
   public FullTextSearchParameter(String name, String term) {
     this.name = name;
     this.term = term;
