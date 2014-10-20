@@ -9,12 +9,16 @@ import nl.knaw.huygens.facetedsearch.services.SolrUtils;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Adds the query string to the SolrQuery. 
  *
  */
 public class QueryStringBuilder implements SolrQueryBuilder {
+  private Logger LOG = LoggerFactory.getLogger(QueryStringBuilder.class);
+
   @Override
   public <T extends FacetedSearchParameters<T>> void build(SolrQuery query, FacetedSearchParameters<T> searchParameters) {
     StringBuilder builder = new StringBuilder();
@@ -31,20 +35,27 @@ public class QueryStringBuilder implements SolrQueryBuilder {
         && !useFacets && !useFullTextParameters) {
       builder.append("*:*");
     } else if (areFullTextSearchFieldsDefined(fullTextSearchFields)) {
+      if (useFacets) {
+        builder.append("+(");
+      }
 
       if (useFullTextParameters) {
         filterFullTextSearchFields(fullTextSearchParameters, fullTextSearchFields);
         for (FullTextSearchParameter fullTextSearchParameter : fullTextSearchParameters) {
-          appendPrefix(builder, useFacets, prefix).//
+          builder.append(prefix).//
               append(fullTextSearchParameter.getQueryValue(term));
           prefix = " ";
         }
       }
 
       for (String field : fullTextSearchFields) {
-        appendPrefix(builder, useFacets, prefix).append(field).append(":");
+        builder.append(prefix).append(field).append(":");
         builder.append(formatTerm(term, searchParameters.isFuzzy()));
         prefix = " "; // separate the search field searches
+      }
+
+      if (useFacets) {
+        builder.append(")");
       }
     }
 
@@ -56,11 +67,10 @@ public class QueryStringBuilder implements SolrQueryBuilder {
         builder.append(facetParameter.getQueryValue());
       }
     }
-    query.setQuery(builder.toString());
-  }
 
-  private StringBuilder appendPrefix(StringBuilder builder, boolean useFacets, String prefix) {
-    return builder.append(prefix).append(useFacets ? "+" : "");
+    LOG.info("Query: {}", builder.toString());
+
+    query.setQuery(builder.toString());
   }
 
   private void filterFullTextSearchFields(List<FullTextSearchParameter> fullTextSearchParameters, List<String> fullTextSearchFields) {

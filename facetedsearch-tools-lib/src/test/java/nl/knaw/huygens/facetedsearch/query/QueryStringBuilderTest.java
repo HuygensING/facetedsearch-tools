@@ -56,6 +56,18 @@ public class QueryStringBuilderTest {
   }
 
   @Test
+  public void testBuildWithTermMultipleSearchFieldsAndFacet() {
+    FacetParameter facet1 = createFacetParameter("facetField", Lists.newArrayList("facetValue"));
+    searchParameters.setTerm("test");
+    searchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField", "testSearchField1"));
+    searchParameters.setFacetParameters(Lists.newArrayList(facet1));
+
+    instance.build(query, searchParameters);
+
+    assertEquals("+(testSearchField:test testSearchField1:test) +facetField:facetValue", query.getQuery());
+  }
+
+  @Test
   public void testBuildWithEmptyTerm() {
     searchParameters.setTerm("");
     searchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField"));
@@ -127,7 +139,7 @@ public class QueryStringBuilderTest {
 
     instance.build(query, searchParameters);
 
-    assertEquals("+testSearchField:test1 +facetField:facetValue", query.getQuery());
+    assertEquals("+(testSearchField:test1) +facetField:facetValue", query.getQuery());
   }
 
   @Test
@@ -205,7 +217,7 @@ public class QueryStringBuilderTest {
 
     instance.build(query, searchParameters);
 
-    assertEquals("+fullTextField1:test +facetField:facetValue", query.getQuery());
+    assertEquals("+(fullTextField1:test) +facetField:facetValue", query.getQuery());
 
   }
 
