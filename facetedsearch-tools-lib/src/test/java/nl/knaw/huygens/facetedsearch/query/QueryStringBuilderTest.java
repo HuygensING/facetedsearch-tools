@@ -42,7 +42,7 @@ public class QueryStringBuilderTest {
 
     instance.build(query, searchParameters);
 
-    assertEquals("testSearchField:test", query.getQuery());
+    assertEquals("+(testSearchField:test)", query.getQuery());
   }
 
   @Test
@@ -52,7 +52,7 @@ public class QueryStringBuilderTest {
 
     instance.build(query, searchParameters);
 
-    assertEquals("testSearchField:test testSearchField1:test", query.getQuery());
+    assertEquals("+(testSearchField:test testSearchField1:test)", query.getQuery());
   }
 
   @Test
@@ -85,7 +85,7 @@ public class QueryStringBuilderTest {
 
     instance.build(query, searchParameters);
 
-    assertEquals("testSearchField:(test1 test2)", query.getQuery());
+    assertEquals("+(testSearchField:(test1 test2))", query.getQuery());
   }
 
   @Test
@@ -96,7 +96,7 @@ public class QueryStringBuilderTest {
 
     instance.build(query, searchParameters);
 
-    assertThat(query.getQuery(), startsWith("testSearchField:-test123"));
+    assertThat(query.getQuery(), startsWith("+(testSearchField:-test123)"));
   }
 
   @Test
@@ -107,7 +107,7 @@ public class QueryStringBuilderTest {
 
     instance.build(query, searchParameters);
 
-    assertThat(query.getQuery(), startsWith("testSearchField:test123~"));
+    assertThat(query.getQuery(), startsWith("+(testSearchField:test123~"));
   }
 
   @Test
@@ -181,7 +181,7 @@ public class QueryStringBuilderTest {
 
     instance.build(query, searchParameters);
 
-    assertThat(query.getQuery(), is(equalTo("fullTextField1:test")));
+    assertThat(query.getQuery(), is(equalTo("+fullTextField1:test")));
   }
 
   @Test
@@ -193,7 +193,7 @@ public class QueryStringBuilderTest {
 
     instance.build(query, searchParameters);
 
-    assertThat(query.getQuery(), is(equalTo("fullTextField1:test fullTextField2:other")));
+    assertThat(query.getQuery(), is(equalTo("+fullTextField1:test +fullTextField2:other")));
   }
 
   @Test
@@ -205,7 +205,7 @@ public class QueryStringBuilderTest {
 
     instance.build(query, searchParameters);
 
-    assertThat(query.getQuery(), is(equalTo("fullTextField1:test term")));
+    assertThat(query.getQuery(), is(equalTo("+(fullTextField1:term) +fullTextField1:test")));
   }
 
   @Test
@@ -217,7 +217,7 @@ public class QueryStringBuilderTest {
 
     instance.build(query, searchParameters);
 
-    assertEquals("+(fullTextField1:test) +facetField:facetValue", query.getQuery());
+    assertEquals("+fullTextField1:test +facetField:facetValue", query.getQuery());
 
   }
 

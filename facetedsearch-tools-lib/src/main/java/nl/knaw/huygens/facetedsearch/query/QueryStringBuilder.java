@@ -31,31 +31,35 @@ public class QueryStringBuilder implements SolrQueryBuilder {
     String prefix = "";
     String term = searchParameters.getTerm();
 
-    if ((isWildCardQuery(term) || !areFullTextSearchFieldsDefined(fullTextSearchFields)) //
-        && !useFacets && !useFullTextParameters) {
+    boolean areFullTextSearchFieldsDefined = areFullTextSearchFieldsDefined(fullTextSearchFields);
+    if (useWildcardQuery(useFacets, useFullTextParameters, term, areFullTextSearchFieldsDefined)) {
       builder.append("*:*");
-    } else if (areFullTextSearchFieldsDefined(fullTextSearchFields)) {
-      if (useFacets) {
-        builder.append("+(");
-      }
+    } else if (areFullTextSearchFieldsDefined && !isWildCardQuery(term)) {
+      builder.append("+(");
 
-      if (useFullTextParameters) {
-        filterFullTextSearchFields(fullTextSearchParameters, fullTextSearchFields);
-        for (FullTextSearchParameter fullTextSearchParameter : fullTextSearchParameters) {
-          builder.append(prefix).//
-              append(fullTextSearchParameter.getQueryValue(term));
-          prefix = " ";
+      for (String field : fullTextSearchFields) {
+        if (!isWildCardQuery(term)) {
+          builder.append(prefix)//
+              .append(field)//
+              .append(":")//
+              .append(formatTerm(term, searchParameters.isFuzzy()));
+          prefix = " "; // separate the search field searches
         }
       }
 
-      for (String field : fullTextSearchFields) {
-        builder.append(prefix).append(field).append(":");
-        builder.append(formatTerm(term, searchParameters.isFuzzy()));
-        prefix = " "; // separate the search field searches
-      }
+      builder.append(")");
+    }
 
-      if (useFacets) {
-        builder.append(")");
+    if (useFullTextParameters) {
+      for (FullTextSearchParameter fullTextSearchParameter : fullTextSearchParameters) {
+        if (!isWildCardQuery(fullTextSearchParameter.getTerm())) {
+          builder.append(prefix)//
+              .append("+")//
+              .append(fullTextSearchParameter.getName())//
+              .append(":")//
+              .append(formatTerm(fullTextSearchParameter.getTerm(), searchParameters.isFuzzy()));
+          prefix = " "; // separate the search field searches
+        }
       }
     }
 
@@ -73,10 +77,9 @@ public class QueryStringBuilder implements SolrQueryBuilder {
     query.setQuery(builder.toString());
   }
 
-  private void filterFullTextSearchFields(List<FullTextSearchParameter> fullTextSearchParameters, List<String> fullTextSearchFields) {
-    for (FullTextSearchParameter fullTextSearchParameter : fullTextSearchParameters) {
-      fullTextSearchFields.remove(fullTextSearchParameter.getName());
-    }
+  private boolean useWildcardQuery(boolean useFacets, boolean useFullTextParameters, String term, boolean areFullTextSearchFieldsDefined) {
+    return (isWildCardQuery(term) || !areFullTextSearchFieldsDefined) //
+        && !useFacets && !useFullTextParameters;
   }
 
   private boolean areFullTextSearchFieldsDefined(List<String> fullTextSearchFields) {
