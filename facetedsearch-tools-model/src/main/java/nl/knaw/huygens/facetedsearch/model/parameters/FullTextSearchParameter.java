@@ -26,20 +26,4 @@ public class FullTextSearchParameter {
   public void setTerm(String term) {
     this.term = term;
   }
-
-  public String getQueryValue(String generalTerm) {
-    StringBuilder builder = new StringBuilder();
-    builder.append(name);
-    builder.append(":");
-    builder.append(term);
-    if (isAUseFullTerm(generalTerm)) {
-      builder.append(" ");
-      builder.append(generalTerm);
-    }
-    return builder.toString();
-  }
-
-  private boolean isAUseFullTerm(String generalTerm) {
-    return generalTerm != null && !"*".equals(generalTerm);
-  }
 }
