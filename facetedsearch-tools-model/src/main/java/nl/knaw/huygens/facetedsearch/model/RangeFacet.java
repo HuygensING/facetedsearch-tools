@@ -1,17 +1,17 @@
 package nl.knaw.huygens.facetedsearch.model;
 
 public class RangeFacet extends Facet {
-  private long lowerLimit;
-  private long upperLimit;
+  private RangeFacetOptions options;
 
   public RangeFacet(String name, String title, long lowerLimit, long upperLimit) {
     super(name, title);
-    this.lowerLimit = lowerLimit;
-    this.upperLimit = upperLimit;
+    options = new RangeFacetOptions();
+    this.setLowerLimit(lowerLimit);
+    this.setUpperLimit(upperLimit);
   }
 
   public RangeFacet(String name, String title) {
-    super(name, title);
+    this(name, title, 0, 0);
   }
 
   @Override
@@ -32,24 +32,44 @@ public class RangeFacet extends Facet {
 
   @Override
   public FacetType getType() {
-    // TODO Auto-generated method stub
     return FacetType.RANGE;
   }
 
   public long getLowerLimit() {
-    return lowerLimit;
+    return options.getLowerLimit();
   }
 
   public void setLowerLimit(long lowerLimit) {
-    this.lowerLimit = lowerLimit;
+    options.setLowerLimit(lowerLimit);
   }
 
   public long getUpperLimit() {
-    return upperLimit;
+    return options.getUpperLimit();
   }
 
   public void setUpperLimit(long upperLimit) {
-    this.upperLimit = upperLimit;
+    options.setUpperLimit(upperLimit);
+  }
+
+  private static class RangeFacetOptions {
+    private long lowerLimit;
+    private long upperLimit;
+
+    public long getLowerLimit() {
+      return lowerLimit;
+    }
+
+    public void setLowerLimit(long lowerLimit) {
+      this.lowerLimit = lowerLimit;
+    }
+
+    public long getUpperLimit() {
+      return upperLimit;
+    }
+
+    public void setUpperLimit(long upperLimit) {
+      this.upperLimit = upperLimit;
+    }
   }
 
 }
