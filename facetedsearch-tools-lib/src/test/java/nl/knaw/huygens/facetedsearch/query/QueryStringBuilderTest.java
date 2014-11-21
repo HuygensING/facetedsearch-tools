@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertEquals;
 
@@ -218,6 +219,22 @@ public class QueryStringBuilderTest {
     instance.build(query, searchParameters);
 
     assertEquals("+fullTextField1:test +facetField:facetValue", query.getQuery());
+  }
+
+  @Test
+  public void testBuildWithTermThatHasColon() {
+    // setup
+    String termWithColon = "test Test: test test";
+    String cleanedTerm = "test Test test test";
+    searchParameters.setTerm(termWithColon);
+    String fullTextSearchField = "fullTextField";
+    searchParameters.setFullTextSearchFields(Lists.newArrayList(fullTextSearchField));
+
+    // action
+    instance.build(query, searchParameters);
+
+    assertThat(query.getQuery(), containsString(cleanedTerm));
+    assertThat(query.getQuery(), not(containsString(termWithColon)));
 
   }
 
