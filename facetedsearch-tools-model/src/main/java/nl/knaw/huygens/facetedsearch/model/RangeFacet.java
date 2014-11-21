@@ -1,11 +1,15 @@
 package nl.knaw.huygens.facetedsearch.model;
 
+import java.util.List;
+
+import com.google.common.collect.Lists;
+
 public class RangeFacet extends Facet {
-  private RangeFacetOptions options;
+  private RangeFacetOption option;
 
   public RangeFacet(String name, String title, long lowerLimit, long upperLimit) {
     super(name, title);
-    options = new RangeFacetOptions();
+    option = new RangeFacetOption();
     this.setLowerLimit(lowerLimit);
     this.setUpperLimit(upperLimit);
   }
@@ -35,23 +39,27 @@ public class RangeFacet extends Facet {
     return FacetType.RANGE;
   }
 
-  public long getLowerLimit() {
-    return options.getLowerLimit();
+  private long getLowerLimit() {
+    return option.getLowerLimit();
   }
 
   public void setLowerLimit(long lowerLimit) {
-    options.setLowerLimit(lowerLimit);
+    option.setLowerLimit(lowerLimit);
   }
 
-  public long getUpperLimit() {
-    return options.getUpperLimit();
+  private long getUpperLimit() {
+    return option.getUpperLimit();
   }
 
   public void setUpperLimit(long upperLimit) {
-    options.setUpperLimit(upperLimit);
+    option.setUpperLimit(upperLimit);
   }
 
-  private static class RangeFacetOptions {
+  public List<RangeFacetOption> getOptions() {
+    return Lists.newArrayList(option);
+  }
+
+  public static class RangeFacetOption {
     private long lowerLimit;
     private long upperLimit;
 

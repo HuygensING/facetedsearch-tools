@@ -1,5 +1,9 @@
 package nl.knaw.huygens.facetedsearch.model;
 
+import java.util.List;
+
+import nl.knaw.huygens.facetedsearch.model.RangeFacet.RangeFacetOption;
+
 import org.hamcrest.Description;
 import org.hamcrest.Factory;
 import org.hamcrest.Matcher;
@@ -30,8 +34,18 @@ public class RangeFacetMatcher extends TypeSafeMatcher<RangeFacet> {
   protected boolean matchesSafely(RangeFacet item) {
     boolean matches = Objects.equal(name, item.getName());
     matches &= Objects.equal(title, item.getTitle());
-    matches &= Objects.equal(lowerLimit, item.getLowerLimit());
-    matches &= Objects.equal(upperLimit, item.getUpperLimit());
+    matches = matchesOptions(item, matches);
+
+    return matches;
+  }
+
+  private boolean matchesOptions(RangeFacet item, boolean matches) {
+    List<RangeFacetOption> options = item.getOptions();
+    if (options != null && !options.isEmpty()) {
+      RangeFacetOption option = options.get(0);
+      matches &= Objects.equal(lowerLimit, option.getLowerLimit());
+      matches &= Objects.equal(upperLimit, option.getUpperLimit());
+    }
 
     return matches;
   }
