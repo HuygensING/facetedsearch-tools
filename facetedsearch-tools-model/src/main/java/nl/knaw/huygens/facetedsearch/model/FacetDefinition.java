@@ -52,7 +52,7 @@ public class FacetDefinition {
     DefaultFacet facet = new DefaultFacet(getName(), getTitle(), getType());
     org.apache.solr.client.solrj.response.FacetField solrField = queryResponse.getFacetField(getName());
 
-    if (solrField != null) {
+    if (facetFieldContainsValues(queryResponse, getName())) {
       for (Count count : solrField.getValues()) {
         facet.addOption(new FacetOption(count.getName(), count.getCount()));
       }
@@ -67,5 +67,10 @@ public class FacetDefinition {
 
   public FacetField toFacetField() {
     return new FacetField(name);
+  }
+
+  protected boolean facetFieldContainsValues(QueryResponse queryResponse, String fieldName) {
+    org.apache.solr.client.solrj.response.FacetField facetField = queryResponse.getFacetField(fieldName);
+    return facetField != null && facetField.getValues() != null && !facetField.getValues().isEmpty();
   }
 }
