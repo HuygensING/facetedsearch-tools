@@ -78,6 +78,32 @@ public class RangeFacetDefinitionTest {
     verify(searchResultMock, never()).addFacet(any(Facet.class));
   }
 
+  @Test
+  public void addFacetDoesNotAddTheFacetIfTheSolrLowerLimitFieldDoesNotContainAValue() {
+    // setup
+    addFacetFieldToQueryResponse(FACET_NAME, LOWER_LIMIT_FIELD, queryResponseMock);
+    addFacetFieldToQueryResponse(FACET_NAME, UPPER_LIMIT_FIELD, queryResponseMock, 60, UPPER_LIMIT, 80);
+
+    // action
+    instance.addFacetToResult(searchResultMock, queryResponseMock);
+
+    // verify
+    verify(searchResultMock, never()).addFacet(any(Facet.class));
+  }
+
+  @Test
+  public void addFacetDoesNotAddTheFacetIfTheSolrUpperLimitFieldDoesNotContainAValue() {
+    // setup
+    addFacetFieldToQueryResponse(FACET_NAME, LOWER_LIMIT_FIELD, queryResponseMock, 30, 50, LOWER_LIMIT);
+    addFacetFieldToQueryResponse(FACET_NAME, UPPER_LIMIT_FIELD, queryResponseMock);
+
+    // action
+    instance.addFacetToResult(searchResultMock, queryResponseMock);
+
+    // verify
+    verify(searchResultMock, never()).addFacet(any(Facet.class));
+  }
+
   private void addFacetFieldToQueryResponse(String facetName, String facetFieldName, QueryResponse queryResponseMock, long... facetValues) {
     FacetField lowerFacetField = createFacetField(facetName, facetValues);
     when(queryResponseMock.getFacetField(facetFieldName)).thenReturn(lowerFacetField);

@@ -35,7 +35,7 @@ public class FacetDefinitionTest {
 
   @Test
   // Currently the default implementation.
-  public void testAddFacetToResultWithListFacet() {
+  public void addFacetToResultWithListFacet() {
     // setup instance
     FacetType facetType = FacetType.LIST;
     FacetDefinition instance = createFacetDefinition(facetType);
@@ -57,7 +57,7 @@ public class FacetDefinitionTest {
   }
 
   @Test
-  public void testAddFacetToResultWithNonListFacet() {
+  public void addFacetToResultWithNonListFacet() {
     // setup instance
     FacetType facetType = FacetType.BOOLEAN;
     FacetDefinition instance = createFacetDefinition(facetType);
@@ -97,6 +97,23 @@ public class FacetDefinitionTest {
     verify(searchResultMock, never()).addFacet(any(Facet.class));
   }
 
+  @Test
+  public void addFacetDoesNotAddTheFacetIfTheSolrFacetFieldDoesNotContainAValue() {
+    // setup instance
+    FacetType facetType = FacetType.LIST;
+    FacetDefinition instance = createFacetDefinition(facetType);
+
+    // when
+    setupSolrFacetFieldWithoutValues();
+
+    // action
+    instance.addFacetToResult(searchResultMock, queryResponseMock);
+
+    // verify
+    verify(searchResultMock, never()).addFacet(any(Facet.class));
+
+  }
+
   private List<FacetOption> createExpecetedOptions(String nameFirstOption, long countFirstOption, String nameSecondOption, long countSecondOption) {
     List<FacetOption> expectedOptions = Lists.newArrayList(//
         new FacetOption(nameFirstOption, countFirstOption), //
@@ -108,6 +125,11 @@ public class FacetDefinitionTest {
     FacetField solrFacet = new FacetField(facetName);
     solrFacet.add(nameFirstOption, countFirstOption);
     solrFacet.add(nameSecondOption, countSecondOption);
+    when(queryResponseMock.getFacetField(facetName)).thenReturn(solrFacet);
+  }
+
+  private void setupSolrFacetFieldWithoutValues() {
+    FacetField solrFacet = new FacetField(facetName);
     when(queryResponseMock.getFacetField(facetName)).thenReturn(solrFacet);
   }
 

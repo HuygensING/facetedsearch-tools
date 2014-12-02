@@ -37,7 +37,8 @@ public class RangeFacetDefinition extends FacetDefinition {
 
   @Override
   public void addFacetToResult(FacetedSearchResult result, QueryResponse queryResponse) {
-    if (queryResponse.getFacetField(lowerLimitField) != null && queryResponse.getFacetField(upperLimitField) != null) {
+    if (facetFieldContainsValues(queryResponse, lowerLimitField) && //
+        facetFieldContainsValues(queryResponse, upperLimitField)) {
       long minValue = Collections.min(getValuesOfFacetField(queryResponse.getFacetField(lowerLimitField)));
       long maxValue = Collections.max(getValuesOfFacetField(queryResponse.getFacetField(upperLimitField)));
 
