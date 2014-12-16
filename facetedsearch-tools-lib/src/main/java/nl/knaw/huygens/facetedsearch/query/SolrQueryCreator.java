@@ -1,14 +1,15 @@
 package nl.knaw.huygens.facetedsearch.query;
 
 import nl.knaw.huygens.facetedsearch.model.parameters.FacetedSearchParameters;
+import nl.knaw.huygens.facetedsearch.model.parameters.IndexDescription;
 
 import org.apache.solr.client.solrj.SolrQuery;
 
 public class SolrQueryCreator {
   private SolrQueryBuilder[] builders;
 
-  public SolrQueryCreator() {
-    this(new QueryStringBuilder(), new ResultFieldBuilder(), new FacetFieldBuilder(), //
+  public SolrQueryCreator(IndexDescription indexDescription) {
+    this(new QueryStringBuilder(indexDescription), new ResultFieldBuilder(), new FacetFieldBuilder(), //
         new SortBuilder(), new HighlightingBuilder(), new QueryOptimizerBuilder());
   }
 

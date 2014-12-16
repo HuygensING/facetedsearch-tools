@@ -4,6 +4,8 @@ import static nl.knaw.huygens.facetedsearch.model.RangeFacetMatcher.rangeFacetHa
 import static nl.knaw.huygens.facetedsearch.model.parameters.FacetFieldMatcher.rangeFacetFieldLike;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
@@ -12,6 +14,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Collection;
+
+import nl.knaw.huygens.facetedsearch.model.parameters.RangeParameter;
 
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -139,5 +143,27 @@ public class RangeFacetDefinitionTest {
         .setName(FACET_NAME);
 
     assertThat(instance.toFacetField(), rangeFacetFieldLike(FACET_NAME, LOWER_LIMIT_FIELD, UPPER_LIMIT_FIELD));
+  }
+
+  @Test
+  public void appendQueryValueAddsAQueryForTheLowerLimitFieldAndTheUpperLimitField() {
+    // setup
+    long lowerLimit = 12;
+    long upperLimit = 16;
+    RangeParameter rangeParameter = new RangeParameter(FACET_NAME, lowerLimit, upperLimit);
+    String expectedQuery = String.format("+(%s:[%d TO %d] %s:[%d TO %d])", LOWER_LIMIT_FIELD, lowerLimit, upperLimit, UPPER_LIMIT_FIELD, lowerLimit, upperLimit);
+
+    StringBuilder stringBuilder = new StringBuilder();
+
+    FacetDefinition instance = new RangeFacetDefinition() //
+        .setLowerLimitField(LOWER_LIMIT_FIELD) //
+        .setUpperLimitField(UPPER_LIMIT_FIELD);
+
+    // action
+    instance.appendQueryValue(stringBuilder, rangeParameter);
+
+    // verify
+    assertThat(stringBuilder.toString(), is(equalTo(expectedQuery)));
+
   }
 }
