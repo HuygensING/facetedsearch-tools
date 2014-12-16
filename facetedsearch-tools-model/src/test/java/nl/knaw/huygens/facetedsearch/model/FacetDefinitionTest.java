@@ -4,6 +4,8 @@ import static nl.knaw.huygens.facetedsearch.model.DefaultFacetMatcher.defaultFac
 import static nl.knaw.huygens.facetedsearch.model.parameters.FacetFieldMatcher.facetFieldLike;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
@@ -13,6 +15,8 @@ import static org.mockito.Mockito.when;
 
 import java.util.Collection;
 import java.util.List;
+
+import nl.knaw.huygens.facetedsearch.model.parameters.DefaultFacetParameter;
 
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -153,6 +157,47 @@ public class FacetDefinitionTest {
     nl.knaw.huygens.facetedsearch.model.parameters.FacetField field = facetDefinition.toFacetField();
 
     assertThat(field, facetFieldLike(facetName));
+  }
+
+  @Test
+  public void appendQueryValueAppendsTheQueryValueOfTheFacet() {
+    // setup
+    String facetValue = "facetValue";
+    List<String> facetValues = Lists.newArrayList(facetValue);
+    String expectedQueryValue = String.format("+%s:%s", facetName, facetValue);
+
+    DefaultFacetParameter facetParameter = new DefaultFacetParameter(facetName, facetValues);
+    StringBuilder stringBuilder = new StringBuilder();
+
+    FacetDefinition facetDefinition = new FacetDefinition() //
+        .setName(facetName);
+
+    // action
+    facetDefinition.appendQueryValue(stringBuilder, facetParameter);
+
+    // verify
+    assertThat(stringBuilder.toString(), is(equalTo(expectedQueryValue)));
+  }
+
+  @Test
+  public void appendQueryValueAppendsTheMultipleQueryValuesOfTheFacet() {
+    // setup
+    String facetValue1 = "facetValue1";
+    String facetValue2 = "facetValue2";
+    List<String> facetValues = Lists.newArrayList(facetValue1, facetValue2);
+    String expectedQueryValue = String.format("+%s:(%s %s)", facetName, facetValue1, facetValue2);
+
+    DefaultFacetParameter facetParameter = new DefaultFacetParameter(facetName, facetValues);
+    StringBuilder stringBuilder = new StringBuilder();
+
+    FacetDefinition facetDefinition = new FacetDefinition() //
+        .setName(facetName);
+
+    // action
+    facetDefinition.appendQueryValue(stringBuilder, facetParameter);
+
+    // verify
+    assertThat(stringBuilder.toString(), is(equalTo(expectedQueryValue)));
   }
 
 }
