@@ -5,12 +5,14 @@ import static org.hamcrest.Matchers.hasItemInArray;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 
 import java.util.ArrayList;
 
 import nl.knaw.huygens.facetedsearch.model.parameters.DefaultFacetedSearchParameters;
 import nl.knaw.huygens.facetedsearch.model.parameters.FacetField;
 import nl.knaw.huygens.facetedsearch.model.parameters.HighlightingOptions;
+import nl.knaw.huygens.facetedsearch.model.parameters.IndexDescription;
 import nl.knaw.huygens.facetedsearch.model.parameters.QueryOptimizer;
 import nl.knaw.huygens.facetedsearch.model.parameters.SortDirection;
 import nl.knaw.huygens.facetedsearch.model.parameters.SortParameter;
@@ -32,7 +34,7 @@ public class SolrQueryCreatorTest {
   @Before
   public void setUp() {
     searchParameters = new DefaultFacetedSearchParameters();
-    instance = new SolrQueryCreator();
+    instance = new SolrQueryCreator(mock(IndexDescription.class));
   }
 
   @Test
