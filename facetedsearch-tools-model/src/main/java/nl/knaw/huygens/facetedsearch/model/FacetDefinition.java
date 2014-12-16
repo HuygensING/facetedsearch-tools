@@ -3,6 +3,7 @@ package nl.knaw.huygens.facetedsearch.model;
 import java.util.Collection;
 
 import nl.knaw.huygens.facetedsearch.model.parameters.FacetField;
+import nl.knaw.huygens.facetedsearch.model.parameters.FacetParameter;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
@@ -72,5 +73,10 @@ public class FacetDefinition {
   protected boolean facetFieldContainsValues(QueryResponse queryResponse, String fieldName) {
     org.apache.solr.client.solrj.response.FacetField facetField = queryResponse.getFacetField(fieldName);
     return facetField != null && facetField.getValues() != null && !facetField.getValues().isEmpty();
+  }
+
+  public void appendQueryValue(StringBuilder stringBuilder, FacetParameter facetParameter) {
+    // TODO Auto-generated method stub
+
   }
 }

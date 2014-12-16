@@ -221,5 +221,41 @@ public class IndexDescriptionTest {
 
     // verify
     verify(facetDefinitionMock1).addFacetToResult(searchResult, queryResponse);
+    verify(facetDefinitionMock2).addFacetToResult(searchResult, queryResponse);
+    verify(facetDefinitionMock3).addFacetToResult(searchResult, queryResponse);
+  }
+
+  @Test
+  public void appendFacetQueryValueCallsAppendFacetQueryValueOfTheFacetDefinitionOfTheFacetParameter() throws NoSuchFieldException {
+    // setup
+    FacetDefinition facetDefinitionMock = mock(FacetDefinition.class);
+    StringBuilder stringBuilder = new StringBuilder();
+    String facetParameterName = "facet1";
+    DefaultFacetParameter facetParameter = new DefaultFacetParameter(facetParameterName, Lists.newArrayList("value1"));
+
+    // when
+    when(facetDefinitionMapMock.containsKey(facetParameterName)).thenReturn(true);
+    when(facetDefinitionMapMock.get(facetParameterName)).thenReturn(facetDefinitionMock);
+
+    // action
+    instance.appendFacetQueryValue(stringBuilder, facetParameter);
+
+    // verify
+    verify(facetDefinitionMock).appendQueryValue(stringBuilder, facetParameter);
+  }
+
+  @Test(expected = NoSuchFieldException.class)
+  public void appendFacetQueryValueThrowAnExceptionWhenTheFacetDoesNotExist() throws NoSuchFieldException {
+    // setup
+    String facetParameterName = "facet1";
+    DefaultFacetParameter facetParameter = new DefaultFacetParameter(facetParameterName, Lists.newArrayList("value1"));
+    StringBuilder stringBuilder = new StringBuilder();
+
+    // when
+    when(facetDefinitionMapMock.containsKey(facetParameterName)).thenReturn(false);
+
+    // action
+    instance.appendFacetQueryValue(stringBuilder, facetParameter);
+
   }
 }
