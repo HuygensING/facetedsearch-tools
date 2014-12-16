@@ -84,4 +84,14 @@ public class IndexDescription {
 
     return facetFields;
   }
+
+  public void appendFacetQueryValue(StringBuilder stringBuilder, FacetParameter facetParameter) throws NoSuchFieldException {
+    String facetName = facetParameter.getName();
+    if (!facetDefinitionMap.containsKey(facetName)) {
+      throw new NoSuchFieldException(String.format("Facet with name \"%s\" does not exist.", facetName));
+    }
+    FacetDefinition facetDefinition = facetDefinitionMap.get(facetName);
+
+    facetDefinition.appendQueryValue(stringBuilder, facetParameter);
+  }
 }
