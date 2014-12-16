@@ -5,6 +5,7 @@ import java.util.List;
 import nl.knaw.huygens.facetedsearch.model.parameters.FacetParameter;
 import nl.knaw.huygens.facetedsearch.model.parameters.FacetedSearchParameters;
 import nl.knaw.huygens.facetedsearch.model.parameters.FullTextSearchParameter;
+import nl.knaw.huygens.facetedsearch.model.parameters.IndexDescription;
 import nl.knaw.huygens.facetedsearch.services.SolrUtils;
 
 import org.apache.commons.lang.StringUtils;
@@ -18,6 +19,11 @@ import org.slf4j.LoggerFactory;
  */
 public class QueryStringBuilder implements SolrQueryBuilder {
   private Logger LOG = LoggerFactory.getLogger(QueryStringBuilder.class);
+  private IndexDescription indexDescription;
+
+  public QueryStringBuilder(IndexDescription indexDescription) {
+    this.indexDescription = indexDescription;
+  }
 
   @Override
   public <T extends FacetedSearchParameters<T>> void build(SolrQuery query, FacetedSearchParameters<T> searchParameters) {
@@ -65,10 +71,12 @@ public class QueryStringBuilder implements SolrQueryBuilder {
 
     if (useFacets) {
       for (FacetParameter facetParameter : facetValues) {
-        String name = facetParameter.getName();
-
-        builder.append(" +").append(name).append(":");
-        builder.append(facetParameter.getQueryValue());
+        try {
+          builder.append(" ");
+          indexDescription.appendFacetQueryValue(builder, facetParameter);
+        } catch (NoSuchFieldException e) {
+          throw new RuntimeException(e);
+        }
       }
     }
 
