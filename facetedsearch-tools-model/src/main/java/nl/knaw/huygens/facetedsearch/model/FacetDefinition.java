@@ -76,7 +76,7 @@ public class FacetDefinition {
   }
 
   public void appendQueryValue(StringBuilder stringBuilder, FacetParameter facetParameter) {
-    // TODO Auto-generated method stub
-
+    stringBuilder.append("+").append(name).append(":")//
+        .append(facetParameter.getQueryValue());
   }
 }
