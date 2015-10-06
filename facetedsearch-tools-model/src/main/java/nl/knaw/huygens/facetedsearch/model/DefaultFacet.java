@@ -1,15 +1,15 @@
 package nl.knaw.huygens.facetedsearch.model;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
+
+import java.util.List;
 
 public class DefaultFacet extends Facet {
   private List<FacetOption> options;
   private FacetType facetType;
 
   /**
-   * Defaults the type to {@link FacetType.LIST}
+   * Defaults the type to {@link FacetType LIST}
    * @param name the name of the facet
    * @param title the title of the facet
    */

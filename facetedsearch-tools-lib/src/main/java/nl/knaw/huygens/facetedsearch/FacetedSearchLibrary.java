@@ -30,8 +30,8 @@ public class FacetedSearchLibrary {
   /**
    * Search the index.
    * @param searchParameters that should be search.
+   * @param <T> the type of the faceted search parameters
    * @return the result of the query, that is executed on the core.
-   * @throws WrongFacetValueException when the {@code searchParameters} contain a facet with a wrong value.
    * @throws NoSuchFieldInIndexException when the {@code searchParameters} contain a field or a facet that is not recognized.
    * @throws FacetedSearchException when the search fails to execute.
    */
