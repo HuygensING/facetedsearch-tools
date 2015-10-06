@@ -8,3 +8,7 @@
 build/*
 reports/*
 target/*
+
+# intellij files and folders
+**/*.iml
+**/.idea
