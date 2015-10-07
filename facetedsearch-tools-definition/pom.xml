@@ -3,7 +3,7 @@
   <parent>
     <groupId>nl.knaw.huygens</groupId>
     <artifactId>facetedsearch-tools</artifactId>
-    <version>1.6.1</version>
+    <version>1.7.0-SNAPSHOT</version>
   </parent>
   <artifactId>facetedsearch-tools-definition</artifactId>
   <name>Faceted search tools definition</name>
