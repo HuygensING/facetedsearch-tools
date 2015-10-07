@@ -134,7 +134,7 @@ public class QueryStringBuilderTest {
 
     instance.build(query, searchParameters);
 
-    assertThat(query.getQuery(), startsWith("+(testSearchField:-test123)"));
+    assertThat(query.getQuery(), startsWith("+(testSearchField:\\-test123~0.7)"));
   }
 
   @Test
@@ -267,19 +267,18 @@ public class QueryStringBuilderTest {
   }
 
   @Test
-  public void testBuildWithTermThatHasColon() {
+  public void testBuildEscapesSpecialCharacters() {
     // setup
-    String termWithColon = "test Test: test test";
-    String cleanedTerm = "test Test test test";
-    searchParameters.setTerm(termWithColon);
-    String fullTextSearchField = "fullTextField";
-    searchParameters.setFullTextSearchFields(Lists.newArrayList(fullTextSearchField));
+    String termSpecialCharacter = "test\" Test: test test";
+    String cleanedTerm = "test\\\" Test\\: test test";
+    searchParameters.setTerm(termSpecialCharacter);
+    searchParameters.setFullTextSearchFields(Lists.newArrayList("fullTextField"));
 
     // action
     instance.build(query, searchParameters);
 
     assertThat(query.getQuery(), containsString(cleanedTerm));
-    assertThat(query.getQuery(), not(containsString(termWithColon)));
+    assertThat(query.getQuery(), not(containsString(termSpecialCharacter)));
 
   }
 

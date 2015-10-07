@@ -99,20 +99,6 @@ public class QueryStringBuilder implements SolrQueryBuilder {
   }
 
   private String formatTerm(String term, boolean fuzzy) {
-    String cleanedTerm = cleanUpSpecialCharaters(term);
-
-    if (fuzzy) {
-      cleanedTerm = SolrUtils.fuzzy(cleanedTerm);
-    }
-
-    if (cleanedTerm.trim().contains(" ")) {
-      return String.format("(%s)", cleanedTerm);
-    }
-    return cleanedTerm;
-  }
-
-  private String cleanUpSpecialCharaters(String term) {
-
-    return term.replace(":", "");
+    return SolrUtils.escapeFulltextValue(term, fuzzy);
   }
 }

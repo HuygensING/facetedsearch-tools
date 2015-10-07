@@ -11,6 +11,26 @@ import org.junit.Test;
 public class SolrUtilsTest {
 
   @Test
+  public void noSpecialCharactersShouldBeFalse() throws Exception {
+    assertThat(SolrUtils.hasUnescapedSolrSpecialCharacters("aaa")).isFalse();
+  }
+
+  @Test
+  public void aSpecialCharactersShouldBeTrue() throws Exception {
+    assertThat(SolrUtils.hasUnescapedSolrSpecialCharacters("a+aa")).isTrue();
+  }
+
+  @Test
+  public void anEscapedSpecialCharactersShouldBeFalse() throws Exception {
+    assertThat(SolrUtils.hasUnescapedSolrSpecialCharacters("a\\+aa")).isFalse();
+  }
+
+  @Test
+  public void anAlmostEscapedSpecialCharactersShouldBeTrue() throws Exception {
+    assertThat(SolrUtils.hasUnescapedSolrSpecialCharacters("a\\\\+aa")).isTrue();
+  }
+
+  @Test
   public void testEscapeFacetValue() throws Exception {
     String in = "This? is a 'test' (#@!$)";
     String expected = "This\\?\\ is\\ a\\ 'test'\\ \\(#@\\!$\\)";
