@@ -47,7 +47,7 @@ public class IndexDescription {
   }
 
   public boolean doesSortParameterExist(SortParameter sortParameter) {
-    final String fieldName = sortParameter.getFieldName();
+    final String fieldName = sortParameter.getFieldname();
     return isScoreField(fieldName) ? true : sortFieldList.contains(fieldName);
   }
 
