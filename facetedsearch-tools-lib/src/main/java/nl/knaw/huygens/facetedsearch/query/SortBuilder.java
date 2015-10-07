@@ -26,7 +26,7 @@ public class SortBuilder implements SolrQueryBuilder {
 
   private SortClause createSortClause(SortParameter sortParameter) {
     ORDER order = ORDER.valueOf(sortParameter.getDirection().toString());
-    return new SortClause(sortParameter.getFieldName(), order);
+    return new SortClause(sortParameter.getFieldname(), order);
   }
 
 }
