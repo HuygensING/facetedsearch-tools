@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>nl.knaw.huygens</groupId>
   <artifactId>facetedsearch-tools</artifactId>
-  <version>1.6.0-SNAPSHOT</version>
+  <version>1.7.0-SNAPSHOT</version>
   <name>Faceted search tools</name>
 
   <distributionManagement>
@@ -84,7 +84,7 @@
     <tomcatservlet-api.version>6.0.36</tomcatservlet-api.version>
     <urlrewritefilter.version>4.0.4</urlrewritefilter.version>
     <visitei.version>0.4.5-SNAPSHOT</visitei.version>
-    <wagon-ssh.version>2.6</wagon-ssh.version>
+    <wagon-ssh.version>2.2</wagon-ssh.version>
     <xmlunit.version>1.5</xmlunit.version>
     <yoga.version>1.0.0</yoga.version>
   </properties>
@@ -129,10 +129,11 @@
       </plugin>
     </plugins>
 
+
     <extensions>
       <extension>
         <groupId>org.apache.maven.wagon</groupId>
-        <artifactId>wagon-ssh-external</artifactId>
+        <artifactId>wagon-ssh</artifactId>
         <version>${wagon-ssh.version}</version>
       </extension>
     </extensions>
