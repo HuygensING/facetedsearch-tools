@@ -1,17 +1,16 @@
 package nl.knaw.huygens.facetedsearch.query;
 
-import java.util.List;
-
 import nl.knaw.huygens.facetedsearch.model.parameters.FacetParameter;
 import nl.knaw.huygens.facetedsearch.model.parameters.FacetedSearchParameters;
 import nl.knaw.huygens.facetedsearch.model.parameters.FullTextSearchParameter;
 import nl.knaw.huygens.facetedsearch.model.parameters.IndexDescription;
 import nl.knaw.huygens.facetedsearch.services.SolrUtils;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * Adds the query string to the SolrQuery. 
@@ -82,7 +81,7 @@ public class QueryStringBuilder implements SolrQueryBuilder {
 
     LOG.info("Query: {}", builder.toString());
 
-    query.setQuery(builder.toString());
+    query.setQuery(builder.toString().trim());
   }
 
   private boolean useWildcardQuery(boolean useFacets, boolean useFullTextParameters, String term, boolean areFullTextSearchFieldsDefined) {

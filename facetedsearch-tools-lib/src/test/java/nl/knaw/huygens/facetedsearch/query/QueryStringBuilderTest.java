@@ -1,16 +1,6 @@
 package nl.knaw.huygens.facetedsearch.query;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.startsWith;
-import static org.junit.Assert.assertEquals;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import com.google.common.collect.Lists;
 import nl.knaw.huygens.facetedsearch.model.FacetDefinition;
 import nl.knaw.huygens.facetedsearch.model.RangeFacetDefinition;
 import nl.knaw.huygens.facetedsearch.model.parameters.DefaultFacetParameter;
@@ -20,12 +10,20 @@ import nl.knaw.huygens.facetedsearch.model.parameters.FullTextSearchParameter;
 import nl.knaw.huygens.facetedsearch.model.parameters.IndexDescription;
 import nl.knaw.huygens.facetedsearch.model.parameters.IndexDescriptionBuilder;
 import nl.knaw.huygens.facetedsearch.model.parameters.RangeParameter;
-
 import org.apache.solr.client.solrj.SolrQuery;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.startsWith;
+import static org.junit.Assert.assertEquals;
 
 public class QueryStringBuilderTest {
 
@@ -113,7 +111,6 @@ public class QueryStringBuilderTest {
     instance.build(query, searchParameters);
 
     assertThat(query.getQuery(), is(equalTo("*:*")));
-
   }
 
   @Test
@@ -180,6 +177,18 @@ public class QueryStringBuilderTest {
     String expectedQuery = String.format("+(testSearchField:test1) +%s:facetValue", //
         FACET_FIELD);
     assertEquals(expectedQuery, query.getQuery());
+  }
+
+  @Test
+  public void buildWithTermAndFacetWithoutValuesHasNoTrailingWhitespaces() {
+    searchParameters.setTerm("test1");
+    searchParameters.setFullTextSearchFields(Lists.newArrayList("testSearchField"));
+    searchParameters.setFacetParameters(Lists.newArrayList(createFacetParameter(FACET_FIELD, Lists.newArrayList())));
+
+    instance.build(query, searchParameters);
+
+    String expectedQuery = String.format("+(testSearchField:test1)");
+    assertThat(query.getQuery(), is(expectedQuery));
   }
 
   @Test
