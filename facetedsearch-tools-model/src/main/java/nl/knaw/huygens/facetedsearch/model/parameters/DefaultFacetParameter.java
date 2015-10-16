@@ -1,12 +1,11 @@
 package nl.knaw.huygens.facetedsearch.model.parameters;
 
-import java.util.List;
-
-import nl.knaw.huygens.facetedsearch.services.SolrUtils;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.Lists;
+import nl.knaw.huygens.facetedsearch.services.SolrUtils;
+
+import java.util.List;
 
 public class DefaultFacetParameter extends FacetParameter {
   // TODO: make it work with jackson/jersey
@@ -38,19 +37,21 @@ public class DefaultFacetParameter extends FacetParameter {
   public String getQueryValue() {
     List<String> values = this.getValues();
 
-    if (values.size() > 1) {
-      StringBuilder builder = new StringBuilder();
-      builder.append("(");
-      String prefix = "";
-      for (String value : values) {
-        builder.append(prefix).append(SolrUtils.escapeFacetValue(value));
-        prefix = " ";
-      }
-      builder.append(")");
-      return builder.toString();
+    if (values == null || values.isEmpty()) {
+      return "";
+    } else if (values.size() == 1) {
+      return SolrUtils.escapeFacetValue(values.get(0));
     }
-    return SolrUtils.escapeFacetValue(values.get(0));
 
+    StringBuilder builder = new StringBuilder();
+    builder.append("(");
+    String prefix = "";
+    for (String value : values) {
+      builder.append(prefix).append(SolrUtils.escapeFacetValue(value));
+      prefix = " ";
+    }
+    builder.append(")");
+    return builder.toString();
   }
 
 }

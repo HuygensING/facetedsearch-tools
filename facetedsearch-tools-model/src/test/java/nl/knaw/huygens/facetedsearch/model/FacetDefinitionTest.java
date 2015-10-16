@@ -1,29 +1,28 @@
 package nl.knaw.huygens.facetedsearch.model;
 
+import com.google.common.collect.Lists;
+import nl.knaw.huygens.facetedsearch.model.parameters.DefaultFacetParameter;
+import org.apache.solr.client.solrj.response.FacetField;
+import org.apache.solr.client.solrj.response.QueryResponse;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.Collection;
+import java.util.List;
+
 import static nl.knaw.huygens.facetedsearch.model.DefaultFacetMatcher.defaultFacethasCharacteristics;
 import static nl.knaw.huygens.facetedsearch.model.parameters.FacetFieldMatcher.facetFieldLike;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isEmptyString;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import java.util.Collection;
-import java.util.List;
-
-import nl.knaw.huygens.facetedsearch.model.parameters.DefaultFacetParameter;
-
-import org.apache.solr.client.solrj.response.FacetField;
-import org.apache.solr.client.solrj.response.QueryResponse;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.google.common.collect.Lists;
 
 public class FacetDefinitionTest {
   private String facetName = "name";
@@ -198,6 +197,22 @@ public class FacetDefinitionTest {
 
     // verify
     assertThat(stringBuilder.toString(), is(equalTo(expectedQueryValue)));
+  }
+
+  @Test
+  public void appendQueryValueDoesNotAppendTheFacetParameterIfItsQueryValueIsAnEmptyString(){
+    List<String> facetValues = Lists.newArrayList();
+    DefaultFacetParameter facetParameter = new DefaultFacetParameter(facetName, facetValues);
+    StringBuilder stringBuilder = new StringBuilder();
+
+    FacetDefinition facetDefinition = new FacetDefinition() //
+      .setName(facetName);
+
+    // action
+    facetDefinition.appendQueryValue(stringBuilder, facetParameter);
+
+    // verify
+    assertThat(stringBuilder.toString(), isEmptyString());
   }
 
 }

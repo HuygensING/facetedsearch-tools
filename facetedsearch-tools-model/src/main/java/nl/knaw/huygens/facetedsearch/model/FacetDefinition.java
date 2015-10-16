@@ -1,16 +1,14 @@
 package nl.knaw.huygens.facetedsearch.model;
 
-import java.util.Collection;
-
+import com.google.common.collect.Lists;
 import nl.knaw.huygens.facetedsearch.model.parameters.FacetField;
 import nl.knaw.huygens.facetedsearch.model.parameters.FacetParameter;
-
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
-import com.google.common.collect.Lists;
+import java.util.Collection;
 
 public class FacetDefinition {
   private String name = "";
@@ -76,7 +74,10 @@ public class FacetDefinition {
   }
 
   public void appendQueryValue(StringBuilder stringBuilder, FacetParameter facetParameter) {
-    stringBuilder.append("+").append(name).append(":")//
-        .append(facetParameter.getQueryValue());
+    String queryValue = facetParameter.getQueryValue();
+    if (!queryValue.isEmpty()) {
+      stringBuilder.append("+").append(name).append(":")//
+        .append(queryValue);
+    }
   }
 }
